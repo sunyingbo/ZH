@@ -1,12 +1,12 @@
 #import "ZHStoryboardManager.h"
 
-#import "ZHFileManager.h"
 
 @interface ZHStoryboardManager ()
 @property (nonatomic,assign)NSInteger viewCount;
 
 @property (nonatomic,strong)NSDictionary *customAndId;
 @property (nonatomic,strong)NSDictionary *customAndName;
+@property (nonatomic,strong)NSDictionary *idAndViewPropertys;
 @end
 
 @implementation ZHStoryboardManager
@@ -22,7 +22,8 @@
     
     NSString *context=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     context=[ZHStoryboardTextManager addCustomClassToAllViews:context];
-//    [context writeToFile:[mainPath stringByAppendingPathComponent:@"MainNew.storyboard"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    
+    [context writeToFile:[@"/Users/mac/Desktop" stringByAppendingPathComponent:@"MainNew.storyboard"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
     
     ReadXML *xml=[ReadXML new];
     [xml initWithXMLString:context];
@@ -47,6 +48,11 @@
     //获取所有View的CustomClass与对应的真实控件类型名字
     NSDictionary *customAndName=[ZHStoryboardXMLManager getAllViewCustomAndNameWithAllViewControllerArrM:allViewControllers andXMLHandel:xml];
     self.customAndName=customAndName;
+    
+    NSDictionary *idAndViews=[ZHStoryboardXMLManager getAllViewWithAllViewControllerArrM:allViewControllers andXMLHandel:xml];
+    
+    NSDictionary *idAndViewPropertys=[ZHStoryboardPropertyManager getPropertysForView:idAndViews withCustomAndName:customAndName andXMLHandel:xml];
+    self.idAndViewPropertys=idAndViewPropertys;
     
     //开始操作所有ViewController
     for (NSDictionary *dic in allViewControllers) {
@@ -157,7 +163,7 @@
                 [ZHStoryboardXMLManager createRelationShipWithControllerDic:dic andXMLHandel:xml WithViews:[NSMutableArray arrayWithArray:views] withRelationShipDic:viewRelationShipDic isCell:NO];
                 
                 
-                //创建这个数组是无奈之举,因为兄弟之间的约束,有时候是两个兄弟之间的互相约束,这样必须先同时创建两个兄弟,所以才用这个数组来保存已经创建好的兄弟,防止有一次创建
+                //创建这个数组是无奈之举,因为兄弟之间的约束,有时候是两个兄弟之间的互相约束,这样必须先同时创建两个兄弟,所以才用这个数组来保存已经创建好的兄弟,防止又一次创建
                 NSMutableArray *brotherOrderArrM=[NSMutableArray array];
                 
                 BOOL isOnlyTableViewOrCollectionView=NO;
@@ -181,11 +187,35 @@
                 [creatCodeStrM appendString:@"- (void)addSubViews{\n\n"];
                 for (NSString *idStr in views) {
                     NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
+                    
                     NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
-                    [creatCodeStrM appendString:creatCode];
+                    
+                    NSMutableString *propertyCode=[NSMutableString string];
+                    [propertyCode setString:creatCode];
+                    
+                    [ZHStoryboardPropertyManager getCodePropertysForViewName:idStr WithidAndViewDic:customAndId withCustomAndName:customAndName withProperty:idAndViewPropertys[idStr] toCodeText:propertyCode];
+                    
+                    [creatCodeStrM appendString:propertyCode];
+                    
+                    NSString *selectorEventType=[ZHStoryboardPropertyManager getSelectorEventTypeForViewName:idStr withProperty:idAndViewPropertys[idStr]];
+                    if (selectorEventType.length>0) {
+                        [ZHStoryboardTextManager addCodeText:selectorEventType andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName] insertFunction:nil];
+                    }
                     
                     //创建约束
                     NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW isCell:NO withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+                    
+                    //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
+                    if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
+                        NSLog(@"%@",constraintCode);
+                        
+                        NSString *constraintCodeDefualt=[ZHStoryboardPropertyManager getConstraintIfNotGiveConstraintsForViewName:idStr withProperty:self.idAndViewPropertys[idStr] withFatherView:fatherView];
+                        constraintCode = [constraintCode stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"[%@ mas_makeConstraints:^(MASConstraintMaker *make) {\n",idStr] withString:@""];
+                        constraintCode = [constraintCode stringByReplacingOccurrencesOfString:@"}];\n\n\n" withString:@""];
+                        constraintCode = [constraintCode stringByAppendingString:constraintCodeDefualt];
+                        constraintCode = [constraintCode stringByAppendingString:@"\n\n"];
+                    }
+                    
                     [creatCodeStrM appendString:constraintCode];
                 }
                 
@@ -213,11 +243,11 @@
                     
                     NSInteger tableViewCount_new=[ZHStoryboardTextManager getTableViewCount:views];
                     if (tableViewCount_new!=tableViewCount) {
-                        NSLog(@"%@",@"筛选没有筛选完");
+                        NSLog(@"1-%@:%@",viewController,@"筛选没有筛选完");
                     }
                     NSInteger collectionViewCount_new=[ZHStoryboardTextManager getCollectionViewCount:views];
                     if (collectionViewCount!=collectionViewCount_new) {
-                        NSLog(@"%@",@"筛选没有筛选完");
+                        NSLog(@"2-%@:%@",viewController,@"筛选没有筛选完");
                     }
                     
                     //添加代理方法
@@ -230,7 +260,7 @@
                     
                     NSInteger tableViewCount_new=[ZHStoryboardTextManager getTableViewCount:views];
                     if (tableViewCount_new!=tableViewCount) {
-                        NSLog(@"%@",@"筛选没有筛选完");
+                        NSLog(@"3-%@:%@",viewController,@"筛选没有筛选完");
                     }
                     
                     if (tableViewCount==1) {
@@ -248,7 +278,7 @@
                     
                     NSInteger collectionViewCount_new=[ZHStoryboardTextManager getCollectionViewCount:views];
                     if (collectionViewCount!=collectionViewCount_new) {
-                        NSLog(@"%@",@"筛选没有筛选完");
+                        NSLog(@"4-%@:%@",viewController,@"筛选没有筛选完");
                     }
                     
                     if (collectionViewCount==1) {
@@ -322,9 +352,10 @@
     
     NSDictionary *MyDic=[xml TreeToDict:xml.rootElement];
     
+    //    获取所有的View,TableViewCell,CollectionViewCell
     NSArray *allViews=[ZHStoryboardXMLManager getAllViewWithDic:MyDic andXMLHandel:xml];
     
-    //    获取所有的ViewController名字
+    //    获取所有的View,TableViewCell,CollectionViewCell名字
     NSArray *views=[ZHStoryboardXMLManager getViewControllerCountNamesWithAllViewControllerArrM:allViews];
     
     for (NSString *view in views) {
@@ -333,13 +364,6 @@
         //创建对应的View文件
         [ZHStroyBoardFileManager creat_m_h_file_XIB:view forView:view];
     }
-    
-    //获取所有View的CustomClass与对应的id
-    NSDictionary *customAndId=[ZHStoryboardXMLManager getAllViewCustomAndIdWithAllViewArrM_XIB:allViews andXMLHandel:xml];
-    self.customAndId=customAndId;
-    //获取所有View的CustomClass与对应的真实控件类型名字
-    NSDictionary *customAndName=[ZHStoryboardXMLManager getAllViewCustomAndNameWithAllViewArrM_XIB:allViews andXMLHandel:xml];
-    self.customAndName=customAndName;
     
     //开始操作所有View
     for (NSDictionary *dic in allViews) {
@@ -350,9 +374,32 @@
             {
                 NSString *viewControllerFileName=[viewController stringByAppendingString:viewController];//对应的ViewController字典key值,通过这个key值可以找到对应存放在字典中的文件内容
                 
+                self.customAndId=self.customAndName=self.idAndViewPropertys=nil;
+                
+                //获取所有View的CustomClass与对应的id
+                NSDictionary *customAndId=[ZHStoryboardXMLManager getAllViewCustomAndIdWithAllViewArrM_XIB:allViews andXMLHandel:xml];
+                self.customAndId=customAndId;
+                
+                //获取所有View的CustomClass与对应的真实控件类型名字
+                NSDictionary *customAndName=[ZHStoryboardXMLManager getAllViewCustomAndNameWithAllViewArrM_XIB:allViews andXMLHandel:xml];
+                self.customAndName=customAndName;
+                
+                if ([viewController hasSuffix:@"TableViewCell"]) {
+                    //获取所有View的CustomClass与对应的属性
+                    NSDictionary *idAndViews=[ZHStoryboardXMLManager getAllCellViewWithAllViewControllerArrM_XIB:allViews andXMLHandel:xml];
+                    NSDictionary *idAndViewPropertys=[ZHStoryboardPropertyManager getPropertysForView:idAndViews withCustomAndName:customAndName andXMLHandel:xml];
+                    self.idAndViewPropertys=idAndViewPropertys;
+                }else{
+                    //获取所有View的CustomClass与对应的属性
+                    NSDictionary *idAndViews=[ZHStoryboardXMLManager getAllViewWithAllViewControllerArrM:allViews andXMLHandel:xml];
+                    
+                    NSDictionary *idAndViewPropertys=[ZHStoryboardPropertyManager getPropertysForView:idAndViews withCustomAndName:customAndName andXMLHandel:xml];
+                    self.idAndViewPropertys=idAndViewPropertys;
+                }
+                
                 //插入属性property
                 NSArray *views;
-                if ([viewController hasSuffix:@"TableViewCell"]||[viewController hasSuffix:@"CollectionViewCell"]) {
+                if ([viewController hasSuffix:@"TableViewCell"]) {
                     views=[ZHStoryboardXMLManager getAllCellSubViewsWithViewControllerDic:dic andXMLHandel:xml];
                 }
                 else views=[ZHStoryboardXMLManager getAllViewControllerSubViewsWithViewControllerDic:dic andXMLHandel:xml];
@@ -363,8 +410,13 @@
                 
                 _viewCount+=views.count;
                 
-                //获取特殊的View --- >self.view
-                [ZHStoryboardXMLManager getViewAllConstraintWithControllerDic:dic andXMLHandel:xml withViewIdStr:viewController withSelfConstraintDicM:viewConstraintDicM_Self withOtherConstraintDicM:viewConstraintDicM_Other];
+                if ([viewController hasSuffix:@"TableViewCell"]){
+                    //获取特殊的View --- >self.view
+                    [ZHStoryboardXMLManager getTableViewCellViewAllConstraintWithControllerDic_XIB:dic andXMLHandel:xml withViewIdStr:viewController withSelfConstraintDicM:viewConstraintDicM_Self withOtherConstraintDicM:viewConstraintDicM_Other];
+                }else{
+                    //获取特殊的View --- >self.view
+                    [ZHStoryboardXMLManager getViewAllConstraintWithControllerDic:dic andXMLHandel:xml withViewIdStr:viewController withSelfConstraintDicM:viewConstraintDicM_Self withOtherConstraintDicM:viewConstraintDicM_Other];
+                }
                 
                 BOOL isOnlyTableViewOrCollectionView=NO;
                 NSInteger tableViewCount=0,collectionViewCount=0;
@@ -392,13 +444,12 @@
                     [ZHStoryboardXMLManager getViewAllConstraintWithControllerDic:dic andXMLHandel:xml withViewIdStr:idStr withSelfConstraintDicM:viewConstraintDicM_Self withOtherConstraintDicM:viewConstraintDicM_Other];
                     
                     //这里获取的属性不包括特殊控件,比如tableView,collectionView
-                    NSString *property=[ZHStoryboardTextManager getPropertyWithViewName_XIB:customAndId[idStr] withViewCategory:customAndName[idStr] isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+                    NSString *property=[ZHStoryboardTextManager getPropertyWithViewName_XIB:self.customAndId[idStr] withViewCategory:self.customAndName[idStr] isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
                     
                     if (property.length>0) {
                         [ZHStoryboardTextManager addCodeText:property andInsertType:ZHAddCodeType_Interface toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName] insertFunction:nil];
                     }
                 }
-                
                 
                 
                 NSMutableDictionary *viewConstraintDicM_Self_NEW=[viewConstraintDicM_Self mutableCopy];
@@ -424,10 +475,28 @@
                 for (NSString *idStr in views) {
                     NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
                     NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:YES];
-                    [creatCodeStrM appendString:creatCode];
+                    
+                    NSMutableString *propertyCode=[NSMutableString string];
+                    [propertyCode setString:creatCode];
+                    
+                    [ZHStoryboardPropertyManager getCodePropertysForViewName:idStr WithidAndViewDic:self.customAndId withCustomAndName:self.customAndName withProperty:self.idAndViewPropertys[idStr] toCodeText:propertyCode];
+                    
+                    [creatCodeStrM appendString:propertyCode];
                     
                     //创建约束
                     NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW isCell:NO withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+                    
+                    //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
+                    if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
+                        NSLog(@"%@",constraintCode);
+                        
+                        NSString *constraintCodeDefualt=[ZHStoryboardPropertyManager getConstraintIfNotGiveConstraintsForViewName:idStr withProperty:self.idAndViewPropertys[idStr] withFatherView:fatherView];
+                        constraintCode = [constraintCode stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"[%@ mas_makeConstraints:^(MASConstraintMaker *make) {\n",idStr] withString:@""];
+                        constraintCode = [constraintCode stringByReplacingOccurrencesOfString:@"}];\n\n\n" withString:@""];
+                        constraintCode = [constraintCode stringByAppendingString:constraintCodeDefualt];
+                        constraintCode = [constraintCode stringByAppendingString:@"\n\n"];
+                    }
+                    
                     [creatCodeStrM appendString:constraintCode];
                 }
 //                //解决self.tableView3=tableView3;的问题
@@ -570,10 +639,33 @@
         for (NSString *idStr in views) {
             NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
             NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
-            [creatCodeStrM appendString:creatCode];
+            
+            NSMutableString *propertyCode=[NSMutableString string];
+            [propertyCode setString:creatCode];
+            
+            [ZHStoryboardPropertyManager getCodePropertysForViewName:idStr WithidAndViewDic:self.customAndId withCustomAndName:self.customAndName withProperty:self.idAndViewPropertys[idStr] toCodeText:propertyCode];
+            
+            [creatCodeStrM appendString:propertyCode];
+            
+            NSString *selectorEventType=[ZHStoryboardPropertyManager getSelectorEventTypeForViewName:idStr withProperty:self.idAndViewPropertys[idStr]];
+            if (selectorEventType.length>0) {
+                [ZHStoryboardTextManager addCodeText:selectorEventType andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:NewFileName] insertFunction:nil];
+            }
             
             //创建约束
             NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW isCell:YES withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+            
+            //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
+            if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
+                NSLog(@"%@",constraintCode);
+                
+                NSString *constraintCodeDefualt=[ZHStoryboardPropertyManager getConstraintIfNotGiveConstraintsForViewName:idStr withProperty:self.idAndViewPropertys[idStr] withFatherView:fatherView];
+                constraintCode = [constraintCode stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"[%@ mas_makeConstraints:^(MASConstraintMaker *make) {\n",idStr] withString:@""];
+                constraintCode = [constraintCode stringByReplacingOccurrencesOfString:@"}];\n\n\n" withString:@""];
+                constraintCode = [constraintCode stringByAppendingString:constraintCodeDefualt];
+                constraintCode = [constraintCode stringByAppendingString:@"\n\n"];
+            }
+            
             [creatCodeStrM appendString:constraintCode];
         }
         

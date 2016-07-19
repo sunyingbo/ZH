@@ -25,4 +25,7 @@
 #import "ZHStoryboardTextManager.h"
 #import "ZHStroyBoardFileManager.h"
 
+#import "ViewProperty.h"
+
+#import "ZHStoryboardPropertyManager.h"
 #endif /* PrefixHeader_pch */

@@ -318,6 +318,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     }
     [doneArrM addObject:viewName];
     [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,viewName,viewName,viewName];
+    
     return textCode;
 }
 

@@ -51,4 +51,9 @@
 /**获取当前节点指定的值*/
 - (NSString *)dicNodeValueWithKey:(NSString *)key ForDic:(NSDictionary *)dic;
 - (BOOL)checkNodeValue:(id)value;
+
+/**获取某个节点的属性字段,包括一级孩子的属性字段*/
+- (NSString *)getPropertyWithName:(NSString *)name withDic:(NSDictionary *)dic needInChild:(BOOL)need;
+/**获取某个节点的目标孩子节点,只包括包括一级孩子*/
+- (NSDictionary *)getOneDegreeChildWithName:(NSString *)name withDic:(NSDictionary *)dic;
 @end

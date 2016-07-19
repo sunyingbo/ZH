@@ -1156,4 +1156,36 @@ void disPlay_TreeNodes(TreeNode *T){//打印里面的兄弟节点
     }
     return nil;
 }
+
+/**获取某个节点的属性字段,包括一级孩子的属性字段*/
+- (NSString *)getPropertyWithName:(NSString *)name withDic:(NSDictionary *)dic needInChild:(BOOL)need{
+    if (dic[name]!=nil&&[dic[name] isKindOfClass:[NSString class]]&&[dic[name] length]>0) {
+        return dic[name];
+    }else{
+        if (need) {
+            //查看孩子节点
+            NSArray *childs=[self childDic:dic];
+            for (NSDictionary *subDic in childs) {
+                NSString *results=[self getPropertyWithName:name withDic:subDic needInChild:NO];
+                if (results.length>0) {
+                    return results;
+                }
+            }
+        }
+    }
+    return @"";
+}
+
+/**获取某个节点的目标孩子节点,只包括包括一级孩子*/
+- (NSDictionary *)getOneDegreeChildWithName:(NSString *)name withDic:(NSDictionary *)dic{
+    //查看孩子节点
+    NSArray *childs=[self childDic:dic];
+    for (NSDictionary *subDic in childs) {
+        if ([[self dicNodeName:subDic]isEqualToString:name]) {
+            return subDic;
+        }
+    }
+    return nil;
+}
+
 @end

@@ -38,6 +38,7 @@
 		0476FF5B1D2E22A500CD167C /* xib.png in Resources */ = {isa = PBXBuildFile; fileRef = 0476FF591D2E22A500CD167C /* xib.png */; };
 		0476FF5C1D2E22A500CD167C /* sb.png in Resources */ = {isa = PBXBuildFile; fileRef = 0476FF5A1D2E22A500CD167C /* sb.png */; };
 		0476FF601D2E2C3E00CD167C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0476FF5F1D2E2C3E00CD167C /* MBProgressHUD.m */; };
+		048CF72C1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 048CF72B1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m */; };
 		04B749111D39D0FD003B046A /* ZHAlertAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749101D39D0FD003B046A /* ZHAlertAction.m */; };
 		04B749131D39D39A003B046A /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = 04B749121D39D39A003B046A /* check.png */; };
 		04B7493D1D3A0504003B046A /* QuickCreatCodeTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749361D3A0504003B046A /* QuickCreatCodeTypeViewController.m */; };
@@ -46,6 +47,7 @@
 		04B7495A1D3A14C6003B046A /* ZHTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749591D3A14C6003B046A /* ZHTableView.m */; };
 		04B7495D1D3A1848003B046A /* ZHCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B7495C1D3A1848003B046A /* ZHCollectionView.m */; };
 		04B749601D3A1C91003B046A /* tableViewContainColloectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B7495F1D3A1C91003B046A /* tableViewContainColloectionView.m */; };
+		04B749631D3A35E6003B046A /* ViewProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749621D3A35E6003B046A /* ViewProperty.m */; };
 		04CA74721D38880A004541F7 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA746B1D38880A004541F7 /* HelpViewController.m */; };
 		04CA74731D38880A004541F7 /* HelpCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA746E1D38880A004541F7 /* HelpCellModel.m */; };
 		04CA74741D38880A004541F7 /* HelpTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA74711D38880A004541F7 /* HelpTableViewCell.m */; };
@@ -168,6 +170,8 @@
 		0476FF5A1D2E22A500CD167C /* sb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sb.png; sourceTree = "<group>"; };
 		0476FF5E1D2E2C3E00CD167C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		0476FF5F1D2E2C3E00CD167C /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		048CF72A1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHStoryboardPropertyManager.h; sourceTree = "<group>"; };
+		048CF72B1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHStoryboardPropertyManager.m; sourceTree = "<group>"; };
 		04B749081D39CBD4003B046A /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		04B7490F1D39D0FD003B046A /* ZHAlertAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHAlertAction.h; sourceTree = "<group>"; };
 		04B749101D39D0FD003B046A /* ZHAlertAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHAlertAction.m; sourceTree = "<group>"; };
@@ -184,6 +188,8 @@
 		04B7495C1D3A1848003B046A /* ZHCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHCollectionView.m; sourceTree = "<group>"; };
 		04B7495E1D3A1C91003B046A /* tableViewContainColloectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tableViewContainColloectionView.h; sourceTree = "<group>"; };
 		04B7495F1D3A1C91003B046A /* tableViewContainColloectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tableViewContainColloectionView.m; sourceTree = "<group>"; };
+		04B749611D3A35E6003B046A /* ViewProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewProperty.h; sourceTree = "<group>"; };
+		04B749621D3A35E6003B046A /* ViewProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewProperty.m; sourceTree = "<group>"; };
 		04CA746A1D38880A004541F7 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		04CA746B1D38880A004541F7 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 		04CA746D1D38880A004541F7 /* HelpCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpCellModel.h; sourceTree = "<group>"; };
@@ -472,6 +478,10 @@
 				047462861D250EBF00F4DDCF /* ZHStroyBoardFileManager.m */,
 				0474627F1D24C0C700F4DDCF /* ZHStoryboardXMLManager.h */,
 				047462801D24C0C700F4DDCF /* ZHStoryboardXMLManager.m */,
+				04B749611D3A35E6003B046A /* ViewProperty.h */,
+				04B749621D3A35E6003B046A /* ViewProperty.m */,
+				048CF72A1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.h */,
+				048CF72B1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m */,
 			);
 			name = SB;
 			sourceTree = "<group>";
@@ -949,6 +959,7 @@
 				044D97D61DDAA749000257A9 /* main.m in Sources */,
 				04CA74A01D38AD6B004541F7 /* MoreFunctionTableViewCell.m in Sources */,
 				04D76BD91CCB13D500235470 /* ZHNSString.m in Sources */,
+				04B749631D3A35E6003B046A /* ViewProperty.m in Sources */,
 				0476FF561D2E1FA400CD167C /* UIView+ZHView.m in Sources */,
 				04CA74831D3890C8004541F7 /* DetailViewController.m in Sources */,
 				0476FF4E1D2E1F2600CD167C /* GetXIBCellModel.m in Sources */,
@@ -958,6 +969,7 @@
 				04CA74D91D38B8C8004541F7 /* UIRefreshControl+AFNetworking.m in Sources */,
 				04CA74D61D38B8C8004541F7 /* UIButton+AFNetworking.m in Sources */,
 				04CA74741D38880A004541F7 /* HelpTableViewCell.m in Sources */,
+				048CF72C1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m in Sources */,
 				04CA75051D38BF50004541F7 /* JSONSourceTableViewCell.m in Sources */,
 				04CA74841D3890C8004541F7 /* DetailContentCellModel.m in Sources */,
 				04CA74CB1D38B8C8004541F7 /* AFHTTPRequestOperationManager.m in Sources */,

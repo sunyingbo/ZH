@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 #import "ReadXML.h"
-#import "ZHNSString.h"
 
 /**这个类用于获取StroyBoard里面重要的属性*/
 
@@ -32,6 +31,12 @@
 /**获取ViewController所有的打上了标志符的名字,也就是对应.m的文件名*/
 + (NSArray *)getViewControllerCountNamesWithAllViewControllerArrM:(NSArray *)arrM;
 
+/**获取所有View*/
++ (NSDictionary *)getAllViewWithAllViewControllerArrM:(NSArray *)arrM andXMLHandel:(ReadXML *)xml;
+
+/**获取所有CellView*/
++ (NSDictionary *)getAllCellViewWithAllViewControllerArrM_XIB:(NSArray *)arrM andXMLHandel:(ReadXML *)xml;
+
 /**获取所有View的CustomClass与对应的id */
 + (NSDictionary *)getAllViewCustomAndIdWithAllViewControllerArrM:(NSArray *)arrM andXMLHandel:(ReadXML *)xml;
 + (NSDictionary *)getAllViewCustomAndIdWithAllViewArrM_XIB:(NSArray *)arrM andXMLHandel:(ReadXML *)xml;
@@ -58,6 +63,9 @@
 /**获取控件自身的所有约束 比如宽度和高度之类 和关联对象的所有约束*/
 + (void)getViewAllConstraintWithControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withSelfConstraintDicM:(NSMutableDictionary *)selfConstraintDicM withOtherConstraintDicM:(NSMutableDictionary *)otherConstraintDicM;
 
+/**获取Cell控件自身的所有约束 比如宽度和高度之类 和关联对象的所有约束*/
++ (void)getTableViewCellViewAllConstraintWithControllerDic_XIB:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withSelfConstraintDicM:(NSMutableDictionary *)selfConstraintDicM withOtherConstraintDicM:(NSMutableDictionary *)otherConstraintDicM;
+
 /**重新调整控件的约束*/
 + (void)reAdjustViewAllConstraintWithNewSelfConstraintDicM:(NSMutableDictionary *)newSelfConstraintDicM withNewOtherConstraintDicM:(NSMutableDictionary *)newOtherConstraintDicM withXMLHandel:(ReadXML *)xml;
 + (void)reAdjustViewAllConstraintWithNewSelfConstraintDicM_Second:(NSMutableDictionary *)newSelfConstraintDicM withNewOtherConstraintDicM:(NSMutableDictionary *)newOtherConstraintDicM withXMLHandel:(ReadXML *)xml;
@@ -77,4 +85,5 @@
 
 /**获取所有ViewController 的 CollectionViewCell.subviews  格式 ViewController,CollectionViewCell,CustomClass,id */
 + (NSDictionary *)getCollectionViewCellSubViewsIdAndViewNameWithDic:(NSDictionary *)MyDic andXMLHandel:(ReadXML *)xml withCustomClassDicM:(NSMutableArray *)CustomClassArrM;
+
 @end

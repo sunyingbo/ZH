@@ -14,9 +14,9 @@
 + (NSArray *)getAllViewWithDic:(NSDictionary *)MyDic andXMLHandel:(ReadXML *)xml{
     //先找到tableView
     NSMutableArray *arrMSub=[NSMutableArray array];
-    [xml getTargetNodeArrWithName:@"view" withDic:MyDic withArrM:arrMSub notContain:@[@"view"] withSuccess:NO];
-    [xml getTargetNodeArrWithName:@"tableViewCell" withDic:MyDic withArrM:arrMSub notContain:@[@"view",@"tableViewCell"] withSuccess:NO];
-    [xml getTargetNodeArrWithName:@"collectionViewCell" withDic:MyDic withArrM:arrMSub notContain:@[@"view",@"collectionViewCell"] withSuccess:NO];
+    [xml getTargetNodeArrWithName:@"view" withDic:MyDic withArrM:arrMSub notContain:@[@"view",@"tableViewCell",@"collectionViewCell"] withSuccess:NO];
+    [xml getTargetNodeArrWithName:@"tableViewCell" withDic:MyDic withArrM:arrMSub notContain:@[@"view",@"tableViewCell",@"collectionViewCell"] withSuccess:NO];
+    [xml getTargetNodeArrWithName:@"collectionViewCell" withDic:MyDic withArrM:arrMSub notContain:@[@"view",@"tableViewCell",@"collectionViewCell"] withSuccess:NO];
     return arrMSub;
 }
 
@@ -28,7 +28,6 @@
         if(dic[@"customClass"]!=nil)
            [arrMName addObject:dic[@"customClass"]];
     }
-//    NSLog(@"所有的ViewController:%@",arrMName);
     return arrMName;
 }
 
@@ -302,6 +301,86 @@
 //    }
 //    return dicM;
 //}
+
+/**获取所有View*/
++ (NSDictionary *)getAllViewWithAllViewControllerArrM:(NSArray *)arrM andXMLHandel:(ReadXML *)xml{
+    
+    NSMutableDictionary *dicM=[NSMutableDictionary dictionary];
+    
+    for (NSDictionary *dic in arrM) {
+        NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
+        
+        
+        NSMutableArray *allDic=[NSMutableArray array];
+        [xml getDicArrFormPathArr:@[@"view",@"subviews"] withIndex:0 withDic:tempDic addToArrM:allDic];
+        
+        for (NSDictionary *subDic in allDic) {
+            [self getAllViewWithConditionDic:subDic andXMLHandel:xml toDicM:dicM];
+        }
+    }
+    
+    return dicM;
+}
+/**嵌套获取所有View*/
++ (void)getAllViewWithConditionDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toDicM:(NSMutableDictionary *)dicM{
+    
+    if (dicM==nil) {
+        dicM=[NSMutableDictionary dictionary];
+    }
+    
+    for (NSDictionary *subDic in [xml childDic:tempDic]) {
+        if ([xml checkNodeValue:[xml dicNodeValueWithKey:@"customClass" ForDic:subDic]]) {
+            NSString *idStr=[xml dicNodeValueWithKey:@"id" ForDic:subDic];
+            [dicM setValue:subDic forKey:idStr];
+        }
+        //对每一个子view进行获取
+        NSMutableArray *allDic=[NSMutableArray array];
+        [xml getDicArrFormPathArr:@[@"subviews"] withIndex:0 withDic:subDic addToArrM:allDic];
+        for (NSDictionary *subDic in allDic) {
+            [self getAllViewWithConditionDic:subDic andXMLHandel:xml toDicM:dicM];
+        }
+    }
+}
+
+/**获取所有CellView*/
++ (NSDictionary *)getAllCellViewWithAllViewControllerArrM_XIB:(NSArray *)arrM andXMLHandel:(ReadXML *)xml{
+    
+    NSMutableDictionary *dicM=[NSMutableDictionary dictionary];
+    
+    for (NSDictionary *dic in arrM) {
+        NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
+        
+        
+        NSMutableArray *allDic=[NSMutableArray array];
+        [xml getDicArrFormPathArr:@[@"subviews"] withIndex:0 withDic:tempDic addToArrM:allDic];
+        
+        for (NSDictionary *subDic in allDic) {
+            [self getAllCellViewWithConditionDic_XIB:subDic andXMLHandel:xml toDicM:dicM];
+        }
+    }
+    
+    return dicM;
+}
+/**嵌套获取所有CellView*/
++ (void)getAllCellViewWithConditionDic_XIB:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toDicM:(NSMutableDictionary *)dicM{
+    
+    if (dicM==nil) {
+        dicM=[NSMutableDictionary dictionary];
+    }
+    
+    for (NSDictionary *subDic in [xml childDic:tempDic]) {
+        if ([xml checkNodeValue:[xml dicNodeValueWithKey:@"customClass" ForDic:subDic]]) {
+            NSString *idStr=[xml dicNodeValueWithKey:@"id" ForDic:subDic];
+            [dicM setValue:subDic forKey:idStr];
+        }
+        //对每一个子view进行获取
+        NSMutableArray *allDic=[NSMutableArray array];
+        [xml getDicArrFormPathArr:@[@"subviews"] withIndex:0 withDic:subDic addToArrM:allDic];
+        for (NSDictionary *subDic in allDic) {
+            [self getAllCellViewWithConditionDic_XIB:subDic andXMLHandel:xml toDicM:dicM];
+        }
+    }
+}
 
 /**获取所有View的CustomClass与对应的id */
 + (NSDictionary *)getAllViewCustomAndIdWithAllViewControllerArrM:(NSArray *)arrM andXMLHandel:(ReadXML *)xml{
@@ -640,9 +719,83 @@
             
             [selfConstraintDicM setValue:selfConstraints forKey:viewIdStr];
             [otherConstraintDicM setValue:otherConstraints forKey:viewIdStr];
-            
         }
     }
+}
+
+
++ (void)getTableViewCellViewAllCanotUseConstraintWithControllerDic_XIB:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withCanoyUseConstraintArrM:(NSMutableArray *)CanoyUseConstraintArrM{
+    if (CanoyUseConstraintArrM==nil) {
+        CanoyUseConstraintArrM=[NSMutableArray array];
+    }
+    
+    //找到具体控件的位置
+    NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
+    tempDic=[xml getOneDegreeChildWithName:@"tableViewCellContentView" withDic:tempDic];
+    tempDic=[xml getOneDegreeChildWithName:@"variation" withDic:tempDic];
+    tempDic=[xml getOneDegreeChildWithName:@"mask" withDic:tempDic];
+    
+    NSArray *allConstraints=[NSArray array];
+    //获取自身的约束self.contentView
+    allConstraints=[xml childDic:tempDic];
+    
+    //开始抽取其中的约束值
+    for (NSDictionary *unUseDic in allConstraints) {
+        if ([xml dicNodeValueWithKey:@"reference" ForDic:unUseDic].length>0) {
+            [CanoyUseConstraintArrM addObject:[xml dicNodeValueWithKey:@"reference" ForDic:unUseDic]];
+        }
+    }
+}
+
+/**获取Cell控件自身的所有约束 比如宽度和高度之类 和关联对象的所有约束*/
++ (void)getTableViewCellViewAllConstraintWithControllerDic_XIB:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withSelfConstraintDicM:(NSMutableDictionary *)selfConstraintDicM withOtherConstraintDicM:(NSMutableDictionary *)otherConstraintDicM{
+    
+    if (selfConstraintDicM==nil) {
+        selfConstraintDicM=[NSMutableDictionary dictionary];
+    }
+    
+    if (otherConstraintDicM==nil) {
+        otherConstraintDicM=[NSMutableDictionary dictionary];
+    }
+    
+    //首先获取所有约束,其实也不难,找到这个控件的位置,就可以找到对应的约束
+    
+    //在获取到约束之前,需要获取不可用的储备的约束
+    
+    NSMutableArray *CanoyUseConstraintArrM=[NSMutableArray array];
+    [self getTableViewCellViewAllCanotUseConstraintWithControllerDic_XIB:dic andXMLHandel:xml withViewIdStr:viewIdStr withCanoyUseConstraintArrM:CanoyUseConstraintArrM];
+    
+    //找到具体控件的位置
+    NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
+    tempDic=[xml getOneDegreeChildWithName:@"tableViewCellContentView" withDic:tempDic];
+    
+    NSArray *allConstraints=[NSArray array];
+    //获取自身的约束self.contentView
+    NSDictionary *ConstraintsDic=[xml getOneDegreeChildWithName:@"constraints" withDic:tempDic];
+    allConstraints=[xml childDic:ConstraintsDic];
+    
+    //开始抽取其中的约束值
+    //开始挑选出自身的所有约束
+    //开始挑选出关联对象的所有约束
+    NSMutableArray *selfConstraints=[NSMutableArray array];
+    NSMutableArray *otherConstraints=[NSMutableArray array];
+    for (NSDictionary *checkDic in allConstraints) {
+        if ([CanoyUseConstraintArrM containsObject:[xml dicNodeValueWithKey:@"id" ForDic:checkDic]]) {
+            continue;
+        }
+        
+        if ([xml dicNodeValueWithKey:@"firstItem" ForDic:checkDic].length>0||[xml dicNodeValueWithKey:@"secondItem" ForDic:checkDic].length>0) {
+            if(viewIdStr.length>0&&[[xml dicNodeValueWithKey:@"firstItem" ForDic:checkDic] isEqualToString:viewIdStr]){
+                [selfConstraints addObject:checkDic];
+            }else
+                [otherConstraints addObject:checkDic];
+        }else{
+            [selfConstraints addObject:checkDic];
+        }
+    }
+    
+    [selfConstraintDicM setValue:selfConstraints forKey:viewIdStr];
+    [otherConstraintDicM setValue:otherConstraints forKey:viewIdStr];
 }
 
 /**重新调整控件的约束*/

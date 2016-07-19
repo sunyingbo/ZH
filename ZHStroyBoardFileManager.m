@@ -222,13 +222,16 @@ static NSString *MainDirectory;
     \n\
      @end"];
     
-    name=[name stringByAppendingString:@"Model"];
+    if ([[name lowercaseString]hasSuffix:@"model"]==NO) {
+        name=[name stringByAppendingString:@"Model"];
+    }
     [self creatFileWithViewController:viewController name:name text:text isM:YES isModel:YES isView:NO isController:NO];
 }
 + (void)creatOriginalView_h:(NSString *)name isTableView:(BOOL)isTableView isCollectionView:(BOOL)isCollectionView forViewController:(NSString *)viewController{
     if (isTableView) {
         name=[self getAdapterTableViewCellName:name];
         name=[name stringByAppendingString:@"TableViewCell"];
+//        NSLog(@"%@",name);
         [self creatOriginalTableViewCell_h:name forViewController:viewController];
     }else if (isCollectionView){
         name=[self getAdapterCollectionViewCellName:name];
@@ -242,6 +245,7 @@ static NSString *MainDirectory;
     if (isTableView) {
         name=[self getAdapterTableViewCellName:name];
         name=[name stringByAppendingString:@"TableViewCell"];
+//        NSLog(@"%@",name);
         [self creatOriginalTableViewCell_m:name forViewController:viewController];
     }else if (isCollectionView){
         name=[self getAdapterCollectionViewCellName:name];
@@ -393,32 +397,39 @@ static NSString *MainDirectory;
 }
 
 + (NSString *)getAdapterTableViewCellName:(NSString *)name{
-    
     if ([[name lowercaseString] hasSuffix:@"tableviewcell"]) {
         name=[name substringToIndex:name.length-@"tableviewcell".length];
+        return [self getAdapterTableViewCellName:name];
     }else if ([[name lowercaseString] hasSuffix:@"tabelviewcell"]) {
         name=[name substringToIndex:name.length-@"tabelviewcell".length];
+        return [self getAdapterTableViewCellName:name];
     }
     else if ([[name lowercaseString] hasSuffix:@"cell"]) {
         name=[name substringToIndex:name.length-@"cell".length];
+        return [self getAdapterTableViewCellName:name];
     }
     return name;
 }
 + (NSString *)getAdapterTableViewCellModelName:(NSString *)name{
     if ([[name lowercaseString] hasSuffix:@"tableviewcellmodel"]) {
         name=[name substringToIndex:name.length-@"tableviewcellmodel".length];
+        return [self getAdapterTableViewCellModelName:name];
     }
     if ([[name lowercaseString] hasSuffix:@"tabelviewcellmodel"]) {
         name=[name substringToIndex:name.length-@"tabelviewcellmodel".length];
+        return [self getAdapterTableViewCellModelName:name];
     }
     if ([[name lowercaseString] hasSuffix:@"tableviewcell"]) {
         name=[name substringToIndex:name.length-@"tableviewcell".length];
+        return [self getAdapterTableViewCellModelName:name];
     }
     if ([[name lowercaseString] hasSuffix:@"cellmodel"]) {
         name=[name substringToIndex:name.length-@"cellmodel".length];
+        return [self getAdapterTableViewCellModelName:name];
     }
     if ([[name lowercaseString] hasSuffix:@"model"]) {
         name=[name substringToIndex:name.length-@"model".length];
+        return [self getAdapterTableViewCellModelName:name];
     }
     return name;
 }
@@ -427,9 +438,11 @@ static NSString *MainDirectory;
     
     if ([[name lowercaseString] hasSuffix:@"collectionviewcell"]) {
         name=[name substringToIndex:name.length-@"collectionviewcell".length];
+        return [self getAdapterCollectionViewCellName:name];
     }
     else if ([[name lowercaseString] hasSuffix:@"cell"]) {
         name=[name substringToIndex:name.length-@"cell".length];
+        return [self getAdapterCollectionViewCellName:name];
     }
     return name;
 }
@@ -438,13 +451,17 @@ static NSString *MainDirectory;
     
     if ([[name lowercaseString] hasSuffix:@"tableviewcell"]) {
         name=[name substringToIndex:name.length-@"tableviewcell".length];
+        return [self getAdapterCollectionViewCellAndTableViewCellName:name];
     }else if ([[name lowercaseString] hasSuffix:@"tabelviewcell"]) {
         name=[name substringToIndex:name.length-@"tabelviewcell".length];
+        return [self getAdapterCollectionViewCellAndTableViewCellName:name];
     }else if ([[name lowercaseString] hasSuffix:@"collectionviewcell"]) {
         name=[name substringToIndex:name.length-@"collectionviewcell".length];
+        return [self getAdapterCollectionViewCellAndTableViewCellName:name];
     }
     else if ([[name lowercaseString] hasSuffix:@"cell"]) {
         name=[name substringToIndex:name.length-@"cell".length];
+        return [self getAdapterCollectionViewCellAndTableViewCellName:name];
     }
     return name;
 }
@@ -453,15 +470,19 @@ static NSString *MainDirectory;
     
     if ([[name lowercaseString] hasSuffix:@"collectionviewcellmodel"]) {
         name=[name substringToIndex:name.length-@"collectionviewcellmodel".length];
+        return [self getAdapterCollectionViewCellModelName:name];
     }
     if ([[name lowercaseString] hasSuffix:@"collectionviewcell"]) {
         name=[name substringToIndex:name.length-@"collectionviewcell".length];
+        return [self getAdapterCollectionViewCellModelName:name];
     }
     else if ([[name lowercaseString] hasSuffix:@"cellmodel"]) {
         name=[name substringToIndex:name.length-@"cellmodel".length];
+        return [self getAdapterCollectionViewCellModelName:name];
     }
     else if ([[name lowercaseString] hasSuffix:@"model"]) {
         name=[name substringToIndex:name.length-@"model".length];
+        return [self getAdapterCollectionViewCellModelName:name];
     }
     return name;
 }
