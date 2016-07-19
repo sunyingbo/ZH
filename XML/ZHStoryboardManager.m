@@ -207,7 +207,6 @@
                     
                     //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
                     if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
-                        NSLog(@"%@",constraintCode);
                         
                         NSString *constraintCodeDefualt=[ZHStoryboardPropertyManager getConstraintIfNotGiveConstraintsForViewName:idStr withProperty:self.idAndViewPropertys[idStr] withFatherView:fatherView];
                         constraintCode = [constraintCode stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"[%@ mas_makeConstraints:^(MASConstraintMaker *make) {\n",idStr] withString:@""];
@@ -488,8 +487,6 @@
                     
                     //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
                     if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
-                        NSLog(@"%@",constraintCode);
-                        
                         NSString *constraintCodeDefualt=[ZHStoryboardPropertyManager getConstraintIfNotGiveConstraintsForViewName:idStr withProperty:self.idAndViewPropertys[idStr] withFatherView:fatherView];
                         constraintCode = [constraintCode stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"[%@ mas_makeConstraints:^(MASConstraintMaker *make) {\n",idStr] withString:@""];
                         constraintCode = [constraintCode stringByReplacingOccurrencesOfString:@"}];\n\n\n" withString:@""];
@@ -507,6 +504,12 @@
                 NSString *creatCodeStrM_new=[creatCodeStrM stringByReplacingOccurrencesOfString:viewController withString:@"self"];
                 creatCodeStrM_new=[creatCodeStrM_new stringByReplacingOccurrencesOfString:@"self.view." withString:@"self."];
                 creatCodeStrM_new=[creatCodeStrM_new stringByReplacingOccurrencesOfString:@"self.view " withString:@"self "];
+                
+                //如果是tableViewCell或者CollectionViewCell
+                if ([viewController hasSuffix:@"TableViewCell"]||[viewController hasSuffix:@"CollectionViewCell"]){
+                    creatCodeStrM_new=[creatCodeStrM_new stringByReplacingOccurrencesOfString:@"[self addSubview:" withString:@"[self.contentView addSubview:"];
+                    creatCodeStrM_new=[creatCodeStrM_new stringByReplacingOccurrencesOfString:@"self.mas" withString:@"self.contentView.mas"];
+                }
                 
                 [ZHStoryboardTextManager addCodeText:creatCodeStrM_new andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName] insertFunction:nil];
                 //解决UIMapView *mapView1;的问题
@@ -657,7 +660,6 @@
             
             //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
             if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
-                NSLog(@"%@",constraintCode);
                 
                 NSString *constraintCodeDefualt=[ZHStoryboardPropertyManager getConstraintIfNotGiveConstraintsForViewName:idStr withProperty:self.idAndViewPropertys[idStr] withFatherView:fatherView];
                 constraintCode = [constraintCode stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"[%@ mas_makeConstraints:^(MASConstraintMaker *make) {\n",idStr] withString:@""];

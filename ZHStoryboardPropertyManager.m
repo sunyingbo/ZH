@@ -81,6 +81,10 @@
     if ([categoryView isEqualToString:@"webView"]) {
         [self setPropertysForWebView:viewName withViewDic:viewDic withCustomAndName:customAndNameDic toIdAndPropertyDicM:idAndPropertyDicM andXMLHandel:xml];
     }
+    if ([categoryView isEqualToString:@"slider"]) {
+        [self setPropertysForSlider:viewName withViewDic:viewDic withCustomAndName:customAndNameDic toIdAndPropertyDicM:idAndPropertyDicM andXMLHandel:xml];
+    }
+    
 }
 
 + (void)setPropertysForLabel:(NSString *)viewName withViewDic:(NSDictionary *)viewDic withCustomAndName:(NSDictionary *)customAndNameDic toIdAndPropertyDicM:(NSMutableDictionary *)idAndPropertyDicM andXMLHandel:(ReadXML *)xml{
@@ -476,15 +480,18 @@
 
 /**如果没有添加约束,就按照默认frame设置约束*/
 + (NSString *)getConstraintIfNotGiveConstraintsForViewName:(NSString *)viewName withProperty:(ViewProperty *)property withFatherView:(NSString *)fatherView{
-    NSLog(@"%@:%@:%@:%@",property.rect_x,property.rect_y,property.rect_w,property.rect_h);
-    NSMutableString *rectConstraint=[NSMutableString string];
-    [rectConstraint appendFormat:@"[%@ mas_makeConstraints:^(MASConstraintMaker *make) {\n",viewName];
-    [rectConstraint appendFormat:@"make.leading.equalTo(%@.mas_leading).with.offset(%@);\n",fatherView,property.rect_x];
-    [rectConstraint appendFormat:@"make.top.equalTo(%@.mas_top).with.offset(%@);\n",fatherView,property.rect_y];
-    [rectConstraint appendFormat:@"make.width.equalTo(@(%@));\n",property.rect_w];
-    [rectConstraint appendFormat:@"make.height.equalTo(@(%@));\n",property.rect_h];
-    [rectConstraint appendString:@"}];\n"];
-    return rectConstraint;
+//    NSLog(@"%@:%@:%@:%@",property.rect_x,property.rect_y,property.rect_w,property.rect_h);
+    if (property.rect_x.length>0||property.rect_y.length>0||property.rect_w>0||property.rect_h>0) {
+        NSMutableString *rectConstraint=[NSMutableString string];
+        [rectConstraint appendFormat:@"[%@ mas_makeConstraints:^(MASConstraintMaker *make) {\n",viewName];
+        [rectConstraint appendFormat:@"make.leading.equalTo(%@.mas_leading).with.offset(%@);\n",fatherView,property.rect_x];
+        [rectConstraint appendFormat:@"make.top.equalTo(%@.mas_top).with.offset(%@);\n",fatherView,property.rect_y];
+        [rectConstraint appendFormat:@"make.width.equalTo(@(%@));\n",property.rect_w];
+        [rectConstraint appendFormat:@"make.height.equalTo(@(%@));\n",property.rect_h];
+        [rectConstraint appendString:@"}];\n"];
+        return rectConstraint;
+    }
+    return @"";
 }
 /**获取事件代码*/
 + (NSString *)getSelectorEventTypeForViewName:(NSString *)viewName withProperty:(ViewProperty *)property{
