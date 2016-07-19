@@ -361,7 +361,9 @@
     if (property.pointSize.length>0&&[property.pointSize isEqualToString:@"17"]==NO) [codeText appendFormat:@"%@.font=[UIFont systemFontOfSize:%@];\n",viewName,property.pointSize];
     
     if (property.textColor_red.length>0||property.textColor_green.length>0||property.textColor_blue.length>0) {
-        [codeText appendFormat:@"%@.textColor=[UIColor colorWithRed:%@ green:%@ blue:%@ alpha:%@];\n",viewName,[self getThreedigits:property.textColor_red],[self getThreedigits:property.textColor_green],[self getThreedigits:property.textColor_blue],property.textColor_alpha];
+        if(![property.textColor_red isEqualToString:@"0.0"]&&[property.textColor_green isEqualToString:@"0.0"]&&[property.textColor_blue isEqualToString:@"0.0"]){
+            [codeText appendFormat:@"%@.textColor=[UIColor colorWithRed:%@ green:%@ blue:%@ alpha:%@];\n",viewName,[self getThreedigits:property.textColor_red],[self getThreedigits:property.textColor_green],[self getThreedigits:property.textColor_blue],property.textColor_alpha];
+        }
     }
 }
 + (void)getPropertyCodeForButton:(NSString *)viewName withProperty:(ViewProperty *)property withIdAndName:(NSDictionary *)idAndNameDic toCodeText:(NSMutableString *)codeText{

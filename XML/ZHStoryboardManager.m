@@ -23,7 +23,7 @@
     NSString *context=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     context=[ZHStoryboardTextManager addCustomClassToAllViews:context];
     
-    [context writeToFile:[@"/Users/mac/Desktop" stringByAppendingPathComponent:@"MainNew.storyboard"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+//    [context writeToFile:[@"/Users/mac/Desktop" stringByAppendingPathComponent:@"MainNew.storyboard"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
     
     ReadXML *xml=[ReadXML new];
     [xml initWithXMLString:context];
