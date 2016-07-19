@@ -96,6 +96,20 @@
     
     [self addData:details];
 }
+/**@"为什么生成的代码里全是View1,label2之类的"*/
+- (void)ViewAddNum{
+    NSArray *details=@[@"在生成代码后,我们会发现,有很多控件的名字是升序命名的,这看起来不符合命名规范",
+                       @"原因就是我们没有给这个控件一个名字,那如何给这个控件一个名字呢?",
+                       @"我们在ViewController里面都会设置CustomClass,那个是用来关联代码文件的,而且是每个控件都有的属性之一",
+                       @"所以,我们可以把控件的名字填在那里,注意,填完后,按Enter键,才算赋值好了",
+                       @"但是这样有个问题,就是,我们一般不习惯在那里(CustomClass)填值,而且后面想要这个XIB,或者StroyBoard原文件时,还得一个一个删除CustomClass里面的值",
+                       @"所以请大家复制一份出来,拿着复制的那份进行赋值",
+                       @"给大家造成麻烦,实在不好意思"
+                       ];
+    
+    [self addData:details];
+}
+
 
 /**获取指定长度的文字(数字,字母随机)*/
 - (NSString *)getRandomStringWithLenth:(NSInteger)len{
@@ -138,7 +152,11 @@
         [self QuickCreatCode];
     }else if ([_helpString isEqualToString:@"JSON转模型简介"]){
         [self Json_To_Model];
+    }else if ([_helpString isEqualToString:@"为什么代码里全是View1,label2之类的?"]){
+        [self ViewAddNum];
     }
+    
+    
 }
 
 - (void)viewDidLoad{
