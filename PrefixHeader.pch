@@ -28,4 +28,8 @@
 #import "ViewProperty.h"
 
 #import "ZHStoryboardPropertyManager.h"
+
+#import "StroyBoardCreateProperty.h"
+#import "ZHSaveDataToFMDB.h"
+
 #endif /* PrefixHeader_pch */

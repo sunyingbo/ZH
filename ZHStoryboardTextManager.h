@@ -14,6 +14,9 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 @interface ZHStoryboardTextManager : NSObject
 /**为View打上所有标识符(默认顺序) 包括(为所有view的id打上标识符,对应的标识符就是CustomClass)*/
 + (NSString *)addCustomClassToAllViews:(NSString *)text;
+
++ (NSString *)isView:(NSString *)text;
+
 /**判断是否是特殊控件*/
 + (BOOL)isTableViewOrCollectionView:(NSString *)text;
 /**获取所有view的个数*/
@@ -58,4 +61,6 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 //解决UIMapView *mapView1;的问题
 + (void)dealWith_UIMapView:(NSMutableString *)textCode;
 
+/**第一个字母大写*/
++ (NSString *)upFirstCharacter:(NSString *)text;
 @end

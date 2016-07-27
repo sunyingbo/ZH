@@ -82,7 +82,6 @@
                     [ZHStroyBoardFileManager creat_m_h_file:collectionViewCell isModel:YES isView:NO isController:NO isTableView:NO isCollectionView:YES forViewController:viewController];
                 }
                 
-                
                 //获取这个ViewController的所有tableView ,其中每个tableView都对应其所有的tableViewCell
                 NSDictionary *tableViewCellDic=[ZHStoryboardXMLManager getAllTableViewAndTableViewCellNamesWithViewControllerDic:dic andXMLHandel:xml];
                 //                NSLog(@"**tableViewCellDic=%@",tableViewCellDic);

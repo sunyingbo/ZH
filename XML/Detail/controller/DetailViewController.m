@@ -72,7 +72,7 @@
                        \"ViewController的名字\":\"Code\",\n\
                        \"自定义Cell,以逗号隔开\":\"Code1,Code2,Code3,Code4,Code5\",\n\
                        \"自定义Cell标识符:(无:0 TableView:1(子cell以;隔开) ColloectionView:2(子cell以;隔开)),以逗号隔开\":\"0,1(Code2_1;Code2_2),2(Code3_1;Code3_2;Code3_3),2(Code4_1;Code4_2;Code4_3),0\",\n\
-                       \"例如cell有A,B  那么嵌套这一行为:1(A1;A2),2(B1;B2)\":\"<#请填写#>\",\n\
+                       \"例如cell有A,B  那么嵌套这一行为:1(A1;A2),2(B1;B2)\":\"请填写\",\n\
                        \"是否需要对应的Model 1:0 (不填写么默认为否)\":\"1\",\n\
                        \"是否需要对应的StroyBoard 1:0 (不填写么默认为否)\":\"1\",\n\
                        \"自定义cell可编辑(删除) 1:0 (不填写么默认为否)\":\"1\"\n\
@@ -110,6 +110,23 @@
     [self addData:details];
 }
 
+/**@"生成property outlet怎么用?"*/
+- (void)propertyOutlet{
+    NSArray *details=@[@"你有没有觉得,在用StroyBoard搭完界面后,每个控件需要拉线是件很痛苦的事,尤其是你的屏幕不够大的情况下,再加上你还要找到对应的文件,再加上你连好线了,不知道取什么英文名字,再去查字典,白拉出一条线",
+                       @"这个时候,最需的是,假如我在拖出这个控件时,有个属性值可以填个值,可以自动帮我们找到文件位置做拉线处理,没错,这个小功能就是帮你做这个事的",
+                       @"好了,开始讲怎么用了,很简单",
+                       @"点击添加工程,在Mac桌面上会有一个 代码助手.m 文件,把你的工程拖到里面,就会有你工程的路径,确定添加",
+                       @"接下来你会发现里面有你工程的所有StroyBoard文件(除了LaunchScreen.stroyboard这个)",
+                       @"右边的 OK 你应该看得到,对就是点击那个就可以了,简单吧! 但是注意,你还没给控件设置属性呢!",
+                       @"只要你找到像拖线的控件,在它的customClass里,填写你想给它取得名字,但是前面要加一个 \"_\" 并且按Enter就设置好了,例如 \"_MyLabel1\" ,因为你的关联文件应该不会有 \"_\" 开头的",
+                       @"好了,把你所需要拉线的控件都这样赋值好,就点击前面说的 OK 就可以了,试试吧,挺爽的",
+                       @"你添加的工程会一直存在哦,下次进来不用再添加,如果想删除,侧滑就会有删除",
+                       @"如果你想恢复原来,有个备份StroyBoard文件,侧滑就会看到有备份路径",
+                       @"如果给某个控件赋值之前,1.要确定已关联对应的ViewController文件或者是TableViewCell或者是CollectionViewCell文件,要不然找不到对应的文件,线白拉了. 2.确定它没有拉过线,有要删除,要不然有两条线,总感觉不好."
+                       ];
+    
+    [self addData:details];
+}
 
 /**获取指定长度的文字(数字,字母随机)*/
 - (NSString *)getRandomStringWithLenth:(NSInteger)len{
@@ -154,9 +171,9 @@
         [self Json_To_Model];
     }else if ([_helpString isEqualToString:@"为什么代码里全是View1,label2之类的?"]){
         [self ViewAddNum];
+    }else if ([_helpString isEqualToString:@"生成property outlet怎么用?"]){
+        [self propertyOutlet];
     }
-    
-    
 }
 
 - (void)viewDidLoad{

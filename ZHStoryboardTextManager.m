@@ -618,6 +618,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     }
     return newCustomClass;
 }
+
 + (NSString *)getViewCountIdenityWithViewIdenity:(NSString *)viewIdenity{
     NSString *viewCountIdenity=viewIdenity;
     if ([viewCountIdenity hasPrefix:@"<"]) {

@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040501DB1D45A93900CC35FD /* StroyBoardCreateProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501DA1D45A93900CC35FD /* StroyBoardCreateProperty.m */; };
+		040501E61D45BE4A00CC35FD /* StroyBoardCreatePropertyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501DF1D45BE4A00CC35FD /* StroyBoardCreatePropertyViewController.m */; };
+		040501E71D45BE4A00CC35FD /* StroyBoardCreatePropertyCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501E21D45BE4A00CC35FD /* StroyBoardCreatePropertyCellModel.m */; };
+		040501E81D45BE4A00CC35FD /* StroyBoardCreatePropertyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501E51D45BE4A00CC35FD /* StroyBoardCreatePropertyTableViewCell.m */; };
+		040501EB1D46035900CC35FD /* ZHSaveDataToFMDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501EA1D46035900CC35FD /* ZHSaveDataToFMDB.m */; };
+		040501F81D46037100CC35FD /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501EE1D46037100CC35FD /* FMDatabase.m */; };
+		040501F91D46037100CC35FD /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501F01D46037100CC35FD /* FMDatabaseAdditions.m */; };
+		040501FA1D46037100CC35FD /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501F21D46037100CC35FD /* FMDatabasePool.m */; };
+		040501FB1D46037100CC35FD /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501F41D46037100CC35FD /* FMDatabaseQueue.m */; };
+		040501FC1D46037100CC35FD /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 040501F71D46037100CC35FD /* FMResultSet.m */; };
+		040501FE1D46038700CC35FD /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 040501FD1D46038700CC35FD /* libsqlite3.tbd */; };
 		044D97D61DDAA749000257A9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 044D97D51DDAA749000257A9 /* main.m */; };
 		044D97D91DDAA749000257A9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 044D97D81DDAA749000257A9 /* AppDelegate.m */; };
 		044D97DC1DDAA749000257A9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044D97DB1DDAA749000257A9 /* ViewController.m */; };
@@ -48,6 +59,7 @@
 		04B7495D1D3A1848003B046A /* ZHCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B7495C1D3A1848003B046A /* ZHCollectionView.m */; };
 		04B749601D3A1C91003B046A /* tableViewContainColloectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B7495F1D3A1C91003B046A /* tableViewContainColloectionView.m */; };
 		04B749631D3A35E6003B046A /* ViewProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749621D3A35E6003B046A /* ViewProperty.m */; };
+		04B838211D48ADA8004931F5 /* StroyBoardPropertySetValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B838201D48ADA8004931F5 /* StroyBoardPropertySetValue.m */; };
 		04CA74721D38880A004541F7 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA746B1D38880A004541F7 /* HelpViewController.m */; };
 		04CA74731D38880A004541F7 /* HelpCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA746E1D38880A004541F7 /* HelpCellModel.m */; };
 		04CA74741D38880A004541F7 /* HelpTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA74711D38880A004541F7 /* HelpTableViewCell.m */; };
@@ -110,6 +122,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		040501D91D45A93900CC35FD /* StroyBoardCreateProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StroyBoardCreateProperty.h; sourceTree = "<group>"; };
+		040501DA1D45A93900CC35FD /* StroyBoardCreateProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StroyBoardCreateProperty.m; sourceTree = "<group>"; };
+		040501DE1D45BE4A00CC35FD /* StroyBoardCreatePropertyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StroyBoardCreatePropertyViewController.h; sourceTree = "<group>"; };
+		040501DF1D45BE4A00CC35FD /* StroyBoardCreatePropertyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StroyBoardCreatePropertyViewController.m; sourceTree = "<group>"; };
+		040501E11D45BE4A00CC35FD /* StroyBoardCreatePropertyCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StroyBoardCreatePropertyCellModel.h; sourceTree = "<group>"; };
+		040501E21D45BE4A00CC35FD /* StroyBoardCreatePropertyCellModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StroyBoardCreatePropertyCellModel.m; sourceTree = "<group>"; };
+		040501E41D45BE4A00CC35FD /* StroyBoardCreatePropertyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StroyBoardCreatePropertyTableViewCell.h; sourceTree = "<group>"; };
+		040501E51D45BE4A00CC35FD /* StroyBoardCreatePropertyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StroyBoardCreatePropertyTableViewCell.m; sourceTree = "<group>"; };
+		040501E91D46035900CC35FD /* ZHSaveDataToFMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHSaveDataToFMDB.h; sourceTree = "<group>"; };
+		040501EA1D46035900CC35FD /* ZHSaveDataToFMDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHSaveDataToFMDB.m; sourceTree = "<group>"; };
+		040501ED1D46037100CC35FD /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		040501EE1D46037100CC35FD /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		040501EF1D46037100CC35FD /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		040501F01D46037100CC35FD /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		040501F11D46037100CC35FD /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		040501F21D46037100CC35FD /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		040501F31D46037100CC35FD /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		040501F41D46037100CC35FD /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		040501F51D46037100CC35FD /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		040501F61D46037100CC35FD /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		040501F71D46037100CC35FD /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		040501FD1D46038700CC35FD /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		044D97D11DDAA749000257A9 /* XML.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XML.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		044D97D51DDAA749000257A9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		044D97D71DDAA749000257A9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -190,6 +224,8 @@
 		04B7495F1D3A1C91003B046A /* tableViewContainColloectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tableViewContainColloectionView.m; sourceTree = "<group>"; };
 		04B749611D3A35E6003B046A /* ViewProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewProperty.h; sourceTree = "<group>"; };
 		04B749621D3A35E6003B046A /* ViewProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewProperty.m; sourceTree = "<group>"; };
+		04B8381F1D48ADA8004931F5 /* StroyBoardPropertySetValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StroyBoardPropertySetValue.h; sourceTree = "<group>"; };
+		04B838201D48ADA8004931F5 /* StroyBoardPropertySetValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StroyBoardPropertySetValue.m; sourceTree = "<group>"; };
 		04CA746A1D38880A004541F7 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		04CA746B1D38880A004541F7 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 		04CA746D1D38880A004541F7 /* HelpCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpCellModel.h; sourceTree = "<group>"; };
@@ -281,6 +317,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				040501FE1D46038700CC35FD /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,11 +338,80 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		040501D81D45A92100CC35FD /* StroyBoard生成属性 */ = {
+			isa = PBXGroup;
+			children = (
+				040501D91D45A93900CC35FD /* StroyBoardCreateProperty.h */,
+				040501DA1D45A93900CC35FD /* StroyBoardCreateProperty.m */,
+				04B8381F1D48ADA8004931F5 /* StroyBoardPropertySetValue.h */,
+				04B838201D48ADA8004931F5 /* StroyBoardPropertySetValue.m */,
+			);
+			path = "StroyBoard生成属性";
+			sourceTree = "<group>";
+		};
+		040501DC1D45BE4A00CC35FD /* StroyBoardCreateProperty */ = {
+			isa = PBXGroup;
+			children = (
+				040501DD1D45BE4A00CC35FD /* controller */,
+				040501E01D45BE4A00CC35FD /* model */,
+				040501E31D45BE4A00CC35FD /* view */,
+			);
+			path = StroyBoardCreateProperty;
+			sourceTree = "<group>";
+		};
+		040501DD1D45BE4A00CC35FD /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				040501DE1D45BE4A00CC35FD /* StroyBoardCreatePropertyViewController.h */,
+				040501DF1D45BE4A00CC35FD /* StroyBoardCreatePropertyViewController.m */,
+			);
+			path = controller;
+			sourceTree = "<group>";
+		};
+		040501E01D45BE4A00CC35FD /* model */ = {
+			isa = PBXGroup;
+			children = (
+				040501E11D45BE4A00CC35FD /* StroyBoardCreatePropertyCellModel.h */,
+				040501E21D45BE4A00CC35FD /* StroyBoardCreatePropertyCellModel.m */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		040501E31D45BE4A00CC35FD /* view */ = {
+			isa = PBXGroup;
+			children = (
+				040501E41D45BE4A00CC35FD /* StroyBoardCreatePropertyTableViewCell.h */,
+				040501E51D45BE4A00CC35FD /* StroyBoardCreatePropertyTableViewCell.m */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		040501EC1D46037100CC35FD /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				040501ED1D46037100CC35FD /* FMDatabase.h */,
+				040501EE1D46037100CC35FD /* FMDatabase.m */,
+				040501EF1D46037100CC35FD /* FMDatabaseAdditions.h */,
+				040501F01D46037100CC35FD /* FMDatabaseAdditions.m */,
+				040501F11D46037100CC35FD /* FMDatabasePool.h */,
+				040501F21D46037100CC35FD /* FMDatabasePool.m */,
+				040501F31D46037100CC35FD /* FMDatabaseQueue.h */,
+				040501F41D46037100CC35FD /* FMDatabaseQueue.m */,
+				040501F51D46037100CC35FD /* FMDB.h */,
+				040501F61D46037100CC35FD /* FMResultSet.h */,
+				040501F71D46037100CC35FD /* FMResultSet.m */,
+			);
+			path = fmdb;
+			sourceTree = "<group>";
+		};
 		044D97C81DDAA749000257A9 = {
 			isa = PBXGroup;
 			children = (
+				040501FD1D46038700CC35FD /* libsqlite3.tbd */,
 				04B749081D39CBD4003B046A /* PrefixHeader.pch */,
 				044D97DD1DDAA749000257A9 /* Main.storyboard */,
+				040501DC1D45BE4A00CC35FD /* StroyBoardCreateProperty */,
+				040501D81D45A92100CC35FD /* StroyBoard生成属性 */,
 				04B749331D3A0504003B046A /* QuickCreatCodeType */,
 				04CA74DB1D38B8F9004541F7 /* json_To_Model */,
 				0476FF581D2E1FE700CD167C /* 辅助类(与项目无多大关系) */,
@@ -418,8 +524,6 @@
 		0476FF571D2E1FB800CD167C /* 真正相关的类 */ = {
 			isa = PBXGroup;
 			children = (
-				0476FF3B1D2E1C9100CD167C /* ZHStoryboardManager.h */,
-				0476FF3C1D2E1C9100CD167C /* ZHStoryboardManager.m */,
 				0476FF761D2E3F8B00CD167C /* SB */,
 			);
 			name = "真正相关的类";
@@ -428,6 +532,9 @@
 		0476FF581D2E1FE700CD167C /* 辅助类(与项目无多大关系) */ = {
 			isa = PBXGroup;
 			children = (
+				040501EC1D46037100CC35FD /* fmdb */,
+				040501E91D46035900CC35FD /* ZHSaveDataToFMDB.h */,
+				040501EA1D46035900CC35FD /* ZHSaveDataToFMDB.m */,
 				04B7490F1D39D0FD003B046A /* ZHAlertAction.h */,
 				04B749101D39D0FD003B046A /* ZHAlertAction.m */,
 				04CA74A31D38B8C8004541F7 /* AFNworking */,
@@ -464,6 +571,8 @@
 		0476FF761D2E3F8B00CD167C /* SB */ = {
 			isa = PBXGroup;
 			children = (
+				0476FF3B1D2E1C9100CD167C /* ZHStoryboardManager.h */,
+				0476FF3C1D2E1C9100CD167C /* ZHStoryboardManager.m */,
 				047462821D250E2800F4DDCF /* ZHStoryboardTextManager.h */,
 				047462831D250E2800F4DDCF /* ZHStoryboardTextManager.m */,
 				0474628B1D25247900F4DDCF /* ZHWordWrap.h */,
@@ -906,19 +1015,23 @@
 				04CA74D21D38B8C8004541F7 /* AFURLSessionManager.m in Sources */,
 				04CA74CE1D38B8C8004541F7 /* AFSecurityPolicy.m in Sources */,
 				04CA74731D38880A004541F7 /* HelpCellModel.m in Sources */,
+				040501EB1D46035900CC35FD /* ZHSaveDataToFMDB.m in Sources */,
 				0476FF501D2E1F2600CD167C /* GetXIBTableViewCell.m in Sources */,
 				0476FF4F1D2E1F2600CD167C /* GetSBTableViewCell.m in Sources */,
 				047462871D250EBF00F4DDCF /* ZHStroyBoardFileManager.m in Sources */,
+				040501FC1D46037100CC35FD /* FMResultSet.m in Sources */,
 				04CA749F1D38AD6B004541F7 /* MoreFunctionCellModel.m in Sources */,
 				04CA74DE1D38B906004541F7 /* CreatPropert.m in Sources */,
 				044D980C1DDAA9D5000257A9 /* propertyNode.m in Sources */,
 				04CA75001D38BF50004541F7 /* JSONFineTuningCellModel.m in Sources */,
 				04B749601D3A1C91003B046A /* tableViewContainColloectionView.m in Sources */,
+				040501FA1D46037100CC35FD /* FMDatabasePool.m in Sources */,
 				04CA749E1D38AD6B004541F7 /* MoreFunctionViewController.m in Sources */,
 				044D97DC1DDAA749000257A9 /* ViewController.m in Sources */,
 				04CA74D71D38B8C8004541F7 /* UIImageView+AFNetworking.m in Sources */,
 				047462901D2524BD00F4DDCF /* CreatFatherFile.m in Sources */,
 				04CA74CA1D38B8C8004541F7 /* AFHTTPRequestOperation.m in Sources */,
+				040501E71D45BE4A00CC35FD /* StroyBoardCreatePropertyCellModel.m in Sources */,
 				04CA74D31D38B8C8004541F7 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				0476FF4C1D2E1F2600CD167C /* GetSBViewController.m in Sources */,
 				04CA74861D3890C8004541F7 /* DetailContentTableViewCell.m in Sources */,
@@ -928,6 +1041,8 @@
 				047462961D25250700F4DDCF /* ZHFileManager.m in Sources */,
 				04CA74721D38880A004541F7 /* HelpViewController.m in Sources */,
 				04CA75021D38BF50004541F7 /* JSONTypeCellModel.m in Sources */,
+				04B838211D48ADA8004931F5 /* StroyBoardPropertySetValue.m in Sources */,
+				040501F81D46037100CC35FD /* FMDatabase.m in Sources */,
 				0476FF3D1D2E1C9100CD167C /* ZHStoryboardManager.m in Sources */,
 				04CA75011D38BF50004541F7 /* JSONSourceCellModel.m in Sources */,
 				04CA74871D3890C8004541F7 /* DetailStepTableViewCell.m in Sources */,
@@ -935,9 +1050,11 @@
 				0476FF531D2E1F8800CD167C /* TabBarAndNavagation.m in Sources */,
 				04B7495D1D3A1848003B046A /* ZHCollectionView.m in Sources */,
 				04CA74D81D38B8C8004541F7 /* UIProgressView+AFNetworking.m in Sources */,
+				040501FB1D46037100CC35FD /* FMDatabaseQueue.m in Sources */,
 				044D98091DDAA7AD000257A9 /* ReadXML.m in Sources */,
 				047462931D2524DF00F4DDCF /* FatherClass.m in Sources */,
 				04B7495A1D3A14C6003B046A /* ZHTableView.m in Sources */,
+				040501F91D46037100CC35FD /* FMDatabaseAdditions.m in Sources */,
 				04CA74CD1D38B8C8004541F7 /* AFNetworkReachabilityManager.m in Sources */,
 				04CA74D01D38B8C8004541F7 /* AFURLRequestSerialization.m in Sources */,
 				044D97D91DDAA749000257A9 /* AppDelegate.m in Sources */,
@@ -953,10 +1070,13 @@
 				04CA74CF1D38B8C8004541F7 /* AFURLConnectionOperation.m in Sources */,
 				04CA75041D38BF50004541F7 /* JSONFineTuningTableViewCell.m in Sources */,
 				04CA75061D38BF50004541F7 /* JSONTypeTableViewCell.m in Sources */,
+				040501E81D45BE4A00CC35FD /* StroyBoardCreatePropertyTableViewCell.m in Sources */,
 				0476FF601D2E2C3E00CD167C /* MBProgressHUD.m in Sources */,
 				04CA74E41D38B943004541F7 /* RunTime.m in Sources */,
+				040501DB1D45A93900CC35FD /* StroyBoardCreateProperty.m in Sources */,
 				04CA74FE1D38BF50004541F7 /* JSONViewController.m in Sources */,
 				044D97D61DDAA749000257A9 /* main.m in Sources */,
+				040501E61D45BE4A00CC35FD /* StroyBoardCreatePropertyViewController.m in Sources */,
 				04CA74A01D38AD6B004541F7 /* MoreFunctionTableViewCell.m in Sources */,
 				04D76BD91CCB13D500235470 /* ZHNSString.m in Sources */,
 				04B749631D3A35E6003B046A /* ViewProperty.m in Sources */,

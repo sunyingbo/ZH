@@ -28,7 +28,6 @@
 //获取某个节点的孩子个数
 - (NSUInteger)childCount:(TreeNode *)T;
 
-
 /**将树转换成字典*/
 - (NSDictionary *)TreeToDict:(TreeNode *)T;
 - (NSInteger)countOfTargetNodeWithName:(NSString *)name withDic:(NSDictionary *)dic withCount:(NSInteger)count;

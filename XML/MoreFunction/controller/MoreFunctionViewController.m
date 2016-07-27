@@ -18,7 +18,7 @@
 	if (!_dataArr) {
 		_dataArr=[NSMutableArray array];
         
-        NSArray *titles=@[@"快速生成代码(常用)",@"JSON转模型(Model)"];
+        NSArray *titles=@[@"快速生成代码(常用)",@"JSON转模型(Model)",@"生成property outlet,不用自己拉线"];
         
         for (NSInteger i=0; i<titles.count; i++) {
             @autoreleasepool {
@@ -76,6 +76,9 @@
         [TabBarAndNavagation pushViewController:@"QuickCreatCodeTypeViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
     }else if ([model.title isEqualToString:@"JSON转模型(Model)"]) {
         [TabBarAndNavagation pushViewController:@"JSONViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
+    }
+    else if ([model.title isEqualToString:@"生成property outlet,不用自己拉线"]) {
+        [TabBarAndNavagation pushViewController:@"StroyBoardCreatePropertyViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
     }
 }
 
