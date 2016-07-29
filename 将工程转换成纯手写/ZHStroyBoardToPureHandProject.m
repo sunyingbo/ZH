@@ -256,7 +256,7 @@
                 NSString *tempCode=self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]];
                 tempCode=[tempCode stringByReplacingOccurrencesOfString:@"viewDidLoad " withString:@"viewDidLoad"];
                 self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]]=[NSMutableString stringWithString:tempCode];
-                [ZHStoryboardTextManager addCodeText:@"[self addSubViews];" andInsertType:ZHAddCodeType_InsertFunction toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]] insertFunction:@"\n- (void)viewDidLoad{"];
+                [ZHStoryboardTextManager addCodeText:@"\n[self addSubViews];" andInsertType:ZHAddCodeType_InsertFunction toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]] insertFunction:@"\n- (void)viewDidLoad{"];
                 
                 
             }
@@ -372,13 +372,29 @@
         tempCode=[tempCode stringByReplacingOccurrencesOfString:@"awakeFromNib " withString:@"awakeFromNib"];
         self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]]=[NSMutableString stringWithString:tempCode];
         
-        [ZHStoryboardTextManager addCodeText:@"[self addSubViews];" andInsertType:ZHAddCodeType_InsertFunction toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:@"\n- (void)awakeFromNib{"];
-        [ZHStoryboardTextManager addCodeText:@"- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{\n\
-         if (self=[super initWithStyle:style reuseIdentifier:reuseIdentifier]) {\n\
-         [self addSubViews];\n\
-         }\n\
-         return self;\n\
-         }" andInsertType:ZHAddCodeType_Implementation toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:nil];
+        [ZHStoryboardTextManager addCodeText:@"\n[self addSubViews];" andInsertType:ZHAddCodeType_InsertFunction toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:@"- (void)awakeFromNib{"];
+        
+        NSString *h_filePath=self.ZHStroyBoardCreateFile[fatherCellName];
+        if ([h_filePath hasSuffix:@".m"]) {
+            h_filePath=[h_filePath stringByReplacingOccurrencesOfString:@".m" withString:@".h"];
+            NSString *text=[NSString stringWithContentsOfFile:h_filePath encoding:NSUTF8StringEncoding error:nil];
+            if ([text rangeOfString:@"UICollectionViewCell"].location!=NSNotFound) {
+                [ZHStoryboardTextManager addCodeText:@"- (instancetype)initWithFrame:(CGRect)frame{\n\
+                 if (self=[super initWithFrame:frame]) {\n\
+                 [self addSubViews];\n\
+                 }\n\
+                 return self;\n\
+                 }" andInsertType:ZHAddCodeType_Implementation toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:nil];
+            }else if ([text rangeOfString:@"UITableViewCell"].location!=NSNotFound){
+                [ZHStoryboardTextManager addCodeText:@"- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{\n\
+                 if (self=[super initWithStyle:style reuseIdentifier:reuseIdentifier]) {\n\
+                 [self addSubViews];\n\
+                 }\n\
+                 return self;\n\
+                 }" andInsertType:ZHAddCodeType_Implementation toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:nil];
+            }
+        }
+        
         
         NSArray *tableViewCellDic=[ZHStoryboardXMLManager getTableViewCellNamesWithViewControllerDic:subDic andXMLHandel:xml];
         NSArray *collectionViewCellDic=[ZHStoryboardXMLManager getCollectionViewCellNamesWithViewControllerDic:subDic andXMLHandel:xml];
