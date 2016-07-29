@@ -59,6 +59,17 @@
     [self.timer fire];
     [TabBarAndNavagation setLeftBarButtonItemTitle:@"使用简介" TintColor:[UIColor redColor] target:self action:@selector(helpAction)];
     [TabBarAndNavagation setRightBarButtonItemTitle:@"更多功能" TintColor:[UIColor redColor] target:self action:@selector(moreFuncAction)];
+    
+    [self check];//检测是不是安装到手机上了
+}
+
+- (void)check{
+    NSString *mainPath=[ZHFileManager getMacHomeDirectorInIOS];
+    mainPath=[mainPath stringByAppendingPathComponent:@"Desktop"];
+    if ([ZHFileManager fileExistsAtPath:mainPath]==NO) {
+        self.promoteLabel.text=@"请在模拟器上运行";
+        self.promoteLabel.backgroundColor=[UIColor redColor];
+    }
 }
 
 - (void)helpAction{

@@ -49,6 +49,8 @@
 		0476FF5B1D2E22A500CD167C /* xib.png in Resources */ = {isa = PBXBuildFile; fileRef = 0476FF591D2E22A500CD167C /* xib.png */; };
 		0476FF5C1D2E22A500CD167C /* sb.png in Resources */ = {isa = PBXBuildFile; fileRef = 0476FF5A1D2E22A500CD167C /* sb.png */; };
 		0476FF601D2E2C3E00CD167C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0476FF5F1D2E2C3E00CD167C /* MBProgressHUD.m */; };
+		048098641D49989E0097F577 /* ZHStroyBoardToPureHandProject.m in Sources */ = {isa = PBXBuildFile; fileRef = 048098631D49989E0097F577 /* ZHStroyBoardToPureHandProject.m */; };
+		048098671D4999310097F577 /* PureHandProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 048098661D4999310097F577 /* PureHandProjectViewController.m */; };
 		048CF72C1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 048CF72B1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m */; };
 		04B749111D39D0FD003B046A /* ZHAlertAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749101D39D0FD003B046A /* ZHAlertAction.m */; };
 		04B749131D39D39A003B046A /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = 04B749121D39D39A003B046A /* check.png */; };
@@ -204,6 +206,10 @@
 		0476FF5A1D2E22A500CD167C /* sb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sb.png; sourceTree = "<group>"; };
 		0476FF5E1D2E2C3E00CD167C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		0476FF5F1D2E2C3E00CD167C /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		048098621D49989E0097F577 /* ZHStroyBoardToPureHandProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHStroyBoardToPureHandProject.h; sourceTree = "<group>"; };
+		048098631D49989E0097F577 /* ZHStroyBoardToPureHandProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHStroyBoardToPureHandProject.m; sourceTree = "<group>"; };
+		048098651D4999310097F577 /* PureHandProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureHandProjectViewController.h; sourceTree = "<group>"; };
+		048098661D4999310097F577 /* PureHandProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PureHandProjectViewController.m; sourceTree = "<group>"; };
 		048CF72A1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHStoryboardPropertyManager.h; sourceTree = "<group>"; };
 		048CF72B1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHStoryboardPropertyManager.m; sourceTree = "<group>"; };
 		04B749081D39CBD4003B046A /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
@@ -410,6 +416,7 @@
 				040501FD1D46038700CC35FD /* libsqlite3.tbd */,
 				04B749081D39CBD4003B046A /* PrefixHeader.pch */,
 				044D97DD1DDAA749000257A9 /* Main.storyboard */,
+				048098611D4998470097F577 /* 将工程转换成纯手写 */,
 				040501DC1D45BE4A00CC35FD /* StroyBoardCreateProperty */,
 				040501D81D45A92100CC35FD /* StroyBoard生成属性 */,
 				04B749331D3A0504003B046A /* QuickCreatCodeType */,
@@ -593,6 +600,17 @@
 				048CF72B1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m */,
 			);
 			name = SB;
+			sourceTree = "<group>";
+		};
+		048098611D4998470097F577 /* 将工程转换成纯手写 */ = {
+			isa = PBXGroup;
+			children = (
+				048098621D49989E0097F577 /* ZHStroyBoardToPureHandProject.h */,
+				048098631D49989E0097F577 /* ZHStroyBoardToPureHandProject.m */,
+				048098651D4999310097F577 /* PureHandProjectViewController.h */,
+				048098661D4999310097F577 /* PureHandProjectViewController.m */,
+			);
+			path = "将工程转换成纯手写";
 			sourceTree = "<group>";
 		};
 		04B749331D3A0504003B046A /* QuickCreatCodeType */ = {
@@ -1078,9 +1096,11 @@
 				044D97D61DDAA749000257A9 /* main.m in Sources */,
 				040501E61D45BE4A00CC35FD /* StroyBoardCreatePropertyViewController.m in Sources */,
 				04CA74A01D38AD6B004541F7 /* MoreFunctionTableViewCell.m in Sources */,
+				048098671D4999310097F577 /* PureHandProjectViewController.m in Sources */,
 				04D76BD91CCB13D500235470 /* ZHNSString.m in Sources */,
 				04B749631D3A35E6003B046A /* ViewProperty.m in Sources */,
 				0476FF561D2E1FA400CD167C /* UIView+ZHView.m in Sources */,
+				048098641D49989E0097F577 /* ZHStroyBoardToPureHandProject.m in Sources */,
 				04CA74831D3890C8004541F7 /* DetailViewController.m in Sources */,
 				0476FF4E1D2E1F2600CD167C /* GetXIBCellModel.m in Sources */,
 				047462841D250E2800F4DDCF /* ZHStoryboardTextManager.m in Sources */,

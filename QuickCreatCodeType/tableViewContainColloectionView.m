@@ -1,5 +1,4 @@
 #import "tableViewContainColloectionView.h"
-#import "ZHWordWrap.h"
 
 @implementation tableViewContainColloectionView
 - (NSString *)description{
@@ -53,10 +52,6 @@
     
     [self insertValueAndNewlines:@[[NSString stringWithFormat:@"\n@interface %@ViewController ()<UITableViewDataSource,UITableViewDelegate>\n",dic[@"ViewController的名字"]],@"@property (weak, nonatomic) IBOutlet UITableView *tableView;\n"] ToStrM:textStrM];
     
-    if ([dic[@"是否需要滑动滑栏显示提示 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
-        [self insertValueAndNewlines:@[@"@property (weak, nonatomic) IBOutlet UIView *MI_View;",@"@property (weak, nonatomic) IBOutlet UILabel *MI_Label;",@"@property (nonatomic,assign)NSInteger time_count;//这个属性是为了让MI_View消失"] ToStrM:textStrM];
-    }
-    
     [self insertValueAndNewlines:@[@"@property (nonatomic,strong)NSMutableArray *dataArr;",@""] ToStrM:textStrM];
     
     
@@ -79,30 +74,9 @@
     if (fakeDataStrM.length==0)[fakeDataStrM setString:@""];;
     [self insertValueAndNewlines:@[@"- (NSMutableArray *)dataArr{",@"if (!_dataArr) {",@"_dataArr=[NSMutableArray array];",fakeDataStrM,@"}",@"return _dataArr;",@"}"] ToStrM:textStrM];
     
-    if ([dic[@"是否需要右边的滑栏 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
-        [self insertValueAndNewlines:@[@"- (NSMutableArray *)sectionDataArr{\n\
-                                       if (!_sectionDataArr) {\n\
-                                       _sectionDataArr=[NSMutableArray array];\n\
-                                       }\n"] ToStrM:textStrM];
-        
-        if (![dic[@"是否需要按拼音排序 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-            [self insertValueAndNewlines:@[@"for (NSInteger i=0; i<26; i++) {\n\
-                                           [_sectionDataArr addObject:[NSString stringWithFormat:@\"%C\",(unichar)('A'+i)]];\n\
-                                           }\n"] ToStrM:textStrM];
-        }
-        
-        [self insertValueAndNewlines:@[@"return _sectionDataArr;\n}"] ToStrM:textStrM];
-    }
-    
     
     [self insertValueAndNewlines:@[@"\n- (void)viewDidLoad{",@"[super viewDidLoad];",@"self.tableView.delegate=self;",@"self.tableView.dataSource=self;",@"//self.edgesForExtendedLayout=UIRectEdgeNone;"] ToStrM:textStrM];
     
-    if ([dic[@"是否需要滑动滑栏显示提示 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
-        [self insertValueAndNewlines:@[@"self.MI_View.hidden=YES;\n\
-                                       self.MI_Label.textColor=[UIColor whiteColor];\n\
-                                       self.MI_View.backgroundColor=[[UIColor blackColor]colorWithAlphaComponent:0.5];\n\
-                                       [self.MI_View cornerRadius];"] ToStrM:textStrM];
-    }
     
     [self insertValueAndNewlines:@[@"}\n"] ToStrM:textStrM];
     
@@ -126,18 +100,6 @@
     
     [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{",@"return 44.0f;",@"}",@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"NSLog(@\"选择了某一行\");",@"}",@"\n"] ToStrM:textStrM];
     
-    
-    if ([dic[@"是否需要右边的滑栏 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
-        [self insertValueAndNewlines:@[@"- (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView{\n\
-                                       return self.sectionDataArr;\n\
-                                       }\n\
-                                       - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{\n\
-                                       if(section==0)\n\
-                                       return @\"\";\n\
-                                       return self.sectionDataArr[section];\n\
-                                       }"] ToStrM:textStrM];
-    }
-    
     if ([dic[@"是否需要titleForSection 1:0 (不填写么默认为否)"] isEqualToString:@"1"]&&[dic[@"是否需要右边的滑栏 1:0 (不填写么默认为否)"] isEqualToString:@"0"]) {
         [self insertValueAndNewlines:@[@"- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{\n\
                                        return @\"\";\n\
@@ -150,13 +112,6 @@
                                        }\n\
                                        - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{\n\
                                        return 0.001f;\n\
-                                       }"] ToStrM:textStrM];
-    }
-    
-    if ([dic[@"是否需要滑动滑栏显示提示 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-        [self insertValueAndNewlines:@[@"-(NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index{\n\
-                                       [self setMI_labelText:title];\n\
-                                       return [self.sectionDataArr indexOfObject:title];\n\
                                        }"] ToStrM:textStrM];
     }
     
@@ -349,11 +304,11 @@
     if (hasContain){
         if (isTableView) {
             for (NSString *str in arrTableViewCells) {
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@TableViewCell.h\"\n",str]] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@TableViewCell.h\"",str]] ToStrM:textStrM];
             }
         }else{
-            for (NSString *str in arrTableViewCells) {
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@CollectionViewCell.h\"\n",str]] ToStrM:textStrM];
+            for (NSString *str in arrCollectionViewCells) {
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@CollectionViewCell.h\"",str]] ToStrM:textStrM];
             }
         }
     }
@@ -454,18 +409,18 @@
                                            {"] ToStrM:textStrM];
             
             
+            if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"])[self insertValueAndNewlines:@[@"id modelObjct=self.dataArr[indexPath.row];"] ToStrM:textStrM];
+            
             for (NSString *cellCollectionView in arrCollectionViewCells) {
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CollectionViewCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cellCollectionView,cellCollectionView]] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cellCollectionView],[NSString stringWithFormat:@"%@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cellCollectionView,cellCollectionView,cellCollectionView]] ToStrM:textStrM];
                 
                 if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-                    [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CellModel *model=self.dataArr[indexPath.row];",cellCollectionView]] ToStrM:textStrM];
-                    [self insertValueAndNewlines:@[@"[cell refreshUI:model];"] ToStrM:textStrM];
+                    [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cellCollectionView],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",cellCollectionView]] ToStrM:textStrM];
                 }
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"return %@Cell;\n}\n",cellCollectionView]] ToStrM:textStrM];
+                
             }
-            
-            [self insertValueAndNewlines:@[@"return cell;"] ToStrM:textStrM];
-            
-            [self insertValueAndNewlines:@[@"}"] ToStrM:textStrM];
+            [self insertValueAndNewlines:@[@"//随便给一个cell\nUICollectionViewCell *cell=[UICollectionViewCell new];",@"return cell;",@"}"] ToStrM:textStrM];
             
             [self insertValueAndNewlines:@[@"//4.每一个item的大小:\n\
                                            - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath\n\
@@ -553,6 +508,7 @@
     
     [textStrM setString:@""];
     [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@CollectionViewCell.h\"\n",cell]] ToStrM:textStrM];
+    
     [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@interface %@CollectionViewCell ()",cell],@"@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"//@property (weak, nonatomic) IBOutlet UIButton *iconImageView;",@"//@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"//@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"//@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"@end\n"] ToStrM:textStrM];
     [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@implementation %@CollectionViewCell",cell],@"\n"] ToStrM:textStrM];
     if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){

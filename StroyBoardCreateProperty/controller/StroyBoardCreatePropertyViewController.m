@@ -47,6 +47,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [ZHAlertAction alertWithMsg:@"路径不存在!请重新填写!" addToViewController:self ActionSheet:NO];
             });
+            return ;
         }
         
         NSArray *fileArr=[ZHFileManager subPathFileArrInDirector:path hasPathExtension:@[@".storyboard"]];
@@ -55,6 +56,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [ZHAlertAction alertWithMsg:@"工程路径不存在storyboard文件!请重新填写!" addToViewController:self ActionSheet:NO];
             });
+            return;
         }
         
         for (NSString *fileName in fileArr) {

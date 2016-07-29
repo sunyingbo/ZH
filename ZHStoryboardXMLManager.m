@@ -116,31 +116,31 @@
 }
 
 /**递归获取某个ViewController所有的tableViewCell*/
-//+ (NSArray *)getAllTableViewCellNamesWithConditionDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toArrM:(NSMutableArray *)arrM{
-//    if (arrM==nil) {
-//        arrM=[NSMutableArray array];
-//    }
-//    
-//    NSMutableArray *arrMSub=[NSMutableArray array];
-//    [xml getTargetNodeArrWithName:@"tableViewCell" withDic:tempDic withArrM:arrMSub];
-//    
-//    for (NSDictionary *dicSub in arrMSub) {
-//        NSString *customClassTableViewCell=[xml dicNodeValueWithKey:@"customClass" ForDic:dicSub];
-//        if ([arrM containsObject:customClassTableViewCell]==NO) {
-//            [arrM addObject:customClassTableViewCell];
-//        }
-//        NSArray *childArr=[xml childDic:dicSub];
-//        if (childArr!=nil) {
-//            for (id obj in childArr) {
-//                if ([obj isKindOfClass:[NSDictionary class]]) {
-//                    [self getAllTableViewCellNamesWithConditionDic:obj andXMLHandel:xml toArrM:arrM];
-//                }
-//            }
-//        }
-//    }
-//    
-//    return arrM;
-//}
++ (NSArray *)getAllTableViewCellNamesWithConditionDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toArrM:(NSMutableArray *)arrM{
+    if (arrM==nil) {
+        arrM=[NSMutableArray array];
+    }
+    
+    NSMutableArray *arrMSub=[NSMutableArray array];
+    [xml getTargetNodeArrWithName:@"tableViewCell" withDic:tempDic withArrM:arrMSub];
+    
+    for (NSDictionary *dicSub in arrMSub) {
+        NSString *customClassTableViewCell=[xml dicNodeValueWithKey:@"customClass" ForDic:dicSub];
+        if ([arrM containsObject:customClassTableViewCell]==NO) {
+            [arrM addObject:customClassTableViewCell];
+        }
+        NSArray *childArr=[xml childDic:dicSub];
+        if (childArr!=nil) {
+            for (id obj in childArr) {
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [self getAllTableViewCellNamesWithConditionDic:obj andXMLHandel:xml toArrM:arrM];
+                }
+            }
+        }
+    }
+    
+    return arrM;
+}
 
 /**获取某个ViewController所有的collectionViewCell*/
 + (NSArray *)getAllCollectionViewCellNamesWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml{
@@ -230,33 +230,33 @@
     return arrM;
 }
 
-/**递归获取某个ViewController所有的tableViewCell*/
-//+ (NSArray *)getAllCollectionViewCellNamesWithConditionDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toArrM:(NSMutableArray *)arrM{
-//    if (arrM==nil) {
-//        arrM=[NSMutableArray array];
-//    }
-//    
-//    NSMutableArray *arrMSub=[NSMutableArray array];
-//    [xml getTargetNodeArrWithName:@"collectionViewCell" withDic:tempDic withArrM:arrMSub];
-//    
-//    for (NSDictionary *dicSub in arrMSub) {
-//        NSString *customClassCollectionViewCell=[xml dicNodeValueWithKey:@"customClass" ForDic:dicSub];
-//        if ([arrM containsObject:customClassCollectionViewCell]==NO) {
-//            [arrM addObject:customClassCollectionViewCell];
-//        }
-//        
-//        NSArray *childArr=[xml childDic:dicSub];
-//        if (childArr!=nil) {
-//            for (id obj in childArr) {
-//                if ([obj isKindOfClass:[NSDictionary class]]) {
-////                    [self getAllCollectionViewCellNamesWithConditionDic:obj andXMLHandel:xml toArrM:arrM];
-//                }
-//            }
-//        }
-//    }
-//    
-//    return arrM;
-//}
+/*递归获取某个ViewController所有的collectionViewCell*/
++ (NSArray *)getAllCollectionViewCellNamesWithConditionDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toArrM:(NSMutableArray *)arrM{
+    if (arrM==nil) {
+        arrM=[NSMutableArray array];
+    }
+    
+    NSMutableArray *arrMSub=[NSMutableArray array];
+    [xml getTargetNodeArrWithName:@"collectionViewCell" withDic:tempDic withArrM:arrMSub];
+    
+    for (NSDictionary *dicSub in arrMSub) {
+        NSString *customClassCollectionViewCell=[xml dicNodeValueWithKey:@"customClass" ForDic:dicSub];
+        if ([arrM containsObject:customClassCollectionViewCell]==NO) {
+            [arrM addObject:customClassCollectionViewCell];
+        }
+        
+        NSArray *childArr=[xml childDic:dicSub];
+        if (childArr!=nil) {
+            for (id obj in childArr) {
+                if ([obj isKindOfClass:[NSDictionary class]]) {
+                    [self getAllCollectionViewCellNamesWithConditionDic:obj andXMLHandel:xml toArrM:arrM];
+                }
+            }
+        }
+    }
+    
+    return arrM;
+}
 
 /**获取所有View的CustomClass与对应的id */
 //+ (NSDictionary *)getAllViewCustomAndIdWithAllViewControllerArrM:(NSArray *)arrM andXMLHandel:(ReadXML *)xml{
@@ -340,6 +340,25 @@
             [self getAllViewWithConditionDic:subDic andXMLHandel:xml toDicM:dicM];
         }
     }
+}
+
+/**获取所有OutletView*/
++ (NSDictionary *)getAllOutletViewWithAllViewControllerArrM:(NSArray *)arrM andXMLHandel:(ReadXML *)xml{
+    
+    NSMutableArray *arrMTemp=[NSMutableArray array];
+    NSMutableDictionary *dicM=[NSMutableDictionary dictionary];
+    
+    for (NSDictionary *dic in arrM) {
+        NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
+        
+        [xml getTargetNodeArrWithName:@"outlet" withDic:tempDic withArrM:arrMTemp];
+    }
+    for (NSDictionary *dic in arrMTemp) {
+        if (dic[@"destination"]!=nil&&dic[@"property"]!=nil) {
+            [dicM setValue:dic[@"property"] forKey:dic[@"destination"]];
+        }
+    }
+    return dicM;
 }
 
 /**获取所有CellView*/
@@ -995,7 +1014,6 @@
                 [subArr addObject:[xml dicNodeValueWithKey:@"customClass" ForDic:subDic]];
                 [subArr addObject:[xml dicNodeValueWithKey:@"id" ForDic:subDic]];
                 [CustomClassArrM addObject:subArr];
-//                NSLog(@"%@----%@:%@",subArr[0],subArr[1],subArr[2]);
             }
         }
     }

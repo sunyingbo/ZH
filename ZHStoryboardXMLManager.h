@@ -10,8 +10,14 @@
 /**获取XIB所有的View*/
 + (NSArray *)getAllViewWithDic:(NSDictionary *)MyDic andXMLHandel:(ReadXML *)xml;
 
+/**获取所有OutletView*/
++ (NSDictionary *)getAllOutletViewWithAllViewControllerArrM:(NSArray *)arrM andXMLHandel:(ReadXML *)xml;
+
 /**获取某个ViewController所有的tableViewCell*/
 + (NSArray *)getAllTableViewCellNamesWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml;
+
+/**递归获取某个ViewController所有的tableViewCell*/
++ (NSArray *)getAllTableViewCellNamesWithConditionDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toArrM:(NSMutableArray *)arrM;
 
 /**获取某个ViewController所有的tableViewCell*/
 + (NSDictionary *)getAllTableViewAndTableViewCellNamesWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml;
@@ -27,6 +33,9 @@
 
 /**获取某个ViewController所有的collectionViewCell数组(里面存放的是字典) 不包括嵌套*/
 + (NSArray *)getCollectionViewCellNamesWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml;
+
+/*递归获取某个ViewController所有的collectionViewCell*/
++ (NSArray *)getAllCollectionViewCellNamesWithConditionDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toArrM:(NSMutableArray *)arrM;
 
 /**获取ViewController所有的打上了标志符的名字,也就是对应.m的文件名*/
 + (NSArray *)getViewControllerCountNamesWithAllViewControllerArrM:(NSArray *)arrM;

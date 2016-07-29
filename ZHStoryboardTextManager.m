@@ -290,7 +290,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 }
 
 /**获取创建某个view的代码*/
-+ (NSString *)getCreateViewCodeWithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
++ (NSString *)getCreateViewCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName withOutletView:(NSDictionary *)outletView addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
     
     NSMutableString *textCode=[NSMutableString string];
     
@@ -317,7 +317,16 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
         [textCode appendFormat:@"UI%@ *%@=[UI%@ new];\n",[self upFirstCharacter:viewCategoryName],viewName,[self upFirstCharacter:viewCategoryName]];
     }
     [doneArrM addObject:viewName];
-    [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,viewName,viewName,viewName];
+    if (outletView!=nil&&outletView.count>0) {
+        if (outletView[idStr]!=nil&&[(NSString *)outletView[idStr] length]>0) {
+            [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,viewName,outletView[idStr],viewName];
+        }else{
+            [textCode appendFormat:@"[%@ addSubview:%@];\n\n",fatherView,viewName];
+        }
+    }else{
+        NSLog(@"%@",outletView);
+        [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,viewName,viewName,viewName];
+    }
     
     return textCode;
 }
@@ -346,7 +355,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 }
 
 /**创建约束代码*/
-+ (NSString *)getCreatConstraintCodeWithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
++ (NSString *)getCreatConstraintCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic withOutletView:(NSDictionary *)outletView isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
     
     NSMutableString *textCode=[NSMutableString string];
     
@@ -389,7 +398,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                 }
             }else{
                 if (firstItem.length>0&&[self isView:firstItem]&&[firstItem isEqual:@"self.view"]==NO&&[firstItem isEqual:@"self.contentView"]==NO&&[doneArrM containsObject:firstItem]==NO) {
-                    [textCode insertString:[self getCreateViewCodeWithViewName:firstItem withViewCategoryName:customAndNameDic[firstItem] addToFatherView:fatherView withDoneArrM:doneArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView] atIndex:0];
+                    [textCode insertString:[self getCreateViewCodeWithIdStr:firstItem WithViewName:firstItem withViewCategoryName:customAndNameDic[firstItem] withOutletView:outletView addToFatherView:fatherView withDoneArrM:doneArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView] atIndex:0];
                 }
             }
             
@@ -401,7 +410,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                 }
             }else{
                 if (secondItem.length>0&&[self isView:secondItem]&&[secondItem isEqual:@"self.view"]==NO&&[firstItem isEqual:@"self.contentView"]==NO&&[doneArrM containsObject:secondItem]==NO) {
-                    [textCode insertString:[self getCreateViewCodeWithViewName:secondItem withViewCategoryName:customAndNameDic[secondItem] addToFatherView:fatherView withDoneArrM:doneArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView] atIndex:0];
+                    [textCode insertString:[self getCreateViewCodeWithIdStr:secondItem WithViewName:secondItem withViewCategoryName:customAndNameDic[secondItem] withOutletView:outletView addToFatherView:fatherView withDoneArrM:doneArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView] atIndex:0];
                 }
             }
  
@@ -568,12 +577,14 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 }
 
 //UIMapView *mapView1;
-+ (void)dealWith_UIMapView:(NSMutableString *)textCode{
++ (void)dealWith_UIMapView:(NSMutableString *)textCode needInserFramework:(BOOL)needInserFramework{
     if ([textCode rangeOfString:@"UIMapView"].location==NSNotFound) {
         return;
     }
     
-    [self addCodeText:@"#import <MapKit/MapKit.h>\n#error 请导入<MapKit.framework>框架" andInsertType:ZHAddCodeType_Import toStrM:textCode insertFunction:nil];
+    if (needInserFramework) {
+        [self addCodeText:@"#import <MapKit/MapKit.h>\n#error 请导入<MapKit.framework>框架" andInsertType:ZHAddCodeType_Import toStrM:textCode insertFunction:nil];
+    }
     
     NSString *text=[NSString stringWithString:textCode];
     
@@ -582,8 +593,6 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     
     [textCode setString:text];
 }
-
-
 
 /**第一个字母大写*/
 + (NSString *)upFirstCharacter:(NSString *)text{

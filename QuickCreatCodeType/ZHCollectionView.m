@@ -7,7 +7,6 @@
 //
 
 #import "ZHCollectionView.h"
-#import "ZHWordWrap.h"
 
 @implementation ZHCollectionView
 - (NSString *)description{

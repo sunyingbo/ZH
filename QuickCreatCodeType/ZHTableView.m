@@ -8,7 +8,6 @@
 
 #import "ZHTableView.h"
 #import "Auto_Father.h"
-#import "ZHWordWrap.h"
 
 @implementation ZHTableView
 - (NSString *)description{

@@ -38,12 +38,12 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 + (NSString *)getPropertyWithViewName_XIB:(NSString *)viewName withViewCategory:(NSString *)viewCategory isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
 
 /**获取创建某个view的代码*/
-+ (NSString *)getCreateViewCodeWithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
++ (NSString *)getCreateViewCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName withOutletView:(NSDictionary *)outletView addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
 
 + (NSString *)getFatherView:(NSString *)view inViewRelationShipDic:(NSDictionary *)viewRelationShipDic;
 
 /**创建约束代码*/
-+ (NSString *)getCreatConstraintCodeWithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM  withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
++ (NSString *)getCreatConstraintCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic withOutletView:(NSDictionary *)outletView isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM  withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
 
 + (void)addCodeText:(NSString *)code andInsertType:(ZHAddCodeType)insertType toStrM:(NSMutableString *)strM insertFunction:(NSString *)insertFunction;
 
@@ -59,7 +59,7 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 //解决self.tableView3=tableView3;的问题
 + (void)dealWith_self_tableView_collectionView:(NSMutableString *)textCode isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
 //解决UIMapView *mapView1;的问题
-+ (void)dealWith_UIMapView:(NSMutableString *)textCode;
++ (void)dealWith_UIMapView:(NSMutableString *)textCode needInserFramework:(BOOL)needInserFramework;
 
 /**第一个字母大写*/
 + (NSString *)upFirstCharacter:(NSString *)text;

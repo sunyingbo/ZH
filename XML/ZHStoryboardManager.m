@@ -187,7 +187,7 @@
                 for (NSString *idStr in views) {
                     NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
                     
-                    NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+                    NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr]  withOutletView:nil addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
                     
                     NSMutableString *propertyCode=[NSMutableString string];
                     [propertyCode setString:creatCode];
@@ -202,7 +202,7 @@
                     }
                     
                     //创建约束
-                    NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW isCell:NO withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+                    NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW withOutletView:nil isCell:NO withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
                     
                     //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
                     if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
@@ -225,7 +225,7 @@
                 [ZHStoryboardTextManager addCodeText:creatCodeStrM andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName] insertFunction:nil];
                 
                 //解决UIMapView *mapView1;的问题
-                [ZHStoryboardTextManager dealWith_UIMapView:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName]];
+                [ZHStoryboardTextManager dealWith_UIMapView:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName] needInserFramework:YES];
                 
                 //                NSLog(@"%@",creatCodeStrM);
                 //                NSLog(@"viewConstraintDicM_Self=%@",viewConstraintDicM_Self_NEW);
@@ -472,7 +472,7 @@
                 [creatCodeStrM appendString:@"- (void)addSubViews{\n\n"];
                 for (NSString *idStr in views) {
                     NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
-                    NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:YES];
+                    NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] withOutletView:nil addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:YES];
                     
                     NSMutableString *propertyCode=[NSMutableString string];
                     [propertyCode setString:creatCode];
@@ -482,7 +482,7 @@
                     [creatCodeStrM appendString:propertyCode];
                     
                     //创建约束
-                    NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW isCell:NO withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+                    NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW withOutletView:nil isCell:NO withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
                     
                     //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
                     if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
@@ -512,7 +512,7 @@
                 
                 [ZHStoryboardTextManager addCodeText:creatCodeStrM_new andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName] insertFunction:nil];
                 //解决UIMapView *mapView1;的问题
-                [ZHStoryboardTextManager dealWith_UIMapView:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName]];
+                [ZHStoryboardTextManager dealWith_UIMapView:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName] needInserFramework:YES];
             }
         }
     }
@@ -640,7 +640,7 @@
         [creatCodeStrM appendString:@"- (void)addSubViews{\n\n"];
         for (NSString *idStr in views) {
             NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
-            NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+            NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] withOutletView:nil addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
             
             NSMutableString *propertyCode=[NSMutableString string];
             [propertyCode setString:creatCode];
@@ -655,7 +655,7 @@
             }
             
             //创建约束
-            NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW isCell:YES withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
+            NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW withOutletView:nil isCell:YES withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView];
             
             //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
             if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
@@ -677,7 +677,7 @@
         [ZHStoryboardTextManager addCodeText:creatCodeStrM andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:NewFileName] insertFunction:nil];
         
         //解决UIMapView *mapView1;的问题
-        [ZHStoryboardTextManager dealWith_UIMapView:[ZHStroyBoardFileManager get_M_ContextByIdentity:NewFileName]];
+        [ZHStoryboardTextManager dealWith_UIMapView:[ZHStroyBoardFileManager get_M_ContextByIdentity:NewFileName] needInserFramework:YES];
         
         //                NSLog(@"%@",creatCodeStrM);
         //        NSLog(@"viewConstraintDicM_Self=%@",viewConstraintDicM_Self_NEW);

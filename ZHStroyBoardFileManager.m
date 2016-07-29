@@ -1,5 +1,4 @@
 #import "ZHStroyBoardFileManager.h"
-#import "ZHWordWrap.h"
 
 static NSMutableDictionary *ZHStroyBoardFileDicM;
 static NSMutableDictionary *ZHStroyBoardContextDicM;
