@@ -15,6 +15,8 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 /**为View打上所有标识符(默认顺序) 包括(为所有view的id打上标识符,对应的标识符就是CustomClass)*/
 + (NSString *)addCustomClassToAllViews:(NSString *)text;
 
++ (NSString *)addCustomClassToAllViewsForPureHandProject:(NSString *)text;
+
 + (NSString *)isView:(NSString *)text;
 
 /**判断是否是特殊控件*/
@@ -33,9 +35,18 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 + (BOOL)hasSuffixNumber:(NSString *)text;
 + (NSString *)removeSuffixNumber:(NSString *)text;
 
+/**替换所有的约束的.constant=;*/
++ (void)replaceConstantToMasonry:(NSDictionary *)replaceMasonryDic ToStrM:(NSMutableString *)text;
+
+/**获取引用某个view的代码*/
++ (NSString *)getOutletViewCodeWithView:(NSString *)view withViewCategoryName:(NSString *)viewCategoryName;
+
 /**获取属性Code*/
 + (NSString *)getPropertyWithViewName:(NSString *)viewName withViewCategory:(NSString *)viewCategory;
 + (NSString *)getPropertyWithViewName_XIB:(NSString *)viewName withViewCategory:(NSString *)viewCategory isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
+
+/**在这里,取出拉线出来的约束,并且拿到当为这个约束赋值时的代码改成masonry对应的代码*/
++ (NSDictionary *)getUpdataMasonryCodeWithViewConstraintDic:(NSDictionary *)viewConstraintDic withOutletView:(NSDictionary *)outletView;
 
 /**获取创建某个view的代码*/
 + (NSString *)getCreateViewCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName withOutletView:(NSDictionary *)outletView addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
@@ -53,7 +64,10 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 
 + (void)addDelegateFunctionToText:(NSMutableString *)text withTableViews:(NSDictionary *)tableViewsDic isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
 + (void)addDelegateFunctionToText:(NSMutableString *)text withCollectionViews:(NSDictionary *)collectionViewsDic isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
-
+/**往最某个代码后面追加*/
++ (BOOL)addCode:(NSString *)code ToTargetAfter:(NSString *)target toText:(NSMutableString *)text;
+/**找到某个函数包括函数里面的内容*/
++ (NSString *)findCodeFunctionWithIdentity:(NSString *)identity WithText:(NSMutableString *)text;
 + (void)done;
 
 //解决self.tableView3=tableView3;的问题

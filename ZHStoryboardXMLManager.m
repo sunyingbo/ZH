@@ -50,6 +50,23 @@
     
     return arrM;
 }
++ (NSDictionary *)getAllTableViewCellAndIdWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml{
+    NSMutableDictionary *dicM=[NSMutableDictionary dictionary];
+    
+    NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
+    
+    NSMutableArray *arrMSub=[NSMutableArray array];
+    [xml getTargetNodeArrWithName:@"tableViewCell" withDic:tempDic withArrM:arrMSub];
+    
+    for (NSDictionary *dicSub in arrMSub) {
+        NSString *customClassTableViewCell=[xml dicNodeValueWithKey:@"id" ForDic:dicSub];
+        if ([[dicM allKeys] containsObject:customClassTableViewCell]==NO) {
+            [dicM setValue:dicSub forKey:customClassTableViewCell];
+        }
+    }
+    return dicM;
+}
+
 /**获取某个ViewController所有的tableViewCell*/
 + (NSDictionary *)getAllTableViewAndTableViewCellNamesWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml{
     
@@ -73,7 +90,6 @@
         for (NSDictionary *dicSubNew in arrMSubNew) {
             
             NSString *customClassTableViewCell=[xml dicNodeValueWithKey:@"customClass" ForDic:dicSubNew];
-            
             if ([tableViewCells containsObject:customClassTableViewCell]==NO) {
                 [tableViewCells addObject:customClassTableViewCell];
             }
@@ -159,6 +175,24 @@
     }
 //    [self getAllCollectionViewCellNamesWithConditionDic:tempDic andXMLHandel:xml toArrM:arrM];
     return arrM;
+}
+
++ (NSDictionary *)getAllCollectionViewCellAndIdWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml{
+    NSMutableDictionary *dicM=[NSMutableDictionary dictionary];
+    
+    NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
+    
+    NSMutableArray *arrMSub=[NSMutableArray array];
+    [xml getTargetNodeArrWithName:@"collectionViewCell" withDic:tempDic withArrM:arrMSub];
+    
+    for (NSDictionary *dicSub in arrMSub) {
+        NSString *customClassCollectionViewCell=[xml dicNodeValueWithKey:@"id" ForDic:dicSub];
+        if ([[dicM allKeys] containsObject:customClassCollectionViewCell]==NO) {
+            [dicM setValue:dicSub forKey:customClassCollectionViewCell];
+        }
+    }
+    //    [self getAllCollectionViewCellNamesWithConditionDic:tempDic andXMLHandel:xml toArrM:arrM];
+    return dicM;
 }
 
 /**获取某个ViewController所有的collectionViewCell 不包括嵌套*/
@@ -309,7 +343,6 @@
     
     for (NSDictionary *dic in arrM) {
         NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
-        
         
         NSMutableArray *allDic=[NSMutableArray array];
         [xml getDicArrFormPathArr:@[@"view",@"subviews"] withIndex:0 withDic:tempDic addToArrM:allDic];

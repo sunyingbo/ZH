@@ -102,6 +102,12 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 
 /**为View打上所有标识符(默认顺序)*/
 + (NSString *)addCustomClassToAllViews:(NSString *)text{
+    return [self addCustomClass:text needDealAdapterCell:YES];
+}
++ (NSString *)addCustomClassToAllViewsForPureHandProject:(NSString *)text{
+    return [self addCustomClass:text needDealAdapterCell:NO];
+}
++ (NSString *)addCustomClass:(NSString *)text needDealAdapterCell:(BOOL)needDealAdapterCell{
     NSArray *arr=[text componentsSeparatedByString:@"\n"];
     NSMutableArray *arrM=[NSMutableArray array];
     NSString *rowStr,*newRowStr,*viewIdenity;
@@ -121,8 +127,8 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                     NSString *viewCountIdenity=[self getViewCountIdenityWithViewIdenity:@"<self.view "];
                     [[self defaultIDDicM]setValue:idStr forKey:viewCountIdenity];
                 }
-//                <view key="view" contentMode="scaleToFill" id="hQd-8a-jIj">
-//                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                //                <view key="view" contentMode="scaleToFill" id="hQd-8a-jIj">
+                //                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 
                 [arrM addObject:[self replaceAllIdByCustomClass:rowStr]];
                 continue;
@@ -157,7 +163,12 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
             }else if ([rowStr rangeOfString:@" customClass=\""].location!=NSNotFound&&[rowStr rangeOfString:@" id=\""].location!=NSNotFound) {
                 NSString *customClass=[rowStr substringFromIndex:[rowStr rangeOfString:@"customClass=\""].location+13];
                 customClass=[customClass substringToIndex:[customClass rangeOfString:@"\""].location];
-                NSString *newCustomClass=[self detailSpecialCustomClassLikeCell:rowStr];
+                NSString *newCustomClass;
+                if (needDealAdapterCell) {
+                    newCustomClass=[self detailSpecialCustomClassLikeCell:rowStr];
+                }else{
+                    newCustomClass=[self noDetailSpecialCustomClassLikeCell:rowStr];
+                }
                 if (newCustomClass.length>0) {
                     //替换
                     NSString *oldCustom=[@" customClass=\"" stringByAppendingString:customClass];
@@ -289,6 +300,198 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     return [NSString stringWithFormat:@"@property (strong, nonatomic) UI%@ *%@;",viewCategory,viewName];
 }
 
+/**替换所有的约束的.constant=;*/
++ (void)replaceConstantToMasonry:(NSDictionary *)replaceMasonryDic ToStrM:(NSMutableString *)text{
+//    bgViewHeight = "[self.view14 mas_updateConstraints:^(MASConstraintMaker *make) {\n                make.height.equalTo(@($replace$));\n                 }];";
+//    if (replaceMasonryDic.count>0) {
+//        NSLog(@"%@",replaceMasonryDic);
+//    }
+    
+    for (NSString *property in replaceMasonryDic) {
+        if ([text rangeOfString:[NSString stringWithFormat:@"%@.constant",property]].location!=NSNotFound) {
+            [self subReplaceConstantWithProperty:property ToStrM:text withReplaceMasonryDic:replaceMasonryDic];
+        }
+    }
+}
+
+/**替换所有的约束的.constant=;*/
++ (void)subReplaceConstantWithProperty:(NSString *)property ToStrM:(NSMutableString *)text withReplaceMasonryDic:(NSDictionary *)replaceMasonryDic{
+    if ([text rangeOfString:[NSString stringWithFormat:@"%@.constant=",property]].location!=NSNotFound) {
+        NSString *textTemp=[NSString stringWithString:text];
+        textTemp=[self removeDocSpace:textTemp];
+        
+        BOOL prefixAdd=NO;//前面是不是还有等于号
+        if ([textTemp rangeOfString:[NSString stringWithFormat:@"self.%@.constant=",property]].location!=NSNotFound) {
+            NSInteger start=[textTemp rangeOfString:[NSString stringWithFormat:@"self.%@.constant=",property]].location;
+            NSInteger end=start+[NSString stringWithFormat:@"self.%@.constant=",property].length;
+            unichar ch;
+            for (NSInteger i=end+1; i<textTemp.length; i++) {
+                ch=[textTemp characterAtIndex:i];
+                end++;
+                if (ch==';') {
+                    break;
+                }
+            }
+            if (start>0) {
+                unichar ch1=[textTemp characterAtIndex:start-1];
+                if (ch1=='=') {
+                    prefixAdd=YES;
+                }
+            }
+            
+            NSString *constantCode=[textTemp substringWithRange:NSMakeRange(start, end-start+1)];
+            
+            NSMutableArray *arrMTemp=[NSMutableArray array];
+            for (NSString *str in [constantCode componentsSeparatedByString:@"="]) {
+                if ([arrMTemp containsObject:str]==NO) {
+                    [arrMTemp addObject:str];
+                }
+            }
+            if (arrMTemp.count>=2) {
+                NSString *lastObj=arrMTemp[arrMTemp.count-1];
+                [arrMTemp removeObject:lastObj];
+                lastObj=[lastObj stringByReplacingOccurrencesOfString:@" " withString:@""];
+                lastObj=[lastObj stringByReplacingOccurrencesOfString:@";" withString:@""];
+                for (NSString *str in arrMTemp) {
+                    NSString *tempObj=str;
+                    if ([tempObj hasPrefix:@"_"]) {
+                        tempObj=[tempObj substringFromIndex:1];
+                    }
+                    tempObj=[tempObj stringByReplacingOccurrencesOfString:@"self." withString:@""];
+                    tempObj=[tempObj stringByReplacingOccurrencesOfString:@".constant" withString:@""];
+                    
+                    NSString *replaceMasonryStr=replaceMasonryDic[tempObj];
+                    replaceMasonryStr = [replaceMasonryStr stringByReplacingOccurrencesOfString:@"$replace$" withString:lastObj];
+                    
+                    if (prefixAdd==YES) {
+                        replaceMasonryStr=[[NSString stringWithFormat:@"%@;\n",lastObj] stringByAppendingString:replaceMasonryStr];
+                    }
+                    
+                    textTemp =[textTemp stringByReplacingOccurrencesOfString:constantCode withString:replaceMasonryStr];
+                }
+            }
+            
+            [text setString:textTemp];
+            [self subReplaceConstantWithProperty:property ToStrM:text withReplaceMasonryDic:replaceMasonryDic];
+        }
+        
+        if ([textTemp rangeOfString:[NSString stringWithFormat:@"_%@.constant=",property]].location!=NSNotFound) {
+            NSInteger start=[textTemp rangeOfString:[NSString stringWithFormat:@"_.%@.constant=",property]].location;
+            NSInteger end=start+[NSString stringWithFormat:@"_.%@.constant=",property].length;
+            unichar ch;
+            for (NSInteger i=end+1; i<textTemp.length; i++) {
+                ch=[textTemp characterAtIndex:i];
+                end++;
+                if (ch==';') {
+                    break;
+                }
+            }
+            if (start>0) {
+                unichar ch1=[textTemp characterAtIndex:start-1];
+                if (ch1=='=') {
+                    prefixAdd=YES;
+                }
+            }
+            NSString *constantCode=[textTemp substringWithRange:NSMakeRange(start, end-start+1)];
+            
+            NSMutableArray *arrMTemp=[NSMutableArray array];
+            for (NSString *str in [constantCode componentsSeparatedByString:@"="]) {
+                if ([arrMTemp containsObject:str]==NO) {
+                    [arrMTemp addObject:str];
+                }
+            }
+            if (arrMTemp.count>=2) {
+                NSString *lastObj=arrMTemp[arrMTemp.count-1];
+                [arrMTemp removeObject:lastObj];
+                lastObj=[lastObj stringByReplacingOccurrencesOfString:@" " withString:@""];
+                lastObj=[lastObj stringByReplacingOccurrencesOfString:@";" withString:@""];
+                for (NSString *str in arrMTemp) {
+                    NSString *tempObj=str;
+                    if ([tempObj hasPrefix:@"_"]) {
+                        tempObj=[tempObj substringFromIndex:1];
+                    }
+                    tempObj=[tempObj stringByReplacingOccurrencesOfString:@"self." withString:@""];
+                    tempObj=[tempObj stringByReplacingOccurrencesOfString:@".constant" withString:@""];
+                    
+                    NSString *replaceMasonryStr=replaceMasonryDic[tempObj];
+                    replaceMasonryStr = [replaceMasonryStr stringByReplacingOccurrencesOfString:@"$replace$" withString:lastObj];
+                    
+                    if (prefixAdd==YES) {
+                        replaceMasonryStr=[[NSString stringWithFormat:@"%@;\n",lastObj] stringByAppendingString:replaceMasonryStr];
+                    }
+                    
+                    textTemp =[textTemp stringByReplacingOccurrencesOfString:constantCode withString:replaceMasonryStr];
+                }
+                
+            }
+            
+            textTemp =[textTemp stringByReplacingOccurrencesOfString:constantCode withString:@""];
+            
+            [text setString:textTemp];
+            [self subReplaceConstantWithProperty:property ToStrM:text withReplaceMasonryDic:replaceMasonryDic];
+        }
+    }
+}
+
++ (NSString *)removeDocSpace:(NSString *)text{
+    if ([text rangeOfString:@". "].location!=NSNotFound) {
+        text=[text stringByReplacingOccurrencesOfString:@". " withString:@"."];
+        return [self removeDocSpace:text];
+    }
+    if ([text rangeOfString:@" ."].location!=NSNotFound) {
+        text=[text stringByReplacingOccurrencesOfString:@" ." withString:@"."];
+        return [self removeDocSpace:text];
+    }
+    if ([text rangeOfString:@" ="].location!=NSNotFound) {
+        text=[text stringByReplacingOccurrencesOfString:@" =" withString:@"="];
+        return [self removeDocSpace:text];
+    }
+    if ([text rangeOfString:@"= "].location!=NSNotFound) {
+        text=[text stringByReplacingOccurrencesOfString:@"= " withString:@"="];
+        return [self removeDocSpace:text];
+    }
+    return text;
+}
+
+/**在这里,取出拉线出来的约束,并且拿到当为这个约束赋值时的代码改成masonry对应的代码*/
++ (NSDictionary *)getUpdataMasonryCodeWithViewConstraintDic:(NSDictionary *)viewConstraintDic withOutletView:(NSDictionary *)outletView{
+    
+    NSMutableArray *shouldOutlet=[NSMutableArray array];
+    NSMutableDictionary *replaceMasonry=[NSMutableDictionary dictionary];
+    
+    //遍历这个控件的所有约束,看是否有的约束已经拉线出来的
+    for (NSString *view in viewConstraintDic) {
+        for ( NSDictionary *subDic in viewConstraintDic[view]) {
+            if (outletView[subDic[@"id"]]!=nil) {
+                NSString *firstAttribute=subDic[@"firstAttribute"];
+                NSString *property=outletView[subDic[@"id"]];
+                NSString *myView=outletView[view];
+                if (myView.length<=0) {
+                    if ([shouldOutlet containsObject:view]==NO) {
+                        [shouldOutlet addObject:view];
+                    }
+                    myView=view;
+                }
+                NSString *replace=[NSString stringWithFormat:@"[self.%@ mas_updateConstraints:^(MASConstraintMaker *make) { make.%@.equalTo(@($replace$)); }];",myView,firstAttribute];
+                [replaceMasonry setValue:replace forKey:property];
+            }
+        }
+    }
+    
+    NSMutableDictionary *dicM=[NSMutableDictionary dictionary];
+    [dicM setValue:shouldOutlet forKey:@"shouldOutlet"];
+    [dicM setValue:replaceMasonry forKey:@"replaceMasonry"];
+    return dicM;
+}
+
+/**获取引用某个view的代码*/
++ (NSString *)getOutletViewCodeWithView:(NSString *)view withViewCategoryName:(NSString *)viewCategoryName{
+    if ([viewCategoryName isEqualToString:@"mapView"]) {
+        [NSString stringWithFormat:@"@property (strong, nonatomic) MK%@ *%@;",[self upFirstCharacter:viewCategoryName],view];
+    }
+    return [NSString stringWithFormat:@"@property (strong, nonatomic) UI%@ *%@;",[self upFirstCharacter:viewCategoryName],view];
+}
+
 /**获取创建某个view的代码*/
 + (NSString *)getCreateViewCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName withOutletView:(NSDictionary *)outletView addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
     
@@ -324,7 +527,6 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
             [textCode appendFormat:@"[%@ addSubview:%@];\n\n",fatherView,viewName];
         }
     }else{
-        NSLog(@"%@",outletView);
         [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,viewName,viewName,viewName];
     }
     
@@ -603,7 +805,6 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     return [[firstCharacter uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
 }
 
-/**处理特殊的customClass，因为cell上一旦没有打上对应cell的标识，就会找不到文件，不好处理（TableviewCell，CollectionViewCell）*/
 + (NSString *)detailSpecialCustomClassLikeCell:(NSString *)rowStr{
     NSMutableArray *viewsArr=[NSMutableArray array];
     [viewsArr addObject:@"<tableViewCell "];
@@ -628,6 +829,39 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     return newCustomClass;
 }
 
++ (NSString *)noDetailSpecialCustomClassLikeCell:(NSString *)rowStr{
+    NSMutableArray *viewsArr=[NSMutableArray array];
+    [viewsArr addObject:@"<tableViewCell "];
+    [viewsArr addObject:@"<collectionViewCell "];
+    
+    NSString *customClass=[rowStr substringFromIndex:[rowStr rangeOfString:@"customClass=\""].location+13];
+    customClass=[customClass substringToIndex:[customClass rangeOfString:@"\""].location];
+    
+    customClass=[ZHStroyBoardFileManager getAdapterCollectionViewCellAndTableViewCellNameForPureHandProject:customClass];
+    
+    NSString *newCustomClass;
+    NSString *text=[ZHNSString removeSpaceBeforeAndAfterWithString:rowStr];
+    for (NSString *str in viewsArr) {
+        if ([text hasPrefix:str]) {
+            
+            newCustomClass=str;
+            newCustomClass=[newCustomClass substringFromIndex:1];
+            newCustomClass=[newCustomClass substringToIndex:newCustomClass.length-1];
+            newCustomClass=[customClass stringByAppendingString:[self upFirstCharacter:newCustomClass]];
+            
+            //取出id 防止有些coder tableViewCell的关联文件和复用标识不一样
+//            NSString *reuseIdentifier=[rowStr substringFromIndex:[rowStr rangeOfString:@"reuseIdentifier=\""].location+17];
+//            reuseIdentifier=[reuseIdentifier substringToIndex:[reuseIdentifier rangeOfString:@"\""].location];
+//            if([reuseIdentifier isEqualToString:newCustomClass]==NO){
+//                newCustomClass=reuseIdentifier;
+//            }
+            break;
+        }
+    }
+    
+    return newCustomClass;
+}
+
 + (NSString *)getViewCountIdenityWithViewIdenity:(NSString *)viewIdenity{
     NSString *viewCountIdenity=viewIdenity;
     if ([viewCountIdenity hasPrefix:@"<"]) {
@@ -639,6 +873,8 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     NSNumber *num=[self defaultDicM][viewIdenity];
     if (num) {
         NSInteger count=[num integerValue];
+        
+        //处理特殊的customClass，因为cell上一旦没有打上对应cell的标识，就会找不到文件，不好处理（TableviewCell，CollectionViewCell）
         
         NSArray *specialViews=@[@"tableViewCell",@"collectionViewCell"];
         
@@ -745,6 +981,27 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
         ch=[text characterAtIndex:text.length-1];
     }
     return text;
+}
+
+/**往最某个代码后面追加*/
++ (BOOL)addCode:(NSString *)code ToTargetAfter:(NSString *)target toText:(NSMutableString *)text{
+    if ([text rangeOfString:target].location==NSNotFound) {
+        return NO;
+    }
+    
+    NSInteger endIndex=[text rangeOfString:target].location+target.length;
+    NSString *startString=[text substringToIndex:endIndex];
+    NSString *endString=[text substringFromIndex:endIndex];
+    
+    NSMutableString *strM=[NSMutableString string];
+    [strM appendString:startString];
+    [strM appendString:@"\n"];
+    [strM appendString:code];
+    [strM appendString:@"\n"];
+    [strM appendString:endString];
+    [text setString:strM];
+    
+    return YES;
 }
 
 + (void)addCodeText:(NSString *)code andInsertType:(ZHAddCodeType)insertType toStrM:(NSMutableString *)strM insertFunction:(NSString *)insertFunction{
@@ -943,6 +1200,37 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     }
 }
 
+/**找到某个函数包括函数里面的内容*/
++ (NSString *)findCodeFunctionWithIdentity:(NSString *)identity WithText:(NSMutableString *)text{
+    NSInteger start=[text rangeOfString:identity].location;
+    NSInteger oldStart=start;
+    if (start==NSNotFound) {
+        return @"";
+    }
+    //找到最后一个},代表这个函数结束了
+    NSInteger count=1;
+    unichar ch;
+    NSInteger i;
+    for (i=start+identity.length+1; i<text.length; i++) {
+        ch=[text characterAtIndex:i];
+        if (ch=='{') {
+            count++;
+        }else if (ch=='}'){
+            count--;
+            if (count==0) {
+                start=i-1;
+                break;
+            }
+        }
+    }
+    if (i==text.length) {
+        NSLog(@"%@",@"开关{}没对称");
+    }else{
+        NSString *tempString=[text substringWithRange:NSMakeRange(oldStart, i-oldStart+1)];
+        return tempString;
+    }
+    return @"";
+}
 
 
 #pragma mark-----------辅助函数

@@ -25,4 +25,5 @@
 + (NSString *)getAdapterCollectionViewCellModelName:(NSString *)name;
 
 + (NSString *)getAdapterCollectionViewCellAndTableViewCellName:(NSString *)name;
++ (NSString *)getAdapterCollectionViewCellAndTableViewCellNameForPureHandProject:(NSString *)name;
 @end

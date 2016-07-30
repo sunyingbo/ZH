@@ -16,6 +16,8 @@
 /**获取某个ViewController所有的tableViewCell*/
 + (NSArray *)getAllTableViewCellNamesWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml;
 
++ (NSDictionary *)getAllTableViewCellAndIdWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml;
+
 /**递归获取某个ViewController所有的tableViewCell*/
 + (NSArray *)getAllTableViewCellNamesWithConditionDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml toArrM:(NSMutableArray *)arrM;
 
@@ -27,6 +29,8 @@
 
 /**获取某个ViewController所有的collectionViewCell*/
 + (NSArray *)getAllCollectionViewCellNamesWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml;
+
++ (NSDictionary *)getAllCollectionViewCellAndIdWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml;
 
 /**获取某个ViewController所有的collectionViewCell*/
 + (NSMutableDictionary *)getAllCollectionViewAndCollectionViewCellNamesWithViewControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml;

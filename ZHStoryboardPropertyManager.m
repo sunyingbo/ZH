@@ -20,7 +20,6 @@
 
 + (void)recursiveGetPropertysForViewName:(NSString *)viewName withViewDic:(NSDictionary *)viewDic withCustomAndName:(NSDictionary *)customAndNameDic toIdAndPropertyDicM:(NSMutableDictionary *)idAndPropertyDicM andXMLHandel:(ReadXML *)xml{
     NSString *categoryView=customAndNameDic[viewName];
-    
     if ([categoryView isEqualToString:@"label"]) {
         [self setPropertysForLabel:viewName withViewDic:viewDic withCustomAndName:customAndNameDic toIdAndPropertyDicM:idAndPropertyDicM andXMLHandel:xml];
     }
@@ -33,8 +32,14 @@
     if ([categoryView isEqualToString:@"tableView"]) {
         [self setPropertysForTableView:viewName withViewDic:viewDic withCustomAndName:customAndNameDic toIdAndPropertyDicM:idAndPropertyDicM andXMLHandel:xml];
     }
+    if ([categoryView isEqualToString:@"tableViewCell"]) {
+        [self setPropertysForTableViewCell:viewName withViewDic:viewDic withCustomAndName:customAndNameDic toIdAndPropertyDicM:idAndPropertyDicM andXMLHandel:xml];
+    }
     if ([categoryView isEqualToString:@"collectionView"]) {
         [self setPropertysForCollectionView:viewName withViewDic:viewDic withCustomAndName:customAndNameDic toIdAndPropertyDicM:idAndPropertyDicM andXMLHandel:xml];
+    }
+    if ([categoryView isEqualToString:@"collectionViewCell"]) {
+        [self setPropertysForCollectionViewCell:viewName withViewDic:viewDic withCustomAndName:customAndNameDic toIdAndPropertyDicM:idAndPropertyDicM andXMLHandel:xml];
     }
     if ([categoryView isEqualToString:@"view"]) {
         [self setPropertysForView:viewName withViewDic:viewDic withCustomAndName:customAndNameDic toIdAndPropertyDicM:idAndPropertyDicM andXMLHandel:xml];
@@ -117,9 +122,19 @@
     [self setPropertysForPropertyNames:@[@"style",@"rowHeight"] withViewDic:viewDic toProperty:property andXMLHandel:xml];
     [idAndPropertyDicM setValue:property forKey:viewName];
 }
++ (void)setPropertysForTableViewCell:(NSString *)viewName withViewDic:(NSDictionary *)viewDic withCustomAndName:(NSDictionary *)customAndNameDic toIdAndPropertyDicM:(NSMutableDictionary *)idAndPropertyDicM andXMLHandel:(ReadXML *)xml{
+    ViewProperty *property=[ViewProperty new];
+    [self setPropertysForPropertyNames:@[@"reuseIdentifier"] withViewDic:viewDic toProperty:property andXMLHandel:xml];
+    [idAndPropertyDicM setValue:property forKey:viewName];
+}
 + (void)setPropertysForCollectionView:(NSString *)viewName withViewDic:(NSDictionary *)viewDic withCustomAndName:(NSDictionary *)customAndNameDic toIdAndPropertyDicM:(NSMutableDictionary *)idAndPropertyDicM andXMLHandel:(ReadXML *)xml{
     ViewProperty *property=[ViewProperty new];
     [self setPropertysForPropertyNames:@[] withViewDic:viewDic toProperty:property andXMLHandel:xml];
+    [idAndPropertyDicM setValue:property forKey:viewName];
+}
++ (void)setPropertysForCollectionViewCell:(NSString *)viewName withViewDic:(NSDictionary *)viewDic withCustomAndName:(NSDictionary *)customAndNameDic toIdAndPropertyDicM:(NSMutableDictionary *)idAndPropertyDicM andXMLHandel:(ReadXML *)xml{
+    ViewProperty *property=[ViewProperty new];
+    [self setPropertysForPropertyNames:@[@"reuseIdentifier"] withViewDic:viewDic toProperty:property andXMLHandel:xml];
     [idAndPropertyDicM setValue:property forKey:viewName];
 }
 + (void)setPropertysForView:(NSString *)viewName withViewDic:(NSDictionary *)viewDic withCustomAndName:(NSDictionary *)customAndNameDic toIdAndPropertyDicM:(NSMutableDictionary *)idAndPropertyDicM andXMLHandel:(ReadXML *)xml{

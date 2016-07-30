@@ -83,34 +83,38 @@
     NSMutableArray *arrMText=[NSMutableArray array];
     
     for (NSString *str in arrM) {
-        if (str.length>0) {
-            
-            tempStr=[self removeSpaceSuffix:str];
-            
-            if ([self hasOutIndex:tempStr]){
-                count--;
-                if (count==-1)count=0;
-            }else{
-                if (self.specialCount==1) {
-                    count++;
-                }
-            }
-            
-            [arrMText addObject:[[self getIndentationWithCount:count] stringByAppendingString:tempStr]];
-            
-            if ([self hasInIndex:tempStr]) {
-                count++;
-            }
-            
-            if ([self hasInIndexSpecial:tempStr]==NO) {
-                if (self.specialCount==1) {
+        if ([str hasPrefix:@"//"]) {//如果是注释,不做处理
+            [arrMText addObject:[[self getIndentationWithCount:count] stringByAppendingString:str]];
+        }else{
+            if (str.length>0) {
+                
+                tempStr=[self removeSpaceSuffix:str];
+                
+                if ([self hasOutIndex:tempStr]){
                     count--;
                     if (count==-1)count=0;
+                }else{
+                    if (self.specialCount==1) {
+                        count++;
+                    }
                 }
-                self.specialCount=0;
+                
+                [arrMText addObject:[[self getIndentationWithCount:count] stringByAppendingString:tempStr]];
+                
+                if ([self hasInIndex:tempStr]) {
+                    count++;
+                }
+                
+                if ([self hasInIndexSpecial:tempStr]==NO) {
+                    if (self.specialCount==1) {
+                        count--;
+                        if (count==-1)count=0;
+                    }
+                    self.specialCount=0;
+                }
+            }else{
+                [arrMText addObject:[self getIndentationWithCount:count]];
             }
-        }else{
-            [arrMText addObject:[self getIndentationWithCount:count]];
         }
     }
     
@@ -141,34 +145,38 @@
     NSMutableArray *arrMText=[NSMutableArray array];
     
     for (NSString *str in arrM) {
-        if (str.length>0) {
-            
-            tempStr=[self removeSpaceSuffix:str];
-            
-            if ([self hasOutIndex:tempStr]){
-                count--;
-                if (count==-1)count=0;
-            }else{
-                if (self.specialCount==1) {
-                    count++;
-                }
-            }
-            
-            [arrMText addObject:[[self getIndentationWithCount:count] stringByAppendingString:tempStr]];
-            
-            if ([self hasInIndex:tempStr]) {
-                count++;
-            }
-            
-            if ([self hasInIndexSpecial:tempStr]==NO) {
-                if (self.specialCount==1) {
+        if ([str hasPrefix:@"//"]) {//如果是注释,不做处理
+            [arrMText addObject:[[self getIndentationWithCount:count] stringByAppendingString:str]];
+        }else{
+            if (str.length>0) {
+                
+                tempStr=[self removeSpaceSuffix:str];
+                
+                if ([self hasOutIndex:tempStr]){
                     count--;
                     if (count==-1)count=0;
+                }else{
+                    if (self.specialCount==1) {
+                        count++;
+                    }
                 }
-                self.specialCount=0;
+                
+                [arrMText addObject:[[self getIndentationWithCount:count] stringByAppendingString:tempStr]];
+                
+                if ([self hasInIndex:tempStr]) {
+                    count++;
+                }
+                
+                if ([self hasInIndexSpecial:tempStr]==NO) {
+                    if (self.specialCount==1) {
+                        count--;
+                        if (count==-1)count=0;
+                    }
+                    self.specialCount=0;
+                }
+            }else{
+                [arrMText addObject:[self getIndentationWithCount:count]];
             }
-        }else{
-            [arrMText addObject:[self getIndentationWithCount:count]];
         }
     }
     
@@ -198,6 +206,13 @@
     for (NSString *str in arr) {
         if ([text hasSuffix:str]) {
             return YES;
+        }
+        if([text rangeOfString:@"{"].location!=NSNotFound){
+            NSString *tempStr=[text substringFromIndex:[text rangeOfString:@"{"].location+1];
+            tempStr=[self removeSpacePrefix:tempStr];
+            if ([tempStr hasPrefix:@"//"]) {
+                return YES;
+            }
         }
     }
     return NO;

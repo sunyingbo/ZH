@@ -142,7 +142,7 @@
     }
     
     NSString *context=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    context=[ZHStoryboardTextManager addCustomClassToAllViews:context];
+    context=[ZHStoryboardTextManager addCustomClassToAllViewsForPureHandProject:context];
     
     ReadXML *xml=[ReadXML new];
     [xml initWithXMLString:context];
@@ -165,6 +165,7 @@
     
     NSDictionary *idAndOutletViews=[ZHStoryboardXMLManager getAllOutletViewWithAllViewControllerArrM:allViewControllers andXMLHandel:xml];
     self.idAndOutletViews=idAndOutletViews;
+    
     //开始操作所有ViewController
     for (NSDictionary *dic in allViewControllers) {
         
@@ -172,7 +173,6 @@
         if(dic[@"customClass"]!=nil){
             viewController=dic[@"customClass"];
             {
-                
                 if ([[self.ZHStroyBoardCreateFile allKeys]containsObject:viewController]==NO) {
                     continue;
                 }
@@ -180,6 +180,34 @@
                     continue;
                 }else{
                     [self.didDoneDataArr addObject:viewController];
+                }
+                
+                //获取这个ViewController的所有tableView ,其中每个tableView都对应其所有的tableViewCell
+                NSDictionary *tableViewCellDic=[ZHStoryboardXMLManager getAllTableViewAndTableViewCellNamesWithViewControllerDic:dic andXMLHandel:xml];
+                
+                NSDictionary *allTableViewCellsAndId=[ZHStoryboardXMLManager getAllTableViewCellAndIdWithViewControllerDic:dic andXMLHandel:xml];
+                NSMutableDictionary *customAndNameTemp=[NSMutableDictionary dictionary];
+                for (NSString *customName in allTableViewCellsAndId) {
+                    [customAndNameTemp setValue:@"tableViewCell" forKey:customName];
+                }
+                NSDictionary *idAndViewPropertysTemp1=[ZHStoryboardPropertyManager getPropertysForView:allTableViewCellsAndId withCustomAndName:customAndNameTemp andXMLHandel:xml];
+                
+                //获取这个ViewController的所有collectionView ,其中每个collectionView都对应其所有的collectionViewCell
+                NSDictionary *collectionViewCellDic=[ZHStoryboardXMLManager getAllCollectionViewAndCollectionViewCellNamesWithViewControllerDic:dic andXMLHandel:xml];
+                
+                NSDictionary *allCollectionViewCellsAndId=[ZHStoryboardXMLManager getAllCollectionViewCellAndIdWithViewControllerDic:dic andXMLHandel:xml];
+                customAndNameTemp=[NSMutableDictionary dictionary];
+                for (NSString *customName in allCollectionViewCellsAndId) {
+                    [customAndNameTemp setValue:@"collectionViewCell" forKey:customName];
+                }
+                NSDictionary *idAndViewPropertysTemp2=[ZHStoryboardPropertyManager getPropertysForView:allCollectionViewCellsAndId withCustomAndName:customAndNameTemp andXMLHandel:xml];
+                
+                NSMutableDictionary *idAndViewPropertys_My=[NSMutableDictionary dictionary];
+                for (NSString *idStr in idAndViewPropertysTemp1) {
+                    [idAndViewPropertys_My setValue:idAndViewPropertysTemp1[idStr] forKey:idStr];
+                }
+                for (NSString *idStr in idAndViewPropertysTemp2) {
+                    [idAndViewPropertys_My setValue:idAndViewPropertysTemp2[idStr] forKey:idStr];
                 }
                 
                 //插入属性property
@@ -203,6 +231,18 @@
                 [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
                 [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM_Second:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
                 [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM_Three:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
+                
+                //在这里,取出拉线出来的约束,并且拿到当为这个约束赋值时的代码改成masonry对应的代码
+                NSDictionary *updataMasonryDic=[ZHStoryboardTextManager getUpdataMasonryCodeWithViewConstraintDic:viewConstraintDicM_Self_NEW withOutletView:self.idAndOutletViews];
+                NSArray *shouldOutlet=updataMasonryDic[@"shouldOutlet"];
+                NSDictionary *replaceMasonry=updataMasonryDic[@"replaceMasonry"];
+                
+                for (NSString *viewStr in shouldOutlet) {
+                    [ZHStoryboardTextManager addCodeText:[ZHStoryboardTextManager getOutletViewCodeWithView:viewStr withViewCategoryName:self.customAndName[viewStr]] andInsertType:ZHAddCodeType_Interface toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]] insertFunction:nil];
+                }
+                
+                //替换所有的约束的.constant=;
+                [ZHStoryboardTextManager replaceConstantToMasonry:replaceMasonry ToStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]]];
                 
                 //在这里插入所有view的创建和约束
                 
@@ -246,6 +286,15 @@
                 //解决self.tableView3=tableView3;的问题 但是实际上这个viewcontroller只有一个tableView
                 [ZHStoryboardTextManager dealWith_self_tableView_collectionView:creatCodeStrM isOnlyTableViewOrCollectionView:NO];
                 
+                for (NSString *tableView in tableViewCellDic) {
+                    [creatCodeStrM appendFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;\n",self.idAndOutletViews[tableView],self.idAndOutletViews[tableView]];
+                }
+                
+                
+                for (NSString *collectionView in collectionViewCellDic) {
+                    [creatCodeStrM appendFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;\n",self.idAndOutletViews[collectionView],self.idAndOutletViews[collectionView]];
+                }
+                
                 [creatCodeStrM appendString:@"}\n"];
                 
                 [ZHStoryboardTextManager addCodeText:creatCodeStrM andInsertType:ZHAddCodeType_Implementation toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]] insertFunction:nil];
@@ -256,11 +305,39 @@
                 NSString *tempCode=self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]];
                 tempCode=[tempCode stringByReplacingOccurrencesOfString:@"viewDidLoad " withString:@"viewDidLoad"];
                 self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]]=[NSMutableString stringWithString:tempCode];
-                [ZHStoryboardTextManager addCodeText:@"\n[self addSubViews];" andInsertType:ZHAddCodeType_InsertFunction toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]] insertFunction:@"\n- (void)viewDidLoad{"];
                 
+                //注册cell
+                NSMutableString *registerClassText=[NSMutableString string];
                 
+                for (NSString *tableView in tableViewCellDic) {
+                    NSArray *cells=tableViewCellDic[tableView];
+                    for (NSString *cell in cells) {
+                        //有时候tableViewCell的关联文件和复用标识不一样
+                        ViewProperty *property=idAndViewPropertys_My[cell];
+                        if (property.reuseIdentifier.length<=0) property.reuseIdentifier=cell;
+                        [registerClassText appendFormat:@"[self.%@ registerClass:[%@ class] forCellReuseIdentifier:@\"%@\"];\n",self.idAndOutletViews[tableView],cell,property.reuseIdentifier];
+                    }
+                }
+                
+                for (NSString *collectionView in collectionViewCellDic) {
+                    NSArray *cells=collectionViewCellDic[collectionView];
+                    for (NSString *cell in cells) {
+                        //有时候collectionViewCell的关联文件和复用标识不一样
+                        ViewProperty *property=idAndViewPropertys_My[cell];
+                        if (property.reuseIdentifier.length<=0) property.reuseIdentifier=cell;
+                        [registerClassText appendFormat:@"[self.%@ registerClass:[%@ class] forCellWithReuseIdentifier:@\"%@\"];\n",self.idAndOutletViews[collectionView],cell,property.reuseIdentifier];
+                    }
+                }
+                
+                if(registerClassText.length>0){
+                    [ZHStoryboardTextManager addCodeText:[NSString stringWithFormat:@"\n%@",registerClassText] andInsertType:ZHAddCodeType_InsertFunction toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]] insertFunction:@"viewDidLoad{"];
+                }
+                
+                BOOL result=[ZHStoryboardTextManager addCode:@"[self addSubViews];" ToTargetAfter:@"[super viewDidLoad];" toText:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]]];
+                if (result==NO) {
+                    [ZHStoryboardTextManager addCode:@"[self addSubViews];" ToTargetAfter:@"viewDidLoad{" toText:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]]];
+                }
             }
-            
             
             NSArray *tableViewCellDic=[ZHStoryboardXMLManager getTableViewCellNamesWithViewControllerDic:dic andXMLHandel:xml];
             NSArray *collectionViewCellDic=[ZHStoryboardXMLManager getCollectionViewCellNamesWithViewControllerDic:dic andXMLHandel:xml];
@@ -294,6 +371,32 @@
             [self.didDoneDataArr addObject:fatherCellName];
         }
         
+        NSDictionary *allTableViewCellsAndId=[ZHStoryboardXMLManager getAllTableViewCellAndIdWithViewControllerDic:subDic andXMLHandel:xml];
+        NSMutableDictionary *customAndNameTemp=[NSMutableDictionary dictionary];
+        for (NSString *customName in allTableViewCellsAndId) {
+            [customAndNameTemp setValue:@"tableViewCell" forKey:customName];
+        }
+        NSDictionary *idAndViewPropertysTemp1=[ZHStoryboardPropertyManager getPropertysForView:allTableViewCellsAndId withCustomAndName:customAndNameTemp andXMLHandel:xml];
+        
+        NSDictionary *allCollectionViewCellsAndId=[ZHStoryboardXMLManager getAllCollectionViewCellAndIdWithViewControllerDic:subDic andXMLHandel:xml];
+        customAndNameTemp=[NSMutableDictionary dictionary];
+        for (NSString *customName in allCollectionViewCellsAndId) {
+            [customAndNameTemp setValue:@"collectionViewCell" forKey:customName];
+        }
+        NSDictionary *idAndViewPropertysTemp2=[ZHStoryboardPropertyManager getPropertysForView:allCollectionViewCellsAndId withCustomAndName:customAndNameTemp andXMLHandel:xml];
+        
+        NSMutableDictionary *idAndViewPropertys_My=[NSMutableDictionary dictionary];
+        for (NSString *idStr in idAndViewPropertysTemp1) {
+            [idAndViewPropertys_My setValue:idAndViewPropertysTemp1[idStr] forKey:idStr];
+        }
+        for (NSString *idStr in idAndViewPropertysTemp2) {
+            [idAndViewPropertys_My setValue:idAndViewPropertysTemp2[idStr] forKey:idStr];
+        }
+        
+        NSDictionary *subTableViewCells=[ZHStoryboardXMLManager getAllTableViewAndTableViewCellNamesWithViewControllerDic:subDic andXMLHandel:xml];
+        
+        NSDictionary *subCollectionViewCells=[ZHStoryboardXMLManager getAllCollectionViewAndCollectionViewCellNamesWithViewControllerDic:subDic andXMLHandel:xml];
+        
         //插入属性property
         NSArray *views=[ZHStoryboardXMLManager getAllCellSubViewsWithViewControllerDic:subDic andXMLHandel:xml];
         
@@ -318,6 +421,17 @@
         [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
         [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM_Second:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
         [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM_Three:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
+        
+        //在这里,取出拉线出来的约束,并且拿到当为这个约束赋值时的代码改成masonry对应的代码
+        NSDictionary *updataMasonryDic=[ZHStoryboardTextManager getUpdataMasonryCodeWithViewConstraintDic:viewConstraintDicM_Self_NEW withOutletView:self.idAndOutletViews];
+        NSArray *shouldOutlet=updataMasonryDic[@"shouldOutlet"];
+        NSDictionary *replaceMasonry=updataMasonryDic[@"replaceMasonry"];
+        for (NSString *viewStr in shouldOutlet) {
+            [ZHStoryboardTextManager addCodeText:[ZHStoryboardTextManager getOutletViewCodeWithView:viewStr withViewCategoryName:self.customAndName[viewStr]] andInsertType:ZHAddCodeType_Interface toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:nil];
+        }
+        
+        //替换所有的约束的.constant=;
+        [ZHStoryboardTextManager replaceConstantToMasonry:replaceMasonry ToStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]]];
         
         //在这里插入所有view的创建和约束
         
@@ -362,17 +476,71 @@
         //解决self.tableView3=tableView3;的问题
         [ZHStoryboardTextManager dealWith_self_tableView_collectionView:creatCodeStrM isOnlyTableViewOrCollectionView:NO];
         
+        //注册cell
+        NSMutableString *registerClassText=[NSMutableString string];
+        
+        for (NSString *tableView in subTableViewCells) {
+            NSArray *cells=subTableViewCells[tableView];
+            for (NSString *cell in cells) {
+                //有时候tableViewCell的关联文件和复用标识不一样
+                ViewProperty *property=idAndViewPropertys_My[cell];
+                if (property.reuseIdentifier.length<=0) property.reuseIdentifier=cell;
+                [registerClassText appendFormat:@"[self.%@ registerClass:[%@ class] forCellReuseIdentifier:@\"%@\"];\n",self.idAndOutletViews[tableView],cell,property.reuseIdentifier];
+            }
+        }
+        
+        for (NSString *collectionView in subCollectionViewCells) {
+            NSArray *cells=subCollectionViewCells[collectionView];
+            for (NSString *cell in cells) {
+                //有时候collectionViewCell的关联文件和复用标识不一样
+                ViewProperty *property=idAndViewPropertys_My[cell];
+                if (property.reuseIdentifier.length<=0) property.reuseIdentifier=cell;
+                [registerClassText appendFormat:@"[self.%@ registerClass:[%@ class] forCellWithReuseIdentifier:@\"%@\"];\n",self.idAndOutletViews[collectionView],cell,property.reuseIdentifier];
+            }
+        }
+        
+        if(registerClassText.length>0){
+            [creatCodeStrM appendFormat:@"%@\n",registerClassText];
+        }
+        
+        for (NSString *tableView in subTableViewCells) {
+            [creatCodeStrM appendFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;\n",self.idAndOutletViews[tableView],self.idAndOutletViews[tableView]];
+        }
+        
+        
+        for (NSString *collectionView in subCollectionViewCells) {
+            [creatCodeStrM appendFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;\n",self.idAndOutletViews[collectionView],self.idAndOutletViews[collectionView]];
+        }
+        
+        NSString *tempCode=self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]];
+        tempCode=[tempCode stringByReplacingOccurrencesOfString:@"awakeFromNib " withString:@"awakeFromNib"];
+        tempCode=[tempCode stringByReplacingOccurrencesOfString:@"-(void)" withString:@"- (void)"];
+        tempCode=[tempCode stringByReplacingOccurrencesOfString:@"- (void) " withString:@"- (void)"];
+        self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]]=[NSMutableString stringWithString:tempCode];
+        
+        NSString *funcTemp=[ZHStoryboardTextManager findCodeFunctionWithIdentity:@"- (void)awakeFromNib{" WithText:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]]];
+        
+        NSString *tempCodeNew=self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]];
+        tempCodeNew=[tempCodeNew stringByReplacingOccurrencesOfString:funcTemp withString:@""];
+        self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]]=[NSMutableString stringWithString:tempCodeNew];
+        
+        if (funcTemp.length>0) {
+            funcTemp=[funcTemp substringToIndex:funcTemp.length-1];
+            funcTemp=[funcTemp stringByReplacingOccurrencesOfString:@"- (void)awakeFromNib{" withString:@""];
+            funcTemp=[funcTemp stringByReplacingOccurrencesOfString:@"[super awakeFromNib];" withString:@""];
+            funcTemp=[funcTemp stringByReplacingOccurrencesOfString:@"// Initialization code" withString:@""];
+            funcTemp=[funcTemp stringByReplacingOccurrencesOfString:@"Initialization code" withString:@""];
+            [creatCodeStrM appendFormat:@"%@\n",funcTemp];
+        }
+        
+        
         [creatCodeStrM appendString:@"}"];
+        
         [ZHStoryboardTextManager addCodeText:creatCodeStrM andInsertType:ZHAddCodeType_Implementation toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:nil];
         
         //解决UIMapView *mapView1;的问题
         [ZHStoryboardTextManager dealWith_UIMapView:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] needInserFramework:NO];
         
-        NSString *tempCode=self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]];
-        tempCode=[tempCode stringByReplacingOccurrencesOfString:@"awakeFromNib " withString:@"awakeFromNib"];
-        self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]]=[NSMutableString stringWithString:tempCode];
-        
-        [ZHStoryboardTextManager addCodeText:@"\n[self addSubViews];" andInsertType:ZHAddCodeType_InsertFunction toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:@"- (void)awakeFromNib{"];
         
         NSString *h_filePath=self.ZHStroyBoardCreateFile[fatherCellName];
         if ([h_filePath hasSuffix:@".m"]) {
@@ -394,7 +562,6 @@
                  }" andInsertType:ZHAddCodeType_Implementation toStrM:self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[fatherCellName]] insertFunction:nil];
             }
         }
-        
         
         NSArray *tableViewCellDic=[ZHStoryboardXMLManager getTableViewCellNamesWithViewControllerDic:subDic andXMLHandel:xml];
         NSArray *collectionViewCellDic=[ZHStoryboardXMLManager getCollectionViewCellNamesWithViewControllerDic:subDic andXMLHandel:xml];

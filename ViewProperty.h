@@ -49,6 +49,8 @@
 @property (nonatomic,copy)NSString *on;
 @property (nonatomic,copy)NSString *placeholder;
 
+@property (nonatomic,copy)NSString *reuseIdentifier;
+
 - (BOOL)hasProperty:(NSString *)property;
 
 @end

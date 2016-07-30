@@ -465,6 +465,21 @@ static NSString *MainDirectory;
     return name;
 }
 
++ (NSString *)getAdapterCollectionViewCellAndTableViewCellNameForPureHandProject:(NSString *)name{
+    
+    if ([[name lowercaseString] hasSuffix:@"tableviewcell"]) {
+        name=[name substringToIndex:name.length-@"tableviewcell".length];
+        return [self getAdapterCollectionViewCellAndTableViewCellNameForPureHandProject:name];
+    }else if ([[name lowercaseString] hasSuffix:@"tabelviewcell"]) {
+        name=[name substringToIndex:name.length-@"tabelviewcell".length];
+        return [self getAdapterCollectionViewCellAndTableViewCellNameForPureHandProject:name];
+    }else if ([[name lowercaseString] hasSuffix:@"collectionviewcell"]) {
+        name=[name substringToIndex:name.length-@"collectionviewcell".length];
+        return [self getAdapterCollectionViewCellAndTableViewCellNameForPureHandProject:name];
+    }
+    return name;
+}
+
 + (NSString *)getAdapterCollectionViewCellModelName:(NSString *)name{
     
     if ([[name lowercaseString] hasSuffix:@"collectionviewcellmodel"]) {

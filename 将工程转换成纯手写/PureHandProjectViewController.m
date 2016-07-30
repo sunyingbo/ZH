@@ -27,7 +27,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self.OkButton cornerRadius];
     [self.importButton cornerRadiusWithFloat:25];
     self.promoteLabel.numberOfLines=0;
@@ -95,6 +94,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             hud.labelText=@"转换工程成功";
             
+            [self.OkButton setTitle:@"转换成功" forState:(UIControlStateNormal)];
             self.OkButton.enabled=NO;
             self.OkButton.backgroundColor=[UIColor grayColor];
             
@@ -194,6 +194,7 @@
             self.path=path;
             [self.importButton setTitle:[ZHFileManager getFileNameNoPathComponentFromFilePath:path] forState:(UIControlStateNormal)];
             
+            [self.OkButton setTitle:@"开始转换" forState:(UIControlStateNormal)];
             self.OkButton.enabled=YES;
             self.OkButton.backgroundColor=[UIColor blackColor];
         }else{

@@ -95,6 +95,8 @@
                         }
                     }
                 }
+                NSLog(@"%@",viewController);
+                NSLog(@"%@",tableViewCellDic);
                 
                 //获取这个ViewController的所有collectionView ,其中每个collectionView都对应其所有的collectionViewCell
                 NSDictionary *collectionViewCellDic=[ZHStoryboardXMLManager getAllCollectionViewAndCollectionViewCellNamesWithViewControllerDic:dic andXMLHandel:xml];
@@ -109,6 +111,7 @@
                         }
                     }
                 }
+                NSLog(@"%@",collectionViewCellDic);
                 
                 //插入#import
                 for (NSString *tableViewCell in tableViewCells) {
