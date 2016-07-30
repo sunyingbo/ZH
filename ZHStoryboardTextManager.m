@@ -557,7 +557,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 }
 
 /**创建约束代码*/
-+ (NSString *)getCreatConstraintCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic withOutletView:(NSDictionary *)outletView isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
++ (NSString *)getCreatConstraintCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic withSelfConstraintDic:(NSDictionary *)selfConstraintDic withOutletView:(NSDictionary *)outletView isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
     
     NSMutableString *textCode=[NSMutableString string];
     
@@ -577,6 +577,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
             NSString *secondItem=constraintSubDic[@"secondItem"];
             NSString *multiplier=constraintSubDic[@"multiplier"];
             NSString *constant=constraintSubDic[@"constant"];
+            NSString *idStr=constraintSubDic[@"id"];
             
             if ([firstItem hasPrefix:@"self.view"]) {
                 firstItem=@"self.view";
@@ -684,20 +685,63 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                         NSLog(@"%@",@"约束很奇怪  有firstItem 没有 firstAttribute");
                     }
                 }else{
-                    if (firstItem.length<=0) {
-                        if (isCell) {
-                            firstItem=@"self.contentView";
+                    if (selfConstraintDic[viewName]!=nil) {
+                        BOOL isSelfConstraint=NO;
+                        for (NSDictionary *dicTemp in selfConstraintDic[viewName]) {
+                            if([dicTemp[@"id"] isEqualToString:idStr]){
+                                isSelfConstraint=YES;
+                                break;
+                            }
+                        }
+                        if (isSelfConstraint==YES) {
+                            if (firstItem.length<=0) {
+                                if (isCell) {
+                                    firstItem=viewName;
+                                }else{
+                                    firstItem=fatherView;
+                                }
+                            }
+                            if(constant.length>0){
+                                if ([secondAttribute isEqualToString:@"trailing"]||[secondAttribute isEqualToString:@"bottom"]) {
+                                    constant=[@"-" stringByAppendingString:constant];
+                                }
+                                [textCode appendFormat:@"make.%@.equalTo(%@.mas_%@).with.offset(%@)",secondAttribute,firstItem,firstAttribute,constant];
+                            }else{
+                                [textCode appendFormat:@"make.%@.equalTo(%@.mas_%@)",secondAttribute,firstItem,firstAttribute];
+                            }
                         }else{
-                            firstItem=fatherView;
+                            if (firstItem.length<=0) {
+                                if (isCell) {
+                                    firstItem=@"self.contentView";
+                                }else{
+                                    firstItem=fatherView;
+                                }
+                            }
+                            if(constant.length>0){
+                                if ([secondAttribute isEqualToString:@"trailing"]||[secondAttribute isEqualToString:@"bottom"]) {
+                                    constant=[@"-" stringByAppendingString:constant];
+                                }
+                                [textCode appendFormat:@"make.%@.equalTo(%@.mas_%@).with.offset(%@)",secondAttribute,firstItem,secondAttribute,constant];
+                            }else{
+                                [textCode appendFormat:@"make.%@.equalTo(%@.mas_%@)",secondAttribute,firstItem,secondAttribute];
+                            }
                         }
-                    }
-                    if(constant.length>0){
-                        if ([secondAttribute isEqualToString:@"trailing"]||[secondAttribute isEqualToString:@"bottom"]) {
-                            constant=[@"-" stringByAppendingString:constant];
-                        }
-                        [textCode appendFormat:@"make.%@.equalTo(%@.mas_%@).with.offset(%@)",secondAttribute,firstItem,secondAttribute,constant];
                     }else{
-                        [textCode appendFormat:@"make.%@.equalTo(%@.mas_%@)",secondAttribute,firstItem,secondAttribute];
+                        if (firstItem.length<=0) {
+                            if (isCell) {
+                                firstItem=@"self.contentView";
+                            }else{
+                                firstItem=fatherView;
+                            }
+                        }
+                        if(constant.length>0){
+                            if ([secondAttribute isEqualToString:@"trailing"]||[secondAttribute isEqualToString:@"bottom"]) {
+                                constant=[@"-" stringByAppendingString:constant];
+                            }
+                            [textCode appendFormat:@"make.%@.equalTo(%@.mas_%@).with.offset(%@)",secondAttribute,firstItem,secondAttribute,constant];
+                        }else{
+                            [textCode appendFormat:@"make.%@.equalTo(%@.mas_%@)",secondAttribute,firstItem,secondAttribute];
+                        }
                     }
                 }
                 
@@ -1118,8 +1162,15 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     if (implementationCount==0) {
         return;
     }
+    if (implementationCount>1) {
+        NSLog(@"%@",@"你的.m文件中有两个类");
+    }
     
     NSInteger implementationIndex=[text rangeOfString:@"@implementation"].location;
+    if(implementationCount>1){
+        //这里选择后面的那个implementation为默认
+        implementationIndex = [text rangeOfString:@"@implementation" options:NSBackwardsSearch].location;
+    }
     if (implementationIndex==NSNotFound) {
         return;
     }

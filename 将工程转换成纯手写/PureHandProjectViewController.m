@@ -40,6 +40,10 @@
 }
 
 - (void)OkAction{
+    NSLog(@"%@",@"开始");
+    [[ZHStroyBoardToPureHandProject new] transformProjectToPureHandProject:self.path];
+    NSLog(@"%@",@"结束");
+    return;
     MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;
     hud.labelText = @"正在检测工程...";

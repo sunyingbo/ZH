@@ -775,6 +775,48 @@
     }
 }
 
+/**获取某个控件自身的所有约束 比如宽度和高度之类 和关联对象的所有约束*/
++ (void)getViewAllConstraintWithViewDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withSelfConstraintDicM:(NSMutableDictionary *)selfConstraintDicM{
+    
+    //首先获取所有约束,其实也不难,找到这个控件的位置,就可以找到对应的约束
+    
+    //在获取到约束之前,需要获取不可用的储备的约束
+    
+    NSMutableArray *CanoyUseConstraintArrM=[NSMutableArray array];
+    [self getViewAllCanotUseConstraintWithControllerDic:dic andXMLHandel:xml withViewIdStr:viewIdStr withCanoyUseConstraintArrM:CanoyUseConstraintArrM];
+    
+    //找到具体控件的位置
+    NSDictionary *tempDic=[xml getDicWithCondition:@{@"customClass":[xml dicNodeValueWithKey:@"customClass" ForDic:dic]} withDic:dic];
+    
+    NSMutableArray *allConstraints=[NSMutableArray array];
+    //找到对应的节点 根据CustomClass找到的节点 如果CustomClass,就找id  因为有一个特殊的view 就是self.view
+    [xml getTargetNodeArrWithKeyName:@"customClass" andKeyValue:viewIdStr withDic:tempDic withArrM:allConstraints];
+    
+    //开始抽取其中的约束值
+    for (NSDictionary *dicConstraint in allConstraints) {//其实就只有一个,因为custom唯一
+        
+        NSMutableArray *arrMSub=[NSMutableArray array];
+        [xml getTargetNodeArrWithName:@"constraints" withDic:dicConstraint withArrM:arrMSub notContain:@[@"subviews"] withSuccess:NO];
+        
+        for (NSDictionary *dicSub in arrMSub) {//其实还是只有一个,因为每一个控件里面只有一个constraints
+            NSMutableArray *ViewConstraints=[NSMutableArray array];
+            [xml getTargetNodeArrWithName:@"constraint" withDic:dicSub withArrM:ViewConstraints notContain:nil withSuccess:NO];
+            
+            //开始挑选出自身的所有约束
+            //开始挑选出关联对象的所有约束
+            NSMutableArray *selfConstraints=[NSMutableArray array];
+            for (NSDictionary *checkDic in ViewConstraints) {
+                if ([CanoyUseConstraintArrM containsObject:[xml dicNodeValueWithKey:@"id" ForDic:checkDic]]) {
+                    continue;
+                }
+                
+                [selfConstraints addObject:checkDic];
+            }
+            
+            [selfConstraintDicM setValue:selfConstraints forKey:viewIdStr];
+        }
+    }
+}
 
 + (void)getTableViewCellViewAllCanotUseConstraintWithControllerDic_XIB:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withCanoyUseConstraintArrM:(NSMutableArray *)CanoyUseConstraintArrM{
     if (CanoyUseConstraintArrM==nil) {

@@ -76,6 +76,9 @@
 /**获取控件自身的所有约束 比如宽度和高度之类 和关联对象的所有约束*/
 + (void)getViewAllConstraintWithControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withSelfConstraintDicM:(NSMutableDictionary *)selfConstraintDicM withOtherConstraintDicM:(NSMutableDictionary *)otherConstraintDicM;
 
+/**获取某个控件自身的所有约束 比如宽度和高度之类 和关联对象的所有约束*/
++ (void)getViewAllConstraintWithViewDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withSelfConstraintDicM:(NSMutableDictionary *)selfConstraintDicM;
+
 /**获取Cell控件自身的所有约束 比如宽度和高度之类 和关联对象的所有约束*/
 + (void)getTableViewCellViewAllConstraintWithControllerDic_XIB:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml withViewIdStr:(NSString *)viewIdStr withSelfConstraintDicM:(NSMutableDictionary *)selfConstraintDicM withOtherConstraintDicM:(NSMutableDictionary *)otherConstraintDicM;
 
