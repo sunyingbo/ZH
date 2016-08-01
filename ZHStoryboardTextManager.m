@@ -711,10 +711,14 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                             }
                         }else{
                             if (firstItem.length<=0) {
-                                if (isCell) {
-                                    firstItem=@"self.contentView";
-                                }else{
+                                if (firstAttribute.length>0&&secondAttribute.length>0) {
                                     firstItem=fatherView;
+                                }else{
+                                    if (isCell) {
+                                        firstItem=@"self.contentView";
+                                    }else{
+                                        firstItem=@"self.view";
+                                    }
                                 }
                             }
                             if(constant.length>0){
@@ -727,11 +731,16 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                             }
                         }
                     }else{
+//                        NSLog(@"%@",idStr);//3VL-ng-bib
                         if (firstItem.length<=0) {
-                            if (isCell) {
-                                firstItem=@"self.contentView";
-                            }else{
+                            if (firstAttribute.length>0&&secondAttribute.length>0) {
                                 firstItem=fatherView;
+                            }else{
+                                if (isCell) {
+                                    firstItem=@"self.contentView";
+                                }else{
+                                    firstItem=@"self.view";
+                                }
                             }
                         }
                         if(constant.length>0){
@@ -791,9 +800,9 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     }
 }
 
-//解决.offset(--n)的问题
+//解决.offset(--n)的问题  --得+
 + (void)dealWith_offset:(NSMutableString *)textCode{
-    [textCode setString:[textCode stringByReplacingOccurrencesOfString:@".offset(--" withString:@".offset(-"]];
+    [textCode setString:[textCode stringByReplacingOccurrencesOfString:@".offset(--" withString:@".offset("]];
 }
 
 //解决self.tableView3=tableView3;的问题

@@ -298,6 +298,10 @@
                     NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
                     NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] withOutletView:self.idAndOutletViews addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:NO];
                     
+                    if ([shouldOutlet containsObject:idStr]) {
+                        creatCode=[creatCode stringByAppendingFormat:@"self.%@=%@;\n",self.customAndId[idStr],self.customAndId[idStr]];
+                    }
+                    
                     NSMutableString *propertyCode=[NSMutableString string];
                     [propertyCode setString:creatCode];
                     
@@ -493,6 +497,10 @@
             NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
 
             NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] withOutletView:self.idAndOutletViews addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:NO];
+            
+            if ([shouldOutlet containsObject:idStr]) {
+                creatCode=[creatCode stringByAppendingFormat:@"self.%@=%@;\n",self.customAndId[idStr],self.customAndId[idStr]];
+            }
             
             NSMutableString *propertyCode=[NSMutableString string];
             [propertyCode setString:creatCode];

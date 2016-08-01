@@ -98,8 +98,6 @@
                         }
                     }
                 }
-                NSLog(@"%@",viewController);
-                NSLog(@"%@",tableViewCellDic);
                 
                 //获取这个ViewController的所有collectionView ,其中每个collectionView都对应其所有的collectionViewCell
                 NSDictionary *collectionViewCellDic=[ZHStoryboardXMLManager getAllCollectionViewAndCollectionViewCellNamesWithViewControllerDic:dic andXMLHandel:xml];
@@ -114,7 +112,6 @@
                         }
                     }
                 }
-                NSLog(@"%@",collectionViewCellDic);
                 
                 //插入#import
                 for (NSString *tableViewCell in tableViewCells) {
@@ -139,10 +136,6 @@
                 [ZHStoryboardXMLManager getViewAllConstraintWithControllerDic:dic andXMLHandel:xml withViewIdStr:@"self.view" withSelfConstraintDicM:viewConstraintDicM_Self withOtherConstraintDicM:viewConstraintDicM_Other];
                 
                 for (NSString *idStr in views) {
-                    
-//                    if ([idStr hasPrefix:@"tableView"]||[idStr hasPrefix:@"collectionView"]) {
-//                        continue;
-//                    }
                     
                     //在这里,获取控件自身的所有约束 比如宽度和高度之类 和关联对象的所有约束
                     [ZHStoryboardXMLManager getViewAllConstraintWithControllerDic:dic andXMLHandel:xml withViewIdStr:idStr withSelfConstraintDicM:viewConstraintDicM_Self withOtherConstraintDicM:viewConstraintDicM_Other];
@@ -222,6 +215,7 @@
                         constraintCode = [constraintCode stringByReplacingOccurrencesOfString:@"}];\n\n\n" withString:@""];
                         constraintCode = [constraintCode stringByAppendingString:constraintCodeDefualt];
                         constraintCode = [constraintCode stringByAppendingString:@"\n\n"];
+                        
                     }
                     
                     [creatCodeStrM appendString:constraintCode];
@@ -336,8 +330,6 @@
     [self Xib_To_MasonryForView:xib];
     
 }
-
-
 
 - (void)Xib_To_MasonryForView:(NSString *)xib{
     _viewCount=0;
@@ -465,6 +457,7 @@
                 [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
                 [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM_Second:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
                 [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM_Three:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
+                
                 
                 //在这里插入所有view的创建和约束
                 
@@ -617,6 +610,9 @@
         
         NSMutableDictionary *viewConstraintDicM_Self_NEW=[viewConstraintDicM_Self mutableCopy];
         NSMutableDictionary *viewConstraintDicM_Other_NEW=[viewConstraintDicM_Other mutableCopy];
+        
+//        NSLog(@"%@",viewConstraintDicM_Self);
+//        NSLog(@"%@",viewConstraintDicM_Other);
         
         
         [ZHStoryboardXMLManager reAdjustViewAllConstraintWithNewSelfConstraintDicM:viewConstraintDicM_Self_NEW withNewOtherConstraintDicM:viewConstraintDicM_Other_NEW withXMLHandel:xml];
