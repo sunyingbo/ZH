@@ -1,13 +1,4 @@
-//
-//  ZHTableView.m
-//  代码助手
-//
-//  Created by mac on 16/3/19.
-//  Copyright © 2016年 com/ZQ/mac. All rights reserved.
-//
-
 #import "ZHTableView.h"
-#import "Auto_Father.h"
 
 @implementation ZHTableView
 - (NSString *)description{
@@ -114,94 +105,6 @@
     
     [self insertValueAndNewlines:@[@"}\n"] ToStrM:textStrM];
     
-    if ([dic[@"是否需要滑动滑栏显示提示 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
-        [self insertValueAndNewlines:@[@"- (void)setMI_labelText:(NSString *)text{\n\
-                                       if ([self.MI_Label.text isEqualToString:text]||[text isEqualToString:@\"_\"]) {\n\
-                                       return;\n\
-                                       }\n\
-                                       \n\
-                                       self.MI_View.hidden=NO;\n\
-                                       self.MI_Label.text=text;\n\
-                                       \n\
-                                       [UIView animateWithDuration:0.25 animations:^{\n\
-                                       self.MI_View.alpha=1.0;\n\
-                                       _time_count++;\n\
-                                       NSLog(@\"+++%ld\",_time_count);\n\
-                                       } completion:^(BOOL finished) {\n\
-                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{\n\
-                                       NSLog(@\"%ld\",_time_count);\n\
-                                       if (_time_count>1) {\n\
-                                       _time_count--;\n\
-                                       }\n\
-                                       if (_time_count==1) {\n\
-                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{\n\
-                                       [UIView animateWithDuration:0.5 animations:^{\n\
-                                       self.MI_View.alpha=0.0;\n\
-                                       } completion:^(BOOL finished) {\n\
-                                       self.MI_View.hidden=YES;\n\
-                                       }];\n\
-                                       });\n\
-                                       }\n\
-                                       });\n\
-                                       }];\n\
-                                       }\n- (UIView *)MI_View{\n\
-                                       if (!_MI_View) {\n\
-                                       \n\
-                                       CGFloat centerY=self.view.centerY-40;\n\
-                                       if (self.navigationController.navigationBar.hidden==NO) {\n\
-                                       centerY-=64;\n\
-                                       }\n\
-                                       _MI_View=[[UIView alloc]initWithFrame:CGRectMake(self.view.centerX-40, centerY, 80, 80)];\n\
-                                       \n\
-                                       _MI_Label=[[UILabel alloc]initWithFrame:_MI_View.bounds];\n\
-                                       _MI_Label.font=[UIFont systemFontOfSize:30];\n\
-                                       _MI_Label.textAlignment=NSTextAlignmentCenter;\n\
-                                       \n\
-                                       [_MI_View addSubview:_MI_Label];\n\
-                                       \n\
-                                       [self.view addSubview:_MI_View];\n\
-                                       }\n\
-                                       return _MI_View;\n\
-                                       }\n\
-                                       \n\
-                                       - (UILabel *)MI_Label{\n\
-                                       if (!_MI_Label) {\n\
-                                       [self MI_View];\n\
-                                       }\n\
-                                       return _MI_Label;\n\
-                                       }"] ToStrM:textStrM];
-    }
-    
-    if ([dic[@"是否需要检测网络和请求数据 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
-        [Auto_Father requestData:textStrM];
-    }
-    
-    
-    if ([dic[@"是否需要按拼音排序 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-        //显示假数据
-        [self insertValueAndNewlines:@[@"//- (void)getData1{\n\
-                                       //    NSArray *relatedArr=@[@40,@50,@80,@80,@40,@10,@40,@50,@70,@50,@80,@10,@10,@80,@40,@40,@40,@50,@40,@70];\n\
-                                       //    NSArray *FamilyArr=@[@0,@1,@0,@1,@0,@1,@0,@1,@0,@0,@0,@0,@0,@0,@0,@0,@0,@0,@0,@0];\n\
-                                       //    NSArray *arrName=@[@\"_陈宇\",@\"_陈轩\",@\"阿宇数学老师\",@\"鲍思远爸爸\",@\"董晓妈妈\",@\"陈宇语文老师\",@\"方玉军爸爸\",@\"高欢\",@\"郝向锋\",@\"杰克\",@\"庖轩\",@\"钱宇数学老师\",@\"爱思远爸爸\",@\"妲晓妈妈\",@\"陈宇语文老师\",@\"黄玉军爸爸\",@\"张欢\",@\"石向锋\"];\n\
-                                       //    NSArray *imageNameArr=@[@\"JiazhangQinyouhaoImg1\",@\"JiazhangQinyouhaoImg2\",@\"JiazhangQinyouhaoImg3\",@\"JiazhangQinyouhaoImg4\",@\"JiazhangQinyouhaoImgXitong1\",@\"JiazhangQinyouhaoImgXitong2\",@\"JiazhangQinyouhaoImgXitong3\",@\"JiazhangQinyouhaoImgXitong4\"];\n\
-                                       //    \n\
-                                       //    for (NSInteger i=0; i<arrName.count; i++) {\n\
-                                       //        FriendsAndFamilyCellModel *model=[FriendsAndFamilyCellModel new];\n\
-                                       //        model.iconImageName=imageNameArr[arc4random()%8];\n\
-                                       //        model.isFamily=[FamilyArr[i] boolValue];\n\
-                                       //        model.relatedDigital=[relatedArr[i] floatValue];\n\
-                                       //        model.title=arrName[i];\n\
-                                       //        [self.dataArr addObject:model];\n\
-                                       //    }\n\
-                                       //    \n\
-                                       //    \n\
-                                       //    self.dataArr=[self sortArrByChineseNames:self.dataArr];\n\
-                                       //}\n"] ToStrM:textStrM];
-        
-        //进行排序
-        [Auto_Father sortArrByChineseNames:textStrM];
-    }
-    
     [self insertValueAndNewlines:@[@"#pragma mark - 必须实现的方法:",@"- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{",@"return 1;",@"}"] ToStrM:textStrM];
     
     [self insertValueAndNewlines:@[@"- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{",@"return self.dataArr.count;",@"}",@"- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{"] ToStrM:textStrM];
@@ -219,7 +122,7 @@
     }
     [self insertValueAndNewlines:@[@"//随便给一个cell\nUITableViewCell *cell=[UITableViewCell new];",@"return cell;",@"}"] ToStrM:textStrM];
     
-    [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{",@"return 44.0f;",@"}",@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"NSLog(@\"选择了某一行\");",@"}",@"\n"] ToStrM:textStrM];
+    [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{",@"return 44.0f;",@"}",@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"}",@"\n"] ToStrM:textStrM];
     
     
     if ([dic[@"是否需要右边的滑栏 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
@@ -288,22 +191,29 @@
             
             [textStrM setString:@""];
             [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@TableViewCell.h\"\n",cell]] ToStrM:textStrM];
-            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@interface %@TableViewCell ()",cell],@"@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"//@property (weak, nonatomic) IBOutlet UIButton *iconImageView;",@"//@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"//@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"//@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"@property (weak, nonatomic) IBOutlet UIView *hotKeyArea;",[NSString stringWithFormat:@"@property (nonatomic,weak)%@CellModel *dataModel;",cell],@"@end\n"] ToStrM:textStrM];
+            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@interface %@TableViewCell ()",cell],@"@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"",[NSString stringWithFormat:@"@property (nonatomic,weak)%@CellModel *dataModel;",cell],@"@end\n"] ToStrM:textStrM];
             [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@implementation %@TableViewCell",cell],@"\n"] ToStrM:textStrM];
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
                 [self insertValueAndNewlines:@[[NSString stringWithFormat:@"- (void)refreshUI:(%@CellModel *)dataModel{",cell],@"_dataModel=dataModel;",@"self.nameLabel.text=dataModel.title;\n\
-                                               self.iconImageView.image=[UIImage imageNamed:dataModel.iconImageName];\n\
-                                               //[self.iconImageView imageWithURLString:dataModel.iconImageName];",@"}\n"] ToStrM:textStrM];
+                                               self.iconImageView.image=[UIImage imageNamed:dataModel.iconImageName];",@"}\n"] ToStrM:textStrM];
             }
             [self insertValueAndNewlines:@[@"- (void)awakeFromNib {",@"[super awakeFromNib];",@"//self.selectionStyle=UITableViewCellSelectionStyleNone;\n\
-                                           //self.accessoryType=UITableViewCellAccessoryDisclosureIndicator;",@"//[self addUILongPressGestureRecognizerWithTarget:self withAction:@selector(longPress:) withMinimumPressDuration:0.5];",@"}\n\n",@"- (void)setSelected:(BOOL)selected animated:(BOOL)animated {",@"[super setSelected:selected animated:animated];",@"// Configure the view for the selected state",@"//[self.hotKeyArea addUITapGestureRecognizerWithTarget:self withAction:@selector(hotKeyAreaAction:)];",@"}\n",@"//点击热区触发该方法\n- (void)hotKeyAreaAction:(UITapGestureRecognizer *)tap{\n//[ZHBlockSingleCategroy runBlockNSStringIdentity:@\"deleteMesssge\" Str1:_dataModel.messageId];\n}",@"@end"] ToStrM:textStrM];
+                                           //self.accessoryType=UITableViewCellAccessoryDisclosureIndicator;",@"}\n\n",@"- (void)setSelected:(BOOL)selected animated:(BOOL)animated {",@"[super setSelected:selected animated:animated];",@"}\n",@"@end"] ToStrM:textStrM];
             
             [self saveText:textStrM toFileName:@[dic[@"最大文件夹名字"],@"view",[NSString stringWithFormat:@"%@TableViewCell.m",cell]]];
             
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
                 [textStrM setString:@""];
                 
-                [self insertValueAndNewlines:@[@"#import <UIKit/UIKit.h>\n",[NSString stringWithFormat:@"@interface %@CellModel : NSObject",cell],@"@property (nonatomic,copy)NSString *iconImageName;",@"@property (nonatomic,assign)BOOL isSelect;",@"@property (nonatomic,assign)BOOL shouldShowImage;",@"@property (nonatomic,copy)NSString *name;",@"@property (nonatomic,copy)NSString *title;",@"@property (nonatomic,assign)CGFloat width;",@"@property (nonatomic,copy)NSString *autoWidthText;",@"@property (nonatomic,strong)NSMutableArray *dataArr;",@"@end"] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[@"#import <UIKit/UIKit.h>\n",[NSString stringWithFormat:@"@interface %@CellModel : NSObject",cell],@"@property (nonatomic,copy)NSString *iconImageName;\n\
+                                               @property (nonatomic,assign)BOOL isSelect;\n\
+                                               @property (nonatomic,assign)BOOL shouldShowImage;\n\
+                                               @property (nonatomic,copy)NSString *title;\n\
+                                               \n\
+                                               @property (nonatomic,copy)NSString *content;\n\
+                                               @property (nonatomic,assign)CGSize size;\n\
+                                               @property (nonatomic,assign)CGFloat width;\n\
+                                               @property (nonatomic,strong)NSMutableArray *dataArr;",@"@end"] ToStrM:textStrM];
                 
                 [self saveText:textStrM toFileName:@[dic[@"最大文件夹名字"],@"model",[NSString stringWithFormat:@"%@CellModel.h",cell]]];
                 
@@ -313,9 +223,12 @@
                                                _dataArr=[NSMutableArray array];\n\
                                                }\n\
                                                return _dataArr;\n\
-                                               }",@"- (void)setAutoWidthText:(NSString *)autoWidthText{\n\
-                                               _autoWidthText=autoWidthText;\n\
-                                               self.width=[autoWidthText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size.width;\n\
+                                               }",@"- (void)setContent:(NSString *)content{\n\
+                                               _content=content;\n\
+                                               if (self.width==0) {\n\
+                                               self.width=200;\n\
+                                               }\n\
+                                               self.size=[content boundingRectWithSize:CGSizeMake(self.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size;\n\
                                                }",@"\n@end"] ToStrM:textStrM];
                 
                 [self saveText:textStrM toFileName:@[dic[@"最大文件夹名字"],@"model",[NSString stringWithFormat:@"%@CellModel.m",cell]]];

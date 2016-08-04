@@ -17,7 +17,6 @@
 }
 
 - (void)awakeFromNib {
-	// Initialization code
     [super awakeFromNib];
     [self.iconImageView cornerRadius];
 	self.selectionStyle=UITableViewCellSelectionStyleNone;

@@ -515,7 +515,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
          flow%@.minimumLineSpacing = 0;\n\n",[self upFirstCharacter:viewName],[self upFirstCharacter:viewName],[self upFirstCharacter:viewName],[self upFirstCharacter:viewName]];
         [textCode appendFormat:@"UICollectionView *%@=[[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:flow%@];\n",viewName,[self upFirstCharacter:viewName]];
         [textCode appendFormat:@"%@.backgroundColor=[UIColor whiteColor];\n\
-         //%@.contentInset=UIEdgeInsetsMake(20, 20, 20, 20);\n",viewName,viewName];
+         //%@.contentInset=UIEdgeInsetsMake(10, 10, 10, 10);\n",viewName,viewName];
     }else{
         [textCode appendFormat:@"UI%@ *%@=[UI%@ new];\n",[self upFirstCharacter:viewCategoryName],viewName,[self upFirstCharacter:viewCategoryName]];
     }
@@ -731,7 +731,6 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                             }
                         }
                     }else{
-//                        NSLog(@"%@",idStr);//3VL-ng-bib
                         if (firstItem.length<=0) {
                             if (firstAttribute.length>0&&secondAttribute.length>0) {
                                 firstItem=fatherView;
@@ -1406,7 +1405,6 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
          }\n\
          - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{\n\
          [tableView deselectRowAtIndexPath:indexPath animated:YES];\n\
-         NSLog(@\"选择了某一行\");\n\
          }\n"];
         
         //开始插入
@@ -1575,14 +1573,12 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 //     //    flow.scrollDirection = UICollectionViewScrollDirectionVertical;//垂直\n\
 //     \n\
 //     flow.minimumInteritemSpacing = 10;\n\
-//     \n\
 //     flow.minimumLineSpacing = 10;\n\
-//     \n\
 //     collectionView.collectionViewLayout=flow;\n\
 //     \n\
 //     collectionView.backgroundColor=[UIColor whiteColor];//背景颜色\n\
 //     \n\
-//     collectionView.contentInset=UIEdgeInsetsMake(20, 20, 20, 20);//内嵌值\n\
+//     collectionView.contentInset=UIEdgeInsetsMake(10, 10, 10, 10);//内嵌值\n\
 //     }\n" andInsertType:ZHAddCodeType_end_last toStrM:text insertFunction:nil];
     
     if (collectionViews.count==1) {
@@ -1676,7 +1672,6 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
          - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath\n\
          {\n\
          [collectionView deselectItemAtIndexPath:indexPath animated:YES];\n\
-         NSLog(@\"选择了某个cell\");\n\
          }\n"];
         
         //开始插入

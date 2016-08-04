@@ -349,6 +349,7 @@
                 
                 NSString *tempCode=self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]];
                 tempCode=[tempCode stringByReplacingOccurrencesOfString:@"viewDidLoad " withString:@"viewDidLoad"];
+                
                 self.ZHStroyBoardCreateContent[self.ZHStroyBoardCreateFile[viewController]]=[NSMutableString stringWithString:tempCode];
                 
                 //注册cell
@@ -587,7 +588,6 @@
             funcTemp=[funcTemp stringByReplacingOccurrencesOfString:@"Initialization code" withString:@""];
             [creatCodeStrM appendFormat:@"%@\n",funcTemp];
         }
-        
         
         [creatCodeStrM appendString:@"}"];
         

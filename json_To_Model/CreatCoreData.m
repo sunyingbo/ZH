@@ -12,7 +12,7 @@
         if(str.length>0)
            [arrMs addObject:str];
     }
-//    NSLog(@"%@",arrMs);
+    
     NSInteger count=arrMs.count;
     NSInteger i;
     for (i=0; i<count; i++) {

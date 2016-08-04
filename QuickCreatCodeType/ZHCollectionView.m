@@ -1,11 +1,3 @@
-//
-//  ZHCollectionView.m
-//  代码助手
-//
-//  Created by mac on 16/5/13.
-//  Copyright © 2016年 com/qianfeng/mac. All rights reserved.
-//
-
 #import "ZHCollectionView.h"
 
 @implementation ZHCollectionView
@@ -46,7 +38,6 @@
     
     [textStrM setString:@""];
     
-    
     //2.创建ViewController.m
     [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@ViewController.h\"",dic[@"ViewController的名字"]],@""] ToStrM:textStrM];
     
@@ -70,10 +61,6 @@
     
     [self insertValueAndNewlines:@[@"\n- (void)viewDidLoad{",@"[super viewDidLoad];",@"[self addFlowLayoutToCollectionView:self.collectionView];",@"//self.edgesForExtendedLayout=UIRectEdgeNone;"] ToStrM:textStrM];
     
-//    [self insertViewDidLoad^{
-//        [self setTableViewDelegate];
-//    }];
-    
     [self insertValueAndNewlines:@[@"}\n"] ToStrM:textStrM];
     
     [self insertValueAndNewlines:@[@"/**为collectionView添加布局*/\n\
@@ -84,9 +71,7 @@
                                    //    flow.scrollDirection = UICollectionViewScrollDirectionVertical;//垂直\n\
                                    \n\
                                    flow.minimumInteritemSpacing = 10;\n\
-                                   \n\
                                    flow.minimumLineSpacing = 10;\n\
-                                   \n\
                                    collectionView.collectionViewLayout=flow;\n\
                                    \n\
                                    // 设置代理:\n\
@@ -95,45 +80,8 @@
                                    \n\
                                    collectionView.backgroundColor=[UIColor whiteColor];//背景颜色\n\
                                    \n\
-                                   collectionView.contentInset=UIEdgeInsetsMake(20, 20, 20, 20);//内嵌值\n\
+                                   collectionView.contentInset=UIEdgeInsetsMake(10, 10, 10, 10);//内嵌值\n\
                                    }\n"] ToStrM:textStrM];
-    
-    
-    
-    
-    if ([dic[@"是否需要检测网络和请求数据 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
-        [self insertValueAndNewlines:@[@"- (void)requestData{\n\
-                                       \n\
-                                       //解析数据\n\
-                                       AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];\n\
-                                       \n\
-                                       [manager GET:@\"URL\" parameters:@{@\"p\":[NSString stringWithFormat:@\"%ld\",self.page]} success:^(AFHTTPRequestOperation *operation, id responseObject) {\n\
-                                       \n\
-                                       <#Model#> *model=[<#Model#> new];\n\
-                                       [model setValuesForKeysWithDictionary:responseObject];\n\
-                                       \n\
-                                       if(self.page==1){\n\
-                                       [self.dataArr removeAllObjects];\n\
-                                       }\n\
-                                       \n\
-                                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {\n\
-                                       NSLog(@\"网络出错\");\n\
-                                       }];\n\
-                                       }",@"\n//检查网络状态\n- (void)updateInternetStatus\n\
-                                       {\n\
-                                       AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];\n\
-                                       [manager startMonitoring];\n\
-                                       [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {\n\
-                                       if (status == AFNetworkReachabilityStatusNotReachable) {\n\
-                                       \n\
-                                       }else{\n\
-                                       //请求数据\n\
-                                       [self requestData];\n\
-                                       }\n\
-                                       }];\n\
-                                       }"] ToStrM:textStrM];
-    }
-    
     
     [self insertValueAndNewlines:@[@"#pragma mark - collectionView的代理方法:\n\
                                    // 1.返回组数:\n\
@@ -155,19 +103,20 @@
                                    - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath\n\
                                    {"] ToStrM:textStrM];
     
+    
+    if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"])[self insertValueAndNewlines:@[@"id modelObjct=self.dataArr[indexPath.row];"] ToStrM:textStrM];
+    
     if ([self judge:cells]) {
         for (NSString *cell in arrCells) {
-            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CollectionViewCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cell,cell]] ToStrM:textStrM];
+            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cell,cell,cell]] ToStrM:textStrM];
             
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CellModel *model=self.dataArr[indexPath.row];",cell]] ToStrM:textStrM];
-                [self insertValueAndNewlines:@[@"[cell refreshUI:model];"] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",cell]] ToStrM:textStrM];
             }
+            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"return %@Cell;\n}\n",cell]] ToStrM:textStrM];
         }
-        [self insertValueAndNewlines:@[@"return cell;"] ToStrM:textStrM];
     }
-    
-    [self insertValueAndNewlines:@[@"}"] ToStrM:textStrM];
+    [self insertValueAndNewlines:@[@"//随便给一个cell\nUICollectionViewCell *cell=[UICollectionViewCell new];",@"return cell;",@"}"] ToStrM:textStrM];
     
     [self insertValueAndNewlines:@[@"//4.每一个item的大小:\n\
                                    - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath\n\
@@ -179,7 +128,6 @@
                                    - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath\n\
                                    {\n\
                                    [collectionView deselectItemAtIndexPath:indexPath animated:YES];\n\
-                                   NSLog(@\"选择了某个cell\");\n\
                                    }",@"\n"] ToStrM:textStrM];
     
     
@@ -204,14 +152,13 @@
             
             [textStrM setString:@""];
             [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@CollectionViewCell.h\"\n",cell]] ToStrM:textStrM];
-            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@interface %@CollectionViewCell ()",cell],@"@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"//@property (weak, nonatomic) IBOutlet UIButton *iconImageView;",@"//@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"//@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"//@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"@end\n"] ToStrM:textStrM];
+            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@interface %@CollectionViewCell ()",cell],@"@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"",@"",@"@end\n"] ToStrM:textStrM];
             [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@implementation %@CollectionViewCell",cell],@"\n"] ToStrM:textStrM];
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
                 [self insertValueAndNewlines:@[[NSString stringWithFormat:@"- (void)refreshUI:(%@CellModel *)dataModel{",cell],@"self.nameLabel.text=dataModel.title;\n\
-                                               self.iconImageView.image=[UIImage imageNamed:dataModel.iconImageName];\n\
-                                               //    [self.iconImageView imageWithURLString:dataModel.iconImageName];",@"}\n\n"] ToStrM:textStrM];
+                                               self.iconImageView.image=[UIImage imageNamed:dataModel.iconImageName];",@"}\n\n"] ToStrM:textStrM];
             }
-            [self insertValueAndNewlines:@[@"- (void)awakeFromNib {",@"// Initialization code",@"}\n",@"- (void)setSelected:(BOOL)selected{\n\
+            [self insertValueAndNewlines:@[@"- (void)awakeFromNib {",@"[super awakeFromNib];",@"}\n",@"- (void)setSelected:(BOOL)selected{\n\
                                            [super setSelected:selected];\n\
                                            }\n\
                                            - (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView{\n\
@@ -222,12 +169,31 @@
             
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
                 [textStrM setString:@""];
-                [self insertValueAndNewlines:@[@"#import <UIKit/UIKit.h>\n",[NSString stringWithFormat:@"@interface %@CellModel : NSObject",cell],@"@property (nonatomic,copy)NSString *iconImageName;",@"//@property (nonatomic,copy)NSString *<#ImageView#>;",@"//@property (nonatomic,copy)NSString *<#ImageView#>;",@"@property (nonatomic,copy)NSString *title;",@"//@property (nonatomic,copy)NSString *<#titleName#>;",@"//@property (nonatomic,copy)NSString *<#titleName#>;",@"@end\n"] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[@"#import <UIKit/UIKit.h>\n",[NSString stringWithFormat:@"@interface %@CellModel : NSObject",cell],@"@property (nonatomic,copy)NSString *iconImageName;\n\
+                                               @property (nonatomic,assign)BOOL isSelect;\n\
+                                               @property (nonatomic,assign)BOOL shouldShowImage;\n\
+                                               @property (nonatomic,copy)NSString *title;\n\
+                                               \n\
+                                               @property (nonatomic,copy)NSString *content;\n\
+                                               @property (nonatomic,assign)CGSize size;\n\
+                                               @property (nonatomic,assign)CGFloat width;\n\
+                                               @property (nonatomic,strong)NSMutableArray *dataArr;",@"@end"] ToStrM:textStrM];
                 
                 [self saveText:textStrM toFileName:@[dic[@"最大文件夹名字"],@"model",[NSString stringWithFormat:@"%@CellModel.h",cell]]];
                 
                 [textStrM setString:@""];
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@CellModel.h\"",cell],@"\n",[NSString stringWithFormat:@"@implementation %@CellModel",cell],@"\n@end\n"] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@CellModel.h\"",cell],@"\n",[NSString stringWithFormat:@"@implementation %@CellModel",cell],@"- (NSMutableArray *)dataArr{\n\
+                                               if (!_dataArr) {\n\
+                                               _dataArr=[NSMutableArray array];\n\
+                                               }\n\
+                                               return _dataArr;\n\
+                                               }",@"- (void)setContent:(NSString *)content{\n\
+                                               _content=content;\n\
+                                               if (self.width==0) {\n\
+                                               self.width=200;\n\
+                                               }\n\
+                                               self.size=[content boundingRectWithSize:CGSizeMake(self.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size;\n\
+                                               }",@"\n@end"] ToStrM:textStrM];
                 
                 [self saveText:textStrM toFileName:@[dic[@"最大文件夹名字"],@"model",[NSString stringWithFormat:@"%@CellModel.m",cell]]];
             }

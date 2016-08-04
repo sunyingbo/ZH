@@ -377,7 +377,6 @@
         NSString *myText=[text substringFromIndex:3];
         if([myText rangeOfString:@"\""].location!=NSNotFound)
             myText=[myText substringToIndex:[myText rangeOfString:@"\""].location];
-        NSLog(@"%@",myText);
         return myText;
     }else{
         return @"";//再说
