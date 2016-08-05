@@ -77,4 +77,6 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 
 /**第一个字母大写*/
 + (NSString *)upFirstCharacter:(NSString *)text;
+/**第一个字母小写写*/
++ (NSString *)lowerFirstCharacter:(NSString *)text;
 @end

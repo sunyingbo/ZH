@@ -25,8 +25,9 @@
 - (void)openFile:(NSString *)fileName;
 
 - (void)saveText:(NSString *)text toFileName:(NSArray *)fileNameDegree;
-- (void)saveStoryBoardCollectionViewToFileName:(NSArray *)fileNameDegree;
+- (void)saveStoryBoardCollectionViewToViewController:(NSString *)ViewController collectionviewCells:(NSArray *)collectionviewCells toFileName:(NSArray *)fileNameDegree;
 - (void)saveStoryBoard:(NSString *)ViewController TableViewCells:(NSArray *)tableviewCells toFileName:(NSArray *)fileNameDegree;
+- (void)saveStoryBoard:(NSString *)ViewController TableViewCells:(NSArray *)tableviewCells subTableCells:(NSArray *)subTableCellDic toFileName:(NSArray *)fileNameDegree;
 
 - (NSString *)getDirectoryPath:(NSString *)fileName;
 @end

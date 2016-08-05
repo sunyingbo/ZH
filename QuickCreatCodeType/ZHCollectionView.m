@@ -3,9 +3,7 @@
 @implementation ZHCollectionView
 - (NSString *)description{
     
-    NSString *filePath=[self creatFatherFile:@"CollectionViewController" andData:@[@"最大文件夹名字",@"ViewController的名字",@"自定义Cell,以逗号隔开",@"是否需要对应的Model 1:0 (不填写么默认为否)",@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)",@"是否需要检测网络和请求数据 1:0 (不填写么默认为否)"]];
-    
-    [self openFile:filePath];
+    [self creatFatherFile:@"CollectionViewController" andData:@[@"最大文件夹名字",@"ViewController的名字",@"自定义Cell,以逗号隔开",@"是否需要对应的Model 1:0 (不填写么默认为否)",@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)",@"是否需要检测网络和请求数据 1:0 (不填写么默认为否)"]];
     
     return @"指导文件已经创建在桌面上: CollectionViewController指导文件.m  ,请勿修改指定内容,否则格式不对将无法生成CollectionView的ViewController";
 }
@@ -108,12 +106,13 @@
     
     if ([self judge:cells]) {
         for (NSString *cell in arrCells) {
-            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cell,cell,cell]] ToStrM:textStrM];
+            NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:cell];
+            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cell,tempCell,cell]] ToStrM:textStrM];
             
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",cell]] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",tempCell]] ToStrM:textStrM];
             }
-            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"return %@Cell;\n}\n",cell]] ToStrM:textStrM];
+            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"return %@Cell;\n}\n",tempCell]] ToStrM:textStrM];
         }
     }
     [self insertValueAndNewlines:@[@"//随便给一个cell\nUICollectionViewCell *cell=[UICollectionViewCell new];",@"return cell;",@"}"] ToStrM:textStrM];
@@ -204,10 +203,21 @@
     
     //如果需要StroyBoard
     if([dic[@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-        //这里有较多需要判断的情况
-        //1.假如  ViewController的名字 不存在
-        
-        [self saveStoryBoardCollectionViewToFileName:@[dic[@"最大文件夹名字"],[NSString stringWithFormat:@"MainStroyBoard.storyboard"]]];
+        if (![self judge:dic[@"ViewController的名字"]]) {
+            [self saveStoryBoardCollectionViewToViewController:@"" collectionviewCells:nil toFileName:@[dic[@"最大文件夹名字"],[NSString stringWithFormat:@"MainStroyBoard.storyboard"]]];
+        }else{
+            //没有cells
+            if (![self judge:dic[@"自定义Cell,以逗号隔开"]]) {
+                [self saveStoryBoardCollectionViewToViewController:dic[@"ViewController的名字"] collectionviewCells:nil toFileName:@[dic[@"最大文件夹名字"],[NSString stringWithFormat:@"MainStroyBoard.storyboard"]]];
+            }else{//有cells
+                NSArray *arr=[dic[@"自定义Cell,以逗号隔开"] componentsSeparatedByString:@","];
+                NSMutableArray *arrM=[NSMutableArray array];
+                for (NSString *str in arr) {
+                    [arrM addObject:[str stringByAppendingString:@"CollectionViewCell"]];
+                }
+                [self saveStoryBoardCollectionViewToViewController:dic[@"ViewController的名字"] collectionviewCells:arrM toFileName:@[dic[@"最大文件夹名字"],[NSString stringWithFormat:@"MainStroyBoard.storyboard"]]];
+            }
+        }
     }
     
     [[ZHWordWrap new]wordWrap:[self getDirectoryPath:dic[@"最大文件夹名字"]]];

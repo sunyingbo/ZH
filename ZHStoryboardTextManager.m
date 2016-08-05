@@ -856,6 +856,14 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     NSString *firstCharacter=[text substringToIndex:1];
     return [[firstCharacter uppercaseString] stringByAppendingString:[text substringFromIndex:1]];
 }
+/**第一个字母小写写*/
++ (NSString *)lowerFirstCharacter:(NSString *)text{
+    if (text.length<=0) {
+        return @"";
+    }
+    NSString *firstCharacter=[text substringToIndex:1];
+    return [[firstCharacter lowercaseString] stringByAppendingString:[text substringFromIndex:1]];
+}
 
 + (NSString *)detailSpecialCustomClassLikeCell:(NSString *)rowStr{
     NSMutableArray *viewsArr=[NSMutableArray array];
@@ -1373,12 +1381,13 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
         NSArray *cells=tableDic[[tableDic allKeys][0]];
         for (NSString *cell in cells) {
             NSString *adapterCell=[ZHStroyBoardFileManager getAdapterTableViewCellName:cell];
+            NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:adapterCell];
             [strM appendFormat:@"if ([modelObjct isKindOfClass:[%@TableViewCellModel class]]){\n\
             %@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];\n\
             %@TableViewCellModel *model=modelObjct;\n\
             [%@Cell refreshUI:model];\n\
             return %@Cell;\n\
-             }\n",adapterCell,adapterCell,adapterCell,adapterCell,adapterCell,adapterCell,adapterCell];
+             }\n",adapterCell,tempCell,adapterCell,adapterCell,adapterCell,tempCell,tempCell];
         }
         
         //注册cell
@@ -1401,7 +1410,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
          return cell;\n\
          }\n"];
         [strM appendString:@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{\n\n\
-         return 60.0f;\n\
+         return 80.0f;\n\
          }\n\
          - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{\n\
          [tableView deselectRowAtIndexPath:indexPath animated:YES];\n\
@@ -1495,12 +1504,13 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
             NSArray *cells=allTableViewDicM[tableView];
             for (NSString *cell in cells) {
                 NSString *adapterCell=[ZHStroyBoardFileManager getAdapterTableViewCellName:cell];
+                NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:adapterCell];
                 [strM appendFormat:@"if ([modelObjct isKindOfClass:[%@TableViewCellModel class]]){\n\
                  %@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];\n\
                  %@TableViewCellModel *model=modelObjct;\n\
                  [%@Cell refreshUI:model];\n\
                  return %@Cell;\n\
-                 }\n",adapterCell,adapterCell,adapterCell,adapterCell,adapterCell,adapterCell,adapterCell];
+                 }\n",adapterCell,tempCell,adapterCell,adapterCell,adapterCell,tempCell,tempCell];
             }
             [strM appendString:@"}\n"];
         }
@@ -1521,13 +1531,13 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
             for (NSString *cell in cells) {
                 NSString *adapterCell=[ZHStroyBoardFileManager getAdapterTableViewCellName:cell];
                 [strM appendFormat:@"if ([modelObjct isKindOfClass:[%@TableViewCellModel class]]){\n\
-                 return 60.0f;\n\
+                 return 80.0f;\n\
                  }\n",adapterCell];
             }
             [strM appendString:@"}\n"];
             
         }
-        [strM appendString:@"	return 60.0f;\n\
+        [strM appendString:@"	return 80.0f;\n\
          }\n"];
         [strM appendString:@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{\n\n\
          [tableView deselectRowAtIndexPath:indexPath animated:YES];\n"];
@@ -1635,12 +1645,13 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
         
         for (NSString *cell in cells) {
             NSString *adapterCell=[ZHStroyBoardFileManager getAdapterCollectionViewCellName:cell];
+            NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:adapterCell];
             [strM appendFormat:@"if ([modelObjct isKindOfClass:[%@CollectionViewCellModel class]]) {\n\
              %@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];\n\
              %@CollectionViewCellModel *model=modelObjct;\n\
              [%@Cell refreshUI:model];\n\
              return %@Cell;\n\
-             }\n",adapterCell,adapterCell,adapterCell,adapterCell,adapterCell,adapterCell,adapterCell];
+             }\n",adapterCell,tempCell,adapterCell,adapterCell,adapterCell,tempCell,tempCell];
         }
         
         
@@ -1766,12 +1777,13 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
             NSArray *cells=allCollectionViewDicM[collectionView];
             for (NSString *cell in cells) {
                 NSString *adapterCell=[ZHStroyBoardFileManager getAdapterCollectionViewCellName:cell];
+                NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:adapterCell];
                 [strM appendFormat:@"if ([modelObjct isKindOfClass:[%@CollectionViewCellModel class]]) {\n\
                  %@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];\n\
                  %@CollectionViewCellModel *model=modelObjct;\n\
                  [%@Cell refreshUI:model];\n\
                  return %@Cell;\n\
-                 }\n",adapterCell,adapterCell,adapterCell,adapterCell,adapterCell,adapterCell,adapterCell];
+                 }\n",adapterCell,tempCell,adapterCell,adapterCell,adapterCell,tempCell,tempCell];
             }
             [strM appendString:@"}\n"];
         }

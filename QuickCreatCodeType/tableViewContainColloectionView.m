@@ -89,16 +89,17 @@
     
     if ([self judge:cells]) {
         for (NSString *cell in arrCells) {
+            NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:cell];
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,cell,cell],[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",cell],[NSString stringWithFormat:@"return %@Cell;",cell],@"}"] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,tempCell,cell],[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",tempCell],[NSString stringWithFormat:@"return %@Cell;",tempCell],@"}"] ToStrM:textStrM];
             }else{
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,cell,cell]] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,tempCell,cell]] ToStrM:textStrM];
             }
         }
     }
     [self insertValueAndNewlines:@[@"//随便给一个cell\nUITableViewCell *cell=[UITableViewCell new];",@"return cell;",@"}"] ToStrM:textStrM];
     
-    [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{",@"return 44.0f;",@"}",@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"}",@"\n"] ToStrM:textStrM];
+    [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{",@"return 80.0f;",@"}",@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"}",@"\n"] ToStrM:textStrM];
     
     if ([dic[@"是否需要titleForSection 1:0 (不填写么默认为否)"] isEqualToString:@"1"]&&[dic[@"是否需要右边的滑栏 1:0 (不填写么默认为否)"] isEqualToString:@"0"]) {
         [self insertValueAndNewlines:@[@"- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{\n\
@@ -134,16 +135,19 @@
     NSString *cellsContains=dic[@"自定义Cell标识符:(无:0 TableView:1(子cell以;隔开) ColloectionView:2(子cell以;隔开)),以逗号隔开"];
     NSArray *arrCellsContains=[cellsContains componentsSeparatedByString:@","];
     NSMutableArray *ContainArrM=[NSMutableArray array];
+    NSMutableArray *subTableCells=[NSMutableArray array];
     BOOL hasContain=NO;//判断是否有嵌套
     if (arrCellsContains.count==arrCells.count) {
         hasContain=YES;
         
+        NSInteger index=0;
         for (NSString *str in arrCellsContains) {
             if ([str isEqualToString:@"0"]) {
                 [ContainArrM addObject:@"0"];
+                [subTableCells addObject:[NSDictionary dictionaryWithObject:[NSDictionary dictionaryWithObject:@[] forKey:@"0"] forKey:arrCells[index]]];
             }else if ([str hasPrefix:@"1"]){
                 NSMutableArray *tableViewCells=[NSMutableArray array];
-                
+                NSMutableArray *tableViewCells_new=[NSMutableArray array];
                 [tableViewCells addObject:@"1"];
                 NSString *subStr=[str substringFromIndex:1];
                 if ([subStr hasPrefix:@"("]) {
@@ -154,14 +158,18 @@
                 }
                 if ([subStr rangeOfString:@";"].location!=NSNotFound) {
                     NSArray *subArr=[subStr componentsSeparatedByString:@";"];
+                    [tableViewCells_new addObjectsFromArray:subArr];
                     [tableViewCells addObjectsFromArray:subArr];
                 }else{
                     [tableViewCells addObject:subStr];
+                    [tableViewCells_new addObject:subStr];
                 }
                 
                 [ContainArrM addObject:tableViewCells];
+                [subTableCells addObject:[NSDictionary dictionaryWithObject:[NSDictionary dictionaryWithObject:tableViewCells_new forKey:@"1"] forKey:arrCells[index]]];
             }else if ([str hasPrefix:@"2"]){
                 NSMutableArray *collectionViewCells=[NSMutableArray array];
+                NSMutableArray *collectionViewCells_new=[NSMutableArray array];
                 
                 [collectionViewCells addObject:@"2"];
                 NSString *subStr=[str substringFromIndex:1];
@@ -174,12 +182,16 @@
                 if ([subStr rangeOfString:@";"].location!=NSNotFound) {
                     NSArray *subArr=[subStr componentsSeparatedByString:@";"];
                     [collectionViewCells addObjectsFromArray:subArr];
+                    [collectionViewCells_new addObjectsFromArray:subArr];
                 }else{
                     [collectionViewCells addObject:subStr];
+                    [collectionViewCells_new addObject:subStr];
                 }
                 
                 [ContainArrM addObject:collectionViewCells];
+                [subTableCells addObject:[NSDictionary dictionaryWithObject:[NSDictionary dictionaryWithObject:collectionViewCells_new forKey:@"2"] forKey:arrCells[index]]];
             }
+            index++;
         }
     }
     
@@ -236,7 +248,7 @@
                 for (NSString *str in arr) {
                     [arrM addObject:[str stringByAppendingString:@"TableViewCell"]];
                 }
-                [self saveStoryBoard:dic[@"ViewController的名字"] TableViewCells:arrM toFileName:@[dic[@"最大文件夹名字"],[NSString stringWithFormat:@"MainStroyBoard.storyboard"]]];
+                [self saveStoryBoard:dic[@"ViewController的名字"] TableViewCells:arrM subTableCells:subTableCells toFileName:@[dic[@"最大文件夹名字"],[NSString stringWithFormat:@"MainStroyBoard.storyboard"]]];
             }
         }
     }
@@ -410,12 +422,13 @@
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"])[self insertValueAndNewlines:@[@"id modelObjct=self.dataArr[indexPath.row];"] ToStrM:textStrM];
             
             for (NSString *cellCollectionView in arrCollectionViewCells) {
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cellCollectionView],[NSString stringWithFormat:@"%@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cellCollectionView,cellCollectionView,cellCollectionView]] ToStrM:textStrM];
+                NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:cellCollectionView];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cellCollectionView],[NSString stringWithFormat:@"%@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cellCollectionView,tempCell,cellCollectionView]] ToStrM:textStrM];
                 
                 if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-                    [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cellCollectionView],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",cellCollectionView]] ToStrM:textStrM];
+                    [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cellCollectionView],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",tempCell]] ToStrM:textStrM];
                 }
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"return %@Cell;\n}\n",cellCollectionView]] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"return %@Cell;\n}\n",tempCell]] ToStrM:textStrM];
                 
             }
             [self insertValueAndNewlines:@[@"//随便给一个cell\nUICollectionViewCell *cell=[UICollectionViewCell new];",@"return cell;",@"}"] ToStrM:textStrM];
@@ -442,8 +455,9 @@
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"])[self insertValueAndNewlines:@[@"id modelObjct=self.dataArr[indexPath.row];"] ToStrM:textStrM];
             
             for (NSString *cell in arrTableViewCells) {
+                NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:cell];
                 if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-                    [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,cell,cell],[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",cell],[NSString stringWithFormat:@"return %@Cell;",cell],@"}"] ToStrM:textStrM];
+                    [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,tempCell,cell],[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",tempCell],[NSString stringWithFormat:@"return %@Cell;",tempCell],@"}"] ToStrM:textStrM];
                 }else{
                     [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,cell,cell]] ToStrM:textStrM];
                 }
@@ -451,7 +465,7 @@
             
             [self insertValueAndNewlines:@[@"//随便给一个cell\nUITableViewCell *cell=[UITableViewCell new];",@"return cell;",@"}"] ToStrM:textStrM];
             
-            [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{",@"return 44.0f;",@"}",@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"}",@"\n"] ToStrM:textStrM];
+            [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{",@"return 80.0f;",@"}",@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"}",@"\n"] ToStrM:textStrM];
         }
     }
     

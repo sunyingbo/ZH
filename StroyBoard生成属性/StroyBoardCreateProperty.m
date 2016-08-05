@@ -569,9 +569,11 @@ static NSString *ZHProjectPath;
                 }
                 tempProperty=[self getRealKey:tempProperty];
                 tempProperty=[self getValue:tempProperty category:category];
-                NSString *code=[NSString stringWithFormat:@"\n@property (nonatomic, copy) NSString *%@;",tempProperty];
-                if ([text rangeOfString:code].location==NSNotFound) {
-                    [strM appendString:code];
+                if (tempProperty.length>0) {
+                    NSString *code=[NSString stringWithFormat:@"\n@property (nonatomic, copy) NSString *%@;",tempProperty];
+                    if ([text rangeOfString:code].location==NSNotFound) {
+                        [strM appendString:code];
+                    }
                 }
             }
             if (strM.length>0) {
