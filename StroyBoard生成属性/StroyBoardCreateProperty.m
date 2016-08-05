@@ -6,6 +6,9 @@ static NSMutableDictionary *ZHStroyBoardCreateCategory;
 static NSMutableDictionary *ZHStroyBoardCreateId;
 static NSMutableDictionary *ZHStroyBoardCreateFile;
 static NSMutableDictionary *ZHStroyBoardCreateContent;
+static NSMutableDictionary *ZHStroyBoardCreateReuse;
+
+static NSString *ZHProjectPath;
 
 @interface StroyBoardCreateProperty ()
 
@@ -63,12 +66,22 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
     });
     return ZHStroyBoardCreateId;
 }
++ (NSMutableDictionary *)defalutCreateReuse{
+    //添加线程锁
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (ZHStroyBoardCreateReuse==nil) {
+            ZHStroyBoardCreateReuse=[NSMutableDictionary dictionary];
+        }
+    });
+    return ZHStroyBoardCreateReuse;
+}
 
 + (NSInteger)createPropertyWithStroyBoardPath:(NSString *)stroyBoardPath withProjectPath:(NSString *)projectPath{
     if ([ZHFileManager fileExistsAtPath:stroyBoardPath]==NO||[ZHFileManager fileExistsAtPath:projectPath]==NO) {
         return -1;
     }
-    
+    ZHProjectPath=projectPath;
     //开始备份一份StroyBoard
     [self backupNewStroyBoard:stroyBoardPath];
     
@@ -103,11 +116,38 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
     //这个要放在最后面在运行,因为如果这个StroyBoard是XCode正在打开的文件,那么一旦改变,Xcode会重新加载一遍,StroyBoard文件比较大,加载时间会有点长,导致有点卡,担心影响执行再下面的代码
     [text writeToFile:stroyBoardPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     
-    
     [self done];
     return count;
 }
 
++ (NSString *)setProperty:(NSString *)property forKey:(NSString *)key{
+    NSString *returnStr=@"";
+    if ([self defalutCreateReuse][key]==nil) {
+        [self defalutCreateReuse][key]=[NSNumber numberWithInteger:0];
+        [[self defalutCreateId]setValue:property forKey:key];
+        returnStr=key;
+        return returnStr;
+    }else{
+        NSNumber *num=[self defalutCreateReuse][key];
+        NSInteger tempValue=[num integerValue];
+        tempValue++;
+        [self defalutCreateReuse][key]=[NSNumber numberWithInteger:tempValue];
+        [[self defalutCreateId]setValue:property forKey:[key stringByAppendingFormat:@"(&$&)%ld",tempValue]];
+        returnStr=[key stringByAppendingFormat:@"(&$&)%ld",tempValue];
+        return returnStr;
+    }
+    return returnStr;
+}
++ (NSString *)getRealKey:(NSString *)key{
+    NSString *result=key;
+    if (result.length<=0) {
+        return @"";
+    }
+    if ([result rangeOfString:@"(&$&)"].location!=NSNotFound) {
+        return [result substringToIndex:[result rangeOfString:@"(&$&)"].location];
+    }
+    return result;
+}
 /**获取所有控件自己打上的标识符*/
 + (NSString *)getCustomClassFromAllViews:(NSString *)text{
     NSArray *arr=[text componentsSeparatedByString:@"\n"];
@@ -135,10 +175,10 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                         NSString *idStr=[rowStr substringFromIndex:[rowStr rangeOfString:@"id=\""].location+4];
                         idStr=[idStr substringToIndex:[idStr rangeOfString:@"\""].location];
                         
-                        [[self defalutCreateId]setValue:idStr forKey:customStr];
+                        NSString *tempCustomStr=[self setProperty:idStr forKey:customStr];
                         
-                        [self addCustomClassProperty:customStr withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
-                        [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:customStr];//<view <label <button <imageView
+                        [self addCustomClassProperty:tempCustomStr withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
+                        [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:tempCustomStr];//<view <label <button <imageView
                         
                         NSString *removeCustom=[NSString stringWithFormat:@" customClass=\"%@\"",customStr];
                         [arrM addObject:[rowStr stringByReplacingOccurrencesOfString:removeCustom withString:@""]];
@@ -172,10 +212,10 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                         NSString *idStr=[rowStr substringFromIndex:[rowStr rangeOfString:@"id=\""].location+4];
                         idStr=[idStr substringToIndex:[idStr rangeOfString:@"\""].location];
                         
-                        [[self defalutCreateId]setValue:idStr forKey:customClass];
+                        NSString *tempCustomStr=[self setProperty:idStr forKey:customClass];
                         
-                        [self addCustomClassProperty:customClass withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
-                        [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:customClass];//<view <label <button <imageView
+                        [self addCustomClassProperty:tempCustomStr withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
+                        [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:tempCustomStr];//<view <label <button <imageView
                         
                         NSString *removeCustom=[NSString stringWithFormat:@" customClass=\"%@\"",customClass];
                         [arrM addObject:[rowStr stringByReplacingOccurrencesOfString:removeCustom withString:@""]];
@@ -211,6 +251,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
 
 /**为StroyBoard添加真的outlet property*/
 + (NSString *)addOutletProperty:(NSString *)text{
+    
     NSArray *arr=[text componentsSeparatedByString:@"\n"];
     NSMutableArray *arrM=[NSMutableArray array];
     NSString *rowStr,*viewIdenity;
@@ -271,8 +312,11 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                     if (i>0&&[arr[i-1] rangeOfString:@"</connections>"].location==NSNotFound) {
                         NSMutableString *connections=[NSMutableString string];
                         [connections appendString:@"<connections>\n"];
+                        
+                        NSInteger realInsert=0;
                         for (NSString *property in cellPropertys) {
                             NSString *newProperty=property;
+                            newProperty=[self getRealKey:newProperty];
                             if ([newProperty hasPrefix:@"_"]) {
                                 newProperty=[newProperty substringFromIndex:1];
                             }
@@ -283,10 +327,11 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                             NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
                             if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
                                 [connections appendString:outlet];
+                                realInsert++;
                             }
                         }
                         [connections appendString:@"</connections>"];
-                        if (cellPropertys.count>0) {
+                        if (cellPropertys.count>0&&realInsert>0) {
                             [arrM insertObject:connections atIndex:arrM.count];
                         }
                     }
@@ -294,6 +339,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                     else if(i>0&&[arr[i-1] rangeOfString:@"</connections>"].location!=NSNotFound){
                         for (NSString *property in cellPropertys) {
                             NSString *newProperty=property;
+                            newProperty=[self getRealKey:newProperty];
                             if ([newProperty hasPrefix:@"_"]) {
                                 newProperty=[newProperty substringFromIndex:1];
                             }
@@ -318,8 +364,11 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                     if (i>0&&[arr[i-1] rangeOfString:@"</connections>"].location==NSNotFound) {
                         NSMutableString *connections=[NSMutableString string];
                         [connections appendString:@"<connections>\n"];
+                        
+                        NSInteger realInsert=0;
                         for (NSString *property in cellPropertys) {
                             NSString *newProperty=property;
+                            newProperty=[self getRealKey:newProperty];
                             if ([newProperty hasPrefix:@"_"]) {
                                 newProperty=[newProperty substringFromIndex:1];
                             }
@@ -330,10 +379,11 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                             NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
                             if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
                                 [connections appendString:outlet];
+                                realInsert++;
                             }
                         }
                         [connections appendString:@"</connections>"];
-                        if (cellPropertys.count>0) {
+                        if (cellPropertys.count>0&&realInsert>0) {
                             [arrM insertObject:connections atIndex:arrM.count];
                         }
                     }
@@ -341,6 +391,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                     else if(i>0&&[arr[i-1] rangeOfString:@"</connections>"].location!=NSNotFound){
                         for (NSString *property in cellPropertys) {
                             NSString *newProperty=property;
+                            newProperty=[self getRealKey:newProperty];
                             if ([newProperty hasPrefix:@"_"]) {
                                 newProperty=[newProperty substringFromIndex:1];
                             }
@@ -364,8 +415,11 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                 if (i>0&&[arr[i-1] rangeOfString:@"</connections>"].location==NSNotFound) {
                     NSMutableString *connections=[NSMutableString string];
                     [connections appendString:@"<connections>\n"];
+                    
+                    NSInteger realInsert=0;
                     for (NSString *property in viewControllerPropertys) {
                         NSString *newProperty=property;
+                        newProperty=[self getRealKey:newProperty];
                         if ([newProperty hasPrefix:@"_"]) {
                             newProperty=[newProperty substringFromIndex:1];
                         }
@@ -376,10 +430,11 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                         NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
                         if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
                             [connections appendString:outlet];
+                            realInsert++;
                         }
                     }
                     [connections appendString:@"</connections>"];
-                    if (viewControllerPropertys.count>0) {
+                    if (viewControllerPropertys.count>0&&realInsert>0) {
                         [arrM insertObject:connections atIndex:arrM.count];
                     }
                 }
@@ -387,6 +442,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
                 else if(i>0&&[arr[i-1] rangeOfString:@"</connections>"].location!=NSNotFound){
                     for (NSString *property in viewControllerPropertys) {
                         NSString *newProperty=property;
+                        newProperty=[self getRealKey:newProperty];
                         if ([newProperty hasPrefix:@"_"]) {
                             newProperty=[newProperty substringFromIndex:1];
                         }
@@ -413,6 +469,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
 + (void)insertCode{
     for (NSString *fileName in [self defalutCreateProperty]) {
         [self insertCodePropertys:[self defalutCreateProperty][fileName] toStrM:[self defalutCreateContent][[self defalutCreateFile][fileName]] withFileName:fileName];
+        [self insertModelPropertyString:[self defalutCreateProperty][fileName] withFileName:fileName];
     }
 }
 
@@ -437,8 +494,10 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
     if(propertys.count>0){
         if ([strM rangeOfString:@"- (void)setPropertyValues{"].location!=NSNotFound) {
             NSString *setValue=[self getSetValueFunc:propertys isExsitFunc:YES];
-            setValue=[@"\n" stringByAppendingString:setValue];
-            [ZHStoryboardTextManager addCodeText:setValue andInsertType:ZHAddCodeType_InsertFunction toStrM:strM insertFunction:@"- (void)setPropertyValues{"];
+            if (setValue.length>0) {
+                setValue=[@"\n" stringByAppendingString:setValue];
+                [ZHStoryboardTextManager addCodeText:setValue andInsertType:ZHAddCodeType_InsertFunction toStrM:strM insertFunction:@"- (void)setPropertyValues{"];
+            }
         }else{
             NSString *setValue=[self getSetValueFunc:propertys isExsitFunc:NO];
             [ZHStoryboardTextManager addCodeText:setValue andInsertType:ZHAddCodeType_Implementation toStrM:strM insertFunction:nil];
@@ -453,7 +512,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
     if ([property hasPrefix:@"_"]) {
         property=[property substringFromIndex:1];
     }
-    
+    property=[self getRealKey:property];
     NSString *viewCategory;
     if ([category hasPrefix:@"mapView"]) {
         viewCategory=@"MKMapView";
@@ -461,6 +520,67 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
     
     viewCategory=[@"UI" stringByAppendingString:[ZHStoryboardTextManager upFirstCharacter:category]];
     return [NSString stringWithFormat:@"@property (weak, nonatomic) IBOutlet %@ *%@;",viewCategory,property];
+}
+
++ (NSString *)getValue:(NSString *)viewName category:(NSString *)category{
+    if ([[viewName lowercaseString]hasSuffix:[category lowercaseString]]) {
+        if ([[category lowercaseString]isEqualToString:[@"ImageView" lowercaseString]]) {
+            NSString *remain=[viewName substringToIndex:viewName.length-category.length];
+            remain=[remain stringByAppendingString:@"ImageName"];
+            return remain;
+        }
+        return [viewName substringToIndex:viewName.length-category.length];
+    }
+    return viewName;
+}
+
++ (void)insertModelPropertyString:(NSArray *)propertys withFileName:(NSString *)fileName{
+    
+    NSMutableString *text=[NSMutableString string];
+    NSString *tempFile=fileName;
+    if ([[tempFile lowercaseString]hasSuffix:@"tableviewcell"]) {
+        tempFile=[tempFile substringToIndex:tempFile.length-@"tableviewcell".length];
+        tempFile=[tempFile stringByAppendingString:@"CellModel.h"];
+    }else if ([[tempFile lowercaseString]hasSuffix:@"collectionviewcell"]){
+        tempFile=[tempFile substringToIndex:tempFile.length-@"collectionviewcell".length];
+        tempFile=[tempFile stringByAppendingString:@"CellModel.h"];
+    }
+    
+    if ([tempFile isEqualToString:fileName]==NO) {
+        NSString *path=@"";
+        NSArray *files=[ZHFileManager subPathFileArrInDirector:ZHProjectPath hasPathExtension:@[@".h"]];
+        for (NSString *filePath in files) {
+            if ([[ZHFileManager getFileNameFromFilePath:filePath]isEqualToString:tempFile]) {
+                path=filePath;
+                break;
+            }
+        }
+        if (path.length>0&&[ZHFileManager fileExistsAtPath:path]) {
+            [text setString:[NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil]];
+            
+            NSMutableString *strM=[NSMutableString string];
+            for (NSString *property in propertys) {
+                NSString *category=[self defalutCreateCategory][property];
+                category=[ZHNSString removeSpaceBeforeAndAfterWithString:category];
+                
+                NSString *tempProperty=property;
+                if ([tempProperty hasPrefix:@"_"]) {
+                    tempProperty=[tempProperty substringFromIndex:1];
+                }
+                tempProperty=[self getRealKey:tempProperty];
+                tempProperty=[self getValue:tempProperty category:category];
+                NSString *code=[NSString stringWithFormat:@"\n@property (nonatomic, copy) NSString *%@;",tempProperty];
+                if ([text rangeOfString:code].location==NSNotFound) {
+                    [strM appendString:code];
+                }
+            }
+            if (strM.length>0) {
+                [ZHStoryboardTextManager addCodeText:strM andInsertType:ZHAddCodeType_Interface toStrM:text insertFunction:nil];
+            }
+            
+            [text writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        }
+    }
 }
 
 + (NSString *)getSetValueFunc:(NSArray *)propertys isExsitFunc:(BOOL)isExsitFunc{
@@ -475,6 +595,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
         category=[ZHNSString removeSpaceBeforeAndAfterWithString:category];
         
         NSString *propertyTemp=property;
+        propertyTemp=[self getRealKey:propertyTemp];
         if ([propertyTemp hasPrefix:@"_"]) {
             propertyTemp=[propertyTemp substringFromIndex:1];
         }
@@ -491,6 +612,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
     
     return codeFunc;
 }
+
 + (BOOL)isCell:(NSString *)rowStr{
     if ([rowStr rangeOfString:@"<tableViewCell"].location!=NSNotFound||[rowStr rangeOfString:@"<collectionViewCell"].location!=NSNotFound) {
         return YES;
@@ -549,6 +671,7 @@ static NSMutableDictionary *ZHStroyBoardCreateContent;
     [[self defalutCreateFile]removeAllObjects];
     [[self defalutCreateContent]removeAllObjects];
     [[self defalutCreateId]removeAllObjects];
+    [[self defalutCreateReuse]removeAllObjects];
 }
 
 + (NSString *)getStoryBoardIdString{

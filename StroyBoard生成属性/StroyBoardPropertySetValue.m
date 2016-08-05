@@ -66,18 +66,24 @@
     return nil;
 }
 
++ (NSString *)getValue:(NSString *)viewName category:(NSString *)category{
+    if ([[viewName lowercaseString]hasSuffix:[category lowercaseString]]) {
+        return [viewName substringToIndex:viewName.length-category.length];
+    }
+    return viewName;
+}
 + (NSString *)getPropertyCodeForLabel:(NSString *)viewName{
-    return [NSString stringWithFormat:@"self.%@.text=@\"\";",viewName];
+    return [NSString stringWithFormat:@"self.%@.text=@\"%@\";",viewName,[self getValue:viewName category:@"Label"]];
 }
 
 
 + (NSString *)getPropertyCodeForButton:(NSString *)viewName{
-    return [NSString stringWithFormat:@"[%@ setTitle:@"" forState:(UIControlStateNormal)];",viewName];
+    return [NSString stringWithFormat:@"[self.%@ setTitle:@\"%@\" forState:(UIControlStateNormal)];",viewName,[self getValue:viewName category:@"Button"]];
 }
 
 
 + (NSString *)getPropertyCodeForImageView:(NSString *)viewName{
-    return [NSString stringWithFormat:@"self.%@.image=[UIImage imageNamed:@\"\"];",viewName];
+    return [NSString stringWithFormat:@"self.%@.image=[UIImage imageNamed:@\"%@ImageName\"];",viewName,[self getValue:viewName category:@"ImageView"]];
 }
 
 
@@ -102,7 +108,9 @@
 
 
 + (NSString *)getPropertyCodeForTextField:(NSString *)viewName{
-    return [NSString stringWithFormat:@"self.%@.text=@\"\";",viewName];
+    NSString *textFiled=[self getValue:viewName category:@"TextField"];
+    textFiled=[self getValue:textFiled category:@"TextFiled"];
+    return [NSString stringWithFormat:@"self.%@.text=@\"%@\";",viewName,textFiled];
 }
 
 
@@ -137,7 +145,7 @@
 
 
 + (NSString *)getPropertyCodeForTextView:(NSString *)viewName{
-    return [NSString stringWithFormat:@"self.%@.text=@\"\";",viewName];
+    return [NSString stringWithFormat:@"self.%@.text=@\"%@\";",viewName,[self getValue:viewName category:@"TextView"]];
     return nil;
 }
 
