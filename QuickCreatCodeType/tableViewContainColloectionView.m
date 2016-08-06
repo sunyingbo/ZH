@@ -111,7 +111,11 @@
         for (NSString *cell in arrCells) {
             NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:cell];
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,tempCell,cell],[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell],[NSString stringWithFormat:@"[%@Cell refreshUI:model];",tempCell],[NSString stringWithFormat:@"return %@Cell;",tempCell],@"}"] ToStrM:textStrM];
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cell],[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,tempCell,cell],[NSString stringWithFormat:@"%@CellModel *model=modelObjct;",cell]] ToStrM:textStrM];
+                if ([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
+                    [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@Cell.indexPath=indexPath;",tempCell]] ToStrM:textStrM];
+                }
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"[%@Cell refreshUI:model];",tempCell],[NSString stringWithFormat:@"return %@Cell;",tempCell],@"}"] ToStrM:textStrM];
             }else{
                 [self insertValueAndNewlines:@[[NSString stringWithFormat:@"%@TableViewCell *%@Cell=[tableView dequeueReusableCellWithIdentifier:@\"%@TableViewCell\"];",cell,tempCell,cell]] ToStrM:textStrM];
             }

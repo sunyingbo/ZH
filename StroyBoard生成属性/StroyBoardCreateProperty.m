@@ -570,7 +570,7 @@ static NSString *ZHProjectPath;
                 tempProperty=[self getRealKey:tempProperty];
                 tempProperty=[self getValue:tempProperty category:category];
                 if (tempProperty.length>0) {
-                    NSString *code=[NSString stringWithFormat:@"\n@property (nonatomic, copy) NSString *%@;",tempProperty];
+                    NSString *code=[NSString stringWithFormat:@"\n@property (nonatomic,copy)NSString *%@;",tempProperty];
                     if ([text rangeOfString:code].location==NSNotFound) {
                         [strM appendString:code];
                     }
