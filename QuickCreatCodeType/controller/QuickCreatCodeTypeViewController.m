@@ -39,8 +39,15 @@
 	self.tableView.dataSource=self;
     self.tableView.tableFooterView=[UIView new];
 	self.edgesForExtendedLayout=UIRectEdgeNone;
+    
+    //设置NavagationBar (Left和Right) Title
+    [TabBarAndNavagation setLeftBarButtonItemTitle:@"<返回" TintColor:[UIColor blackColor] target:self action:@selector(leftBarClick)];
+    self.title=@"快速生成代码";
 }
 
+- (void)leftBarClick{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 #pragma mark - 必须实现的方法:
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
 	return 1;

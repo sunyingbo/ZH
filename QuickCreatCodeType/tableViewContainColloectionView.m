@@ -11,6 +11,7 @@
     }
     
     NSString *fatherDirector=[self creatFatherFileDirector:dic[@"最大文件夹名字"] toFatherDirector:nil];
+    
     [self creatFatherFileDirector:@"controller" toFatherDirector:fatherDirector];
     [self creatFatherFileDirector:@"view" toFatherDirector:fatherDirector];
     [self creatFatherFileDirector:@"model" toFatherDirector:fatherDirector];
@@ -19,6 +20,11 @@
     if (![self judge:dic[@"ViewController的名字"]]) {
         [MBProgressHUD showHUDAddedTo:view withText:@"没有填写 ViewController的名字 那么就默认只生成MVC文件夹!" withDuration:1];
         return;
+    }
+    
+    if ([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
+        [[self getZHBlockSingleCategroy_H] writeToFile:[fatherDirector stringByAppendingPathComponent:@"ZHBlockSingleCategroy.h"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        [[self getZHBlockSingleCategroy_M] writeToFile:[fatherDirector stringByAppendingPathComponent:@"ZHBlockSingleCategroy.m"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
     }
     //1.创建ViewController.h
     
@@ -640,6 +646,349 @@
         [self saveText:textStrM toFileName:@[dic[@"最大文件夹名字"],@"model",[NSString stringWithFormat:@"%@CellModel.m",cell]]];
     }
     
+}
+
+- (NSString *)getZHBlockSingleCategroy_H{
+    return [[ZHWordWrap new] wordWrapText:@"#import <UIKit/UIKit.h>\n\
+            \n\
+            //空(NULL)\n\
+            typedef void (^MyblockWithNULL)(void);\n\
+            \n\
+            //字符串(NSString)\n\
+            typedef void (^MyblockWithNSString)(NSString *str1);\n\
+            typedef void (^MyblockWithTwoNSString)(NSString *str1,NSString *str2);\n\
+            typedef void (^MyblockWithThreeNSString)(NSString *str1,NSString *str2,NSString *str3);\n\
+            \n\
+            //NSInteger\n\
+            typedef void (^MyblockWithNSInteger)(NSInteger Integer);\n\
+            typedef void (^MyblockWithTwoNSInteger)(NSInteger Integer1,NSInteger Integer2);\n\
+            typedef void (^MyblockWithThreeNSInteger)(NSInteger Integer1,NSInteger Integer2,NSInteger Integer3);\n\
+            \n\
+            //CGFloat\n\
+            typedef void (^MyblockWithCGFloat)(CGFloat Float);\n\
+            typedef void (^MyblockWithTwoCGFloat)(CGFloat Float1,CGFloat Float2);\n\
+            typedef void (^MyblockWithThreeCGFloat)(CGFloat Float1,CGFloat Float2,CGFloat Float3);\n\
+            \n\
+            //NSArray\n\
+            typedef void (^MyblockWithNSArray)(NSArray *Array);\n\
+            typedef void (^MyblockWithTwoNSArray)(NSArray *Array1,NSArray *Array2);\n\
+            typedef void (^MyblockWithThreeNSArray)(NSArray *Array1,NSArray *Array2,NSArray *Array3);\n\
+            \n\
+            //NSDictionary\n\
+            typedef void (^MyblockWithNSDictionary)(NSDictionary *Dictionary);\n\
+            typedef void (^MyblockWithTwoNSDictionary)(NSDictionary *Dictionary1,NSDictionary *Dictionary2);\n\
+            typedef void (^MyblockWithThreeNSDictionary)(NSDictionary *Dictionary1,NSDictionary *Dictionary2,NSDictionary *Dictionary3);\n\
+            \n\
+            @interface ZHBlockSingleCategroy : NSObject\n\
+            \n\
+            + (NSMutableDictionary *)defaultMyblock;\n\
+            \n\
+            /**判断是否存在某个Block*/\n\
+            + (BOOL)exsitBlockWithIdentity:(NSString *)Identity;\n\
+            \n\
+            //空(NULL)\n\
+            + (void)addBlockWithNULL:(MyblockWithNULL)block WithIdentity:(NSString *)Identity;\n\
+            \n\
+            //字符串(NSString)\n\
+            + (void)addBlockWithNSString:(MyblockWithNSString)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithTwoNSString:(MyblockWithTwoNSString)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithThreeNSString:(MyblockWithThreeNSString)block WithIdentity:(NSString *)Identity;\n\
+            \n\
+            //NSInteger\n\
+            + (void)addBlockWithNSInteger:(MyblockWithNSInteger)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithTwoNSInteger:(MyblockWithTwoNSInteger)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithThreeNSInteger:(MyblockWithThreeNSInteger)block WithIdentity:(NSString *)Identity;\n\
+            \n\
+            //CGFloat\n\
+            + (void)addBlockWithCGFloat:(MyblockWithCGFloat)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithTwoCGFloat:(MyblockWithTwoCGFloat)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithThreeCGFloat:(MyblockWithThreeCGFloat)block WithIdentity:(NSString *)Identity;\n\
+            \n\
+            //NSArray\n\
+            + (void)addBlockWithNSArray:(MyblockWithNSArray)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithTwoNSArray:(MyblockWithTwoNSArray)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithThreeNSArray:(MyblockWithThreeNSArray)block WithIdentity:(NSString *)Identity;\n\
+            \n\
+            //NSDictionary\n\
+            + (void)addBlockWithNSDictionary:(MyblockWithNSDictionary)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithTwoNSDictionary:(MyblockWithTwoNSDictionary)block WithIdentity:(NSString *)Identity;\n\
+            + (void)addBlockWithThreeNSDictionary:(MyblockWithThreeNSDictionary)block WithIdentity:(NSString *)Identity;\n\
+            \n\
+            //执行block 空(NULL)\n\
+            + (void)runBlockNULLIdentity:(NSString *)Identity;\n\
+            \n\
+            //执行block 字符串(NSString)\n\
+            + (void)runBlockNSStringIdentity:(NSString *)Identity Str1:(NSString *)str1;\n\
+            + (void)runBlockTwoNSStringIdentity:(NSString *)Identity Str1:(NSString *)str1 Str2:(NSString *)str2;\n\
+            + (void)runBlockThreeNSStringIdentity:(NSString *)Identity Str1:(NSString *)str1 Str2:(NSString *)str2 Str3:(NSString *)str3;\n\
+            \n\
+            //执行block NSInteger\n\
+            + (void)runBlockNSIntegerIdentity:(NSString *)Identity Intege1:(NSInteger)Intege1;\n\
+            + (void)runBlockTwoNSIntegerIdentity:(NSString *)Identity  Intege1:(NSInteger)Intege1 Intege2:(NSInteger)Intege2;\n\
+            + (void)runBlockThreeNSIntegerIdentity:(NSString *)Identity  Intege1:(NSInteger)Intege1 Intege2:(NSInteger)Intege2  Intege3:(NSInteger)Intege3;\n\
+            \n\
+            //执行block CGFloat\n\
+            + (void)runBlockCGFloatIdentity:(NSString *)Identity Float1:(CGFloat)Float1;\n\
+            + (void)runBlockTwoCGFloatIdentity:(NSString *)Identity Float1:(CGFloat)Float1 Float2:(CGFloat)Float2;\n\
+            + (void)runBlockThreeCGFloatIdentity:(NSString *)Identity Float1:(CGFloat)Float1 Float2:(CGFloat)Float2  Float3:(CGFloat)Float3;\n\
+            \n\
+            //执行block NSArray\n\
+            + (void)runBlockNSArrayIdentity:(NSString *)Identity Array1:(NSArray *)Array1;\n\
+            + (void)runBlockTwoNSArrayIdentity:(NSString *)Identity Array1:(NSArray *)Array1 Array2:(NSArray *)Array2;\n\
+            + (void)runBlockThreeNSArrayIdentity:(NSString *)Identity Array1:(NSArray *)Array1  Array2:(NSArray *)Array2 Array3:(NSArray *)Array3;\n\
+            \n\
+            //NSDictionary\n\
+            + (void)runBlockNSDictionaryIdentity:(NSString *)Identity Dictionary1:(NSDictionary *)Dictionary1;\n\
+            + (void)runBlockTwoNSDictionaryIdentity:(NSString *)Identity Dictionary1:(NSDictionary *)Dictionary1 Dictionary2:(NSDictionary *)Dictionary2;\n\
+            + (void)runBlockThreeNSDictionaryIdentity:(NSString *)Identity  Dictionary1:(NSDictionary *)Dictionary1 Dictionary2:(NSDictionary *)Dictionary2 Dictionary3:(NSDictionary *)Dictionary3;\n\
+            \n\
+            \n\
+            + (void)removeBlockWithIdentity:(NSString *)Identity;\n\
+            \n\
+            @end\n\
+            "];
+}
+- (NSString *)getZHBlockSingleCategroy_M{
+    return [[ZHWordWrap new] wordWrapText:@"#import \"ZHBlockSingleCategroy.h\"\n\
+            \n\
+            static NSMutableDictionary *ZHBlocks;\n\
+            \n\
+            @implementation ZHBlockSingleCategroy\n\
+            + (NSMutableDictionary *)defaultMyblock{\n\
+            //添加线程锁\n\
+            static dispatch_once_t onceToken;\n\
+            dispatch_once(&onceToken, ^{\n\
+            if(ZHBlocks==nil){\n\
+            ZHBlocks=[NSMutableDictionary dictionary];\n\
+            }\n\
+            });\n\
+            return ZHBlocks;\n\
+            }\n\
+            \n\
+            + (BOOL)exsitBlockWithIdentity:(NSString *)Identity{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]==nil)\n\
+            return NO;\n\
+            else\n\
+            return YES;\n\
+            }\n\
+            \n\
+            + (void)addBlock:(id)block withIdentity:(NSString *)identity{\n\
+            [self removeBlockWithIdentity:identity];\n\
+            [[ZHBlockSingleCategroy defaultMyblock] setValue:block forKey:identity];\n\
+            }\n\
+            \n\
+            //空(NULL)\n\
+            + (void)addBlockWithNULL:(MyblockWithNULL)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            \n\
+            //添加block 字符串(NSString)\n\
+            + (void)addBlockWithNSString:(MyblockWithNSString)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            + (void)addBlockWithTwoNSString:(MyblockWithTwoNSString)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            + (void)addBlockWithThreeNSString:(MyblockWithThreeNSString)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            \n\
+            //添加block NSInteger\n\
+            + (void)addBlockWithNSInteger:(MyblockWithNSInteger)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            + (void)addBlockWithTwoNSInteger:(MyblockWithTwoNSInteger)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            + (void)addBlockWithThreeNSInteger:(MyblockWithThreeNSInteger)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            \n\
+            //添加block CGFloat\n\
+            + (void)addBlockWithCGFloat:(MyblockWithCGFloat)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            + (void)addBlockWithTwoCGFloat:(MyblockWithTwoCGFloat)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            +(void)addBlockWithThreeCGFloat:(MyblockWithThreeCGFloat)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            \n\
+            //添加block NSArray\n\
+            + (void)addBlockWithNSArray:(MyblockWithNSArray)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            + (void)addBlockWithTwoNSArray:(MyblockWithTwoNSArray)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            + (void)addBlockWithThreeNSArray:(MyblockWithThreeNSArray)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            \n\
+            //添加block NSDictionary\n\
+            + (void)addBlockWithNSDictionary:(MyblockWithNSDictionary)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            + (void)addBlockWithTwoNSDictionary:(MyblockWithTwoNSDictionary)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            +(void)addBlockWithThreeNSDictionary:(MyblockWithThreeNSDictionary)block WithIdentity:(NSString *)Identity{\n\
+            [self addBlock:block withIdentity:Identity];\n\
+            }\n\
+            \n\
+            //执行block 空(NULL)\n\
+            + (void)runBlockNULLIdentity:(NSString *)Identity{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithNULL block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block();\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            \n\
+            //执行block 字符串(NSString)\n\
+            + (void)runBlockNSStringIdentity:(NSString *)Identity Str1:(NSString *)str1{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithNSString block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(str1);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockTwoNSStringIdentity:(NSString *)Identity Str1:(NSString *)str1 Str2:(NSString *)str2{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithTwoNSString block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(str1,str2);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockThreeNSStringIdentity:(NSString *)Identity Str1:(NSString *)str1 Str2:(NSString *)str2 Str3:(NSString *)str3{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithThreeNSString block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(str1,str2,str3);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            \n\
+            //执行block NSInteger\n\
+            + (void)runBlockNSIntegerIdentity:(NSString *)Identity Intege1:(NSInteger)Intege1{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithNSInteger block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Intege1);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockTwoNSIntegerIdentity:(NSString *)Identity  Intege1:(NSInteger)Intege1 Intege2:(NSInteger)Intege2{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithTwoNSInteger block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Intege1,Intege2);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockThreeNSIntegerIdentity:(NSString *)Identity  Intege1:(NSInteger)Intege1 Intege2:(NSInteger)Intege2  Intege3:(NSInteger)Intege3{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithThreeNSInteger block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Intege1,Intege2,Intege3);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            \n\
+            //执行block CGFloat\n\
+            + (void)runBlockCGFloatIdentity:(NSString *)Identity Float1:(CGFloat)Float1{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithCGFloat block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Float1);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockTwoCGFloatIdentity:(NSString *)Identity Float1:(CGFloat)Float1 Float2:(CGFloat)Float2{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithTwoCGFloat block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Float1,Float2);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockThreeCGFloatIdentity:(NSString *)Identity Float1:(CGFloat)Float1 Float2:(CGFloat)Float2  Float3:(CGFloat)Float3{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithThreeCGFloat block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Float1,Float2,Float3);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            \n\
+            //执行block NSArray\n\
+            + (void)runBlockNSArrayIdentity:(NSString *)Identity Array1:(NSArray *)Array1{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithNSArray block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Array1);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockTwoNSArrayIdentity:(NSString *)Identity Array1:(NSArray *)Array1 Array2:(NSArray *)Array2{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithTwoNSArray block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Array1,Array2);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockThreeNSArrayIdentity:(NSString *)Identity Array1:(NSArray *)Array1  Array2:(NSArray *)Array2 Array3:(NSArray *)Array3{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithThreeNSArray block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Array1,Array2,Array3);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            \n\
+            //NSDictionary\n\
+            + (void)runBlockNSDictionaryIdentity:(NSString *)Identity Dictionary1:(NSDictionary *)Dictionary1{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithNSDictionary block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Dictionary1);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockTwoNSDictionaryIdentity:(NSString *)Identity Dictionary1:(NSDictionary *)Dictionary1 Dictionary2:(NSDictionary *)Dictionary2{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithTwoNSDictionary block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Dictionary1,Dictionary2);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            + (void)runBlockThreeNSDictionaryIdentity:(NSString *)Identity  Dictionary1:(NSDictionary *)Dictionary1 Dictionary2:(NSDictionary *)Dictionary2 Dictionary3:(NSDictionary *)Dictionary3{\n\
+            if([ZHBlockSingleCategroy defaultMyblock][Identity]!=nil){\n\
+            MyblockWithThreeNSDictionary block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
+            block(Dictionary1,Dictionary2,Dictionary3);\n\
+            }else{\n\
+            [self AlertMessageWithIdentity:Identity];\n\
+            }\n\
+            }\n\
+            \n\
+            \n\
+            + (void)removeBlockWithIdentity:(NSString *)Identity{\n\
+            [[ZHBlockSingleCategroy defaultMyblock] removeObjectForKey:Identity];\n\
+            }\n\
+            + (void)AlertMessageWithIdentity:(NSString *)Identity{\n\
+            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@\"温馨提示\" message:[Identity stringByAppendingString:@\" 的block已经移除或者还未创建!\"]delegate:self cancelButtonTitle:@\"确定\" otherButtonTitles:nil, nil];\n\
+            [alert show];\n\
+            }\n\
+            \n\
+            \n\
+            @end\n\
+            "];
 }
 
 @end

@@ -37,6 +37,13 @@
     
     self.OkButton.enabled=NO;
     self.OkButton.backgroundColor=[UIColor grayColor];
+    
+    [TabBarAndNavagation setLeftBarButtonItemTitle:@"<返回" TintColor:[UIColor blackColor] target:self action:@selector(leftBarClick)];
+    self.title=@"转成纯代码工程";
+}
+
+- (void)leftBarClick{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)OkAction{
