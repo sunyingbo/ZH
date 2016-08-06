@@ -473,7 +473,7 @@
             
             if([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
                 [self insertValueAndNewlines:@[[NSString stringWithFormat:@"\n//如果这一行的高度发生变化,就会调用ViewController里面的block来更新\n\
-                                                if (self.dataModel.cellContentSizeHeight!=self.collectionView.contentSize.height) {\n\
+                                                if ((NSInteger)self.dataModel.cellContentSizeHeight!=(NSInteger)self.collectionView.contentSize.height) {\n\
                                                 self.dataModel.cellContentSizeHeight=self.collectionView.contentSize.height;\n\
                                                 [ZHBlockSingleCategroy runBlockThreeCGFloatIdentity:@\"%@CellHeight\" Float1:self.indexPath.row Float2:self.indexPath.section Float3:self.collectionView.contentSize.height];\n\
                                                 }",dic[@"ViewController的名字"]]] ToStrM:textStrM];
@@ -513,7 +513,7 @@
             
             if([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
                 [self insertValueAndNewlines:@[[NSString stringWithFormat:@"\n//如果这一行的高度发生变化,就会调用ViewController里面的block来更新\n\
-                                                if (self.dataModel.cellContentSizeHeight!=self.tableView.contentSize.height) {\n\
+                                                if ((NSInteger)self.dataModel.cellContentSizeHeight!=(NSInteger)self.tableView.contentSize.height) {\n\
                                                 self.dataModel.cellContentSizeHeight=self.tableView.contentSize.height;\n\
                                                 [ZHBlockSingleCategroy runBlockThreeCGFloatIdentity:@\"%@CellHeight\" Float1:self.indexPath.row Float2:self.indexPath.section Float3:self.tableView.contentSize.height];\n\
                                                 }",dic[@"ViewController的名字"]]] ToStrM:textStrM];
