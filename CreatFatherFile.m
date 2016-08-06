@@ -495,7 +495,7 @@
                     NSString *subDicKey=[subDic allKeys][0];
                     if ([subDicKey isEqualToString:@"0"]) {
                         cellHeight=124;
-                        NSLog(@"%ld",cellHeight);
+                        
                         [text appendFormat:@"<subviews>\n\
                          <imageView userInteractionEnabled=\"NO\" contentMode=\"scaleToFill\" horizontalHuggingPriority=\"251\" verticalHuggingPriority=\"251\" fixedFrame=\"YES\" translatesAutoresizingMaskIntoConstraints=\"NO\" id=\"%@\">\n\
                          <rect key=\"frame\" x=\"17\" y=\"8\" width=\"102\" height=\"107\"/>\n\
@@ -535,7 +535,7 @@
                          <prototypes>\n",tableViewID,124*arrCells.count+38];
                         
                         cellHeight+=(124*arrCells.count);
-                        NSLog(@"%ld",cellHeight);
+                        
                         for (NSString *subCell in arrCells) {
                             NSString *idText3=[self getStoryBoardIdString];
                             NSString *idText4=[self getStoryBoardIdString];

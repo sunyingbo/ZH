@@ -1,14 +1,6 @@
 #import "tableViewContainColloectionView.h"
 
 @implementation tableViewContainColloectionView
-- (NSString *)description{
-    
-    NSString *filePath=[self creatFatherFile:@"tableViewContainColloectionView" andData:@[@"最大文件夹名字",@"ViewController的名字",@"自定义Cell,以逗号隔开",@"自定义Cell标识符:(无:0 TableView:1(子cell以;隔开) ColloectionView:2(子cell以;隔开)),以逗号隔开",@"是否需要对应的Model 1:0 (不填写么默认为否)",@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)",@"自定义cell可编辑(删除) 1:0 (不填写么默认为否)",@"是否需要titleForSection 1:0 (不填写么默认为否)",@"是否需要heightForSection 1:0 (不填写么默认为否)",@"是否需要右边的滑栏 1:0 (不填写么默认为否)",@"是否需要按拼音排序 1:0 (不填写么默认为否)",@"是否需要滑动滑栏显示提示 1:0 (不填写么默认为否)",@"是否需要检测网络和请求数据 1:0 (不填写么默认为否)"]];
-    
-    [self openFile:filePath];
-    
-    return @"指导文件已经创建在桌面上: tableViewContainColloectionView指导文件.m  ,请勿修改指定内容,否则格式不对将无法生成tableViewContainColloectionView的ViewController";
-}
 - (void)Begin:(NSString *)str toView:(UIView *)view{
     
     NSDictionary *dic=[self getDicFromFileName:str];
@@ -41,6 +33,10 @@
     //创建ViewController.m
     [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@ViewController.h\"",dic[@"ViewController的名字"]],@""] ToStrM:textStrM];
     
+    if ([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
+        [self insertValueAndNewlines:@[@"#import \"ZHBlockSingleCategroy.h\"",@""] ToStrM:textStrM];
+    }
+    
     NSString *cells=dic[@"自定义Cell,以逗号隔开"];
     NSArray *arrCells=[cells componentsSeparatedByString:@","];
     
@@ -55,8 +51,8 @@
     [self insertValueAndNewlines:@[@"@property (nonatomic,strong)NSMutableArray *dataArr;",@""] ToStrM:textStrM];
     
     
-    if ([dic[@"是否需要右边的滑栏 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
-        [self insertValueAndNewlines:@[@"@property (nonatomic,strong)NSMutableArray *sectionDataArr;"] ToStrM:textStrM];
+    if ([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
+        [self insertValueAndNewlines:@[@"@property (nonatomic,strong)NSMutableDictionary *rowHeightDic;"] ToStrM:textStrM];
     }
     
     
@@ -71,12 +67,30 @@
             }
         }
     }
-    if (fakeDataStrM.length==0)[fakeDataStrM setString:@""];;
+    if (fakeDataStrM.length==0)[fakeDataStrM setString:@""];
+    
     [self insertValueAndNewlines:@[@"- (NSMutableArray *)dataArr{",@"if (!_dataArr) {",@"_dataArr=[NSMutableArray array];",fakeDataStrM,@"}",@"return _dataArr;",@"}"] ToStrM:textStrM];
     
+    if ([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
+        [self insertValueAndNewlines:@[@"- (NSMutableDictionary *)rowHeightDic{\n\
+                                       if (!_rowHeightDic) {\n\
+                                       _rowHeightDic=[NSMutableDictionary dictionary];\n\
+                                       }\n\
+                                       return _rowHeightDic;\n\
+                                       }"] ToStrM:textStrM];
+    }
     
     [self insertValueAndNewlines:@[@"\n- (void)viewDidLoad{",@"[super viewDidLoad];",@"self.tableView.delegate=self;",@"self.tableView.dataSource=self;",@"//self.edgesForExtendedLayout=UIRectEdgeNone;"] ToStrM:textStrM];
     
+    if ([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
+        [self insertValueAndNewlines:@[[NSString stringWithFormat:@"\n__weak typeof(self) weakSelf=self;\n\
+                                        [ZHBlockSingleCategroy addBlockWithThreeCGFloat:^(CGFloat Float1, CGFloat Float2, CGFloat Float3) {\n\
+                                        //Float1是indexPath.row Float2是indexPath.section Float3是嵌套控件的内容高度值 当cell中嵌套控件高度发生改变时,就会调用这个block来重新刷新对应行\n\
+                                        \n//其实就是把每一行的高度保存到字典中\n\
+                                        weakSelf.rowHeightDic[[NSString stringWithFormat:@\"%%ld_%%ld\",(long)Float1,(long)Float2]]=@(Float3+85);\n\
+                                        [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:Float1 inSection:Float2]] withRowAnimation:(UITableViewRowAnimationNone)];\n\
+                                        } WithIdentity:@\"%@CellHeight\"];",dic[@"ViewController的名字"]]] ToStrM:textStrM];
+    }
     
     [self insertValueAndNewlines:@[@"}\n"] ToStrM:textStrM];
     
@@ -99,7 +113,23 @@
     }
     [self insertValueAndNewlines:@[@"//随便给一个cell\nUITableViewCell *cell=[UITableViewCell new];",@"return cell;",@"}"] ToStrM:textStrM];
     
-    [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{",@"return 80.0f;",@"}",@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"}",@"\n"] ToStrM:textStrM];
+    
+    [self insertValueAndNewlines:@[@"- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{"] ToStrM:textStrM];
+    
+    if ([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
+        [self insertValueAndNewlines:@[@"//如果字典中不存在这一行的高度,返回默认值,否则就会返回这一行最新的高度\n\
+                                       if (self.rowHeightDic[[NSString stringWithFormat:@\"%ld_%ld\",indexPath.row,indexPath.section]]==nil) {\n\
+                                       return 370.0;//返回默认高度,这个由自己写\n\
+                                       }\n\
+                                       return [self.rowHeightDic[[NSString stringWithFormat:@\"%ld_%ld\",indexPath.row,indexPath.section]] floatValue];"] ToStrM:textStrM];
+    }else{
+        [self insertValueAndNewlines:@[@"return 80.0f;"] ToStrM:textStrM];
+    }
+    
+    [self insertValueAndNewlines:@[@"}"] ToStrM:textStrM];
+    
+    
+    [self insertValueAndNewlines:@[@"- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{",@"[tableView deselectRowAtIndexPath:indexPath animated:YES];",@"}",@"\n"] ToStrM:textStrM];
     
     if ([dic[@"是否需要titleForSection 1:0 (不填写么默认为否)"] isEqualToString:@"1"]&&[dic[@"是否需要右边的滑栏 1:0 (不填写么默认为否)"] isEqualToString:@"0"]) {
         [self insertValueAndNewlines:@[@"- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{\n\
@@ -273,6 +303,11 @@
     if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
         [self insertValueAndNewlines:@[[NSString stringWithFormat:@"- (void)refreshUI:(%@CellModel *)dataModel;",cell]] ToStrM:textStrM];
     }
+    if (hasContain) {
+        if([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
+            [self insertValueAndNewlines:@[@"\n@property (nonatomic,strong)NSIndexPath *indexPath;\n"] ToStrM:textStrM];
+        }
+    }
     [self insertValueAndNewlines:@[@"@end"] ToStrM:textStrM];
     [self saveText:textStrM toFileName:@[dic[@"最大文件夹名字"],@"view",[NSString stringWithFormat:@"%@TableViewCell.h",cell]]];
     
@@ -314,6 +349,11 @@
     [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@TableViewCell.h\"\n",cell]] ToStrM:textStrM];
     
     if (hasContain){
+        
+        if ([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]) {
+            [self insertValueAndNewlines:@[@"#import \"ZHBlockSingleCategroy.h\"",@""] ToStrM:textStrM];
+        }
+        
         if (isTableView) {
             for (NSString *str in arrTableViewCells) {
                 [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@TableViewCell.h\"",str]] ToStrM:textStrM];
@@ -421,6 +461,15 @@
             
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"])[self insertValueAndNewlines:@[@"id modelObjct=self.dataArr[indexPath.row];"] ToStrM:textStrM];
             
+            if([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"\n//如果这一行的高度发生变化,就会调用ViewController里面的block来更新\n\
+                                                if (self.dataModel.cellContentSizeHeight!=self.collectionView.contentSize.height) {\n\
+                                                self.dataModel.cellContentSizeHeight=self.collectionView.contentSize.height;\n\
+                                                [ZHBlockSingleCategroy runBlockThreeCGFloatIdentity:@\"%@CellHeight\" Float1:self.indexPath.row Float2:self.indexPath.section Float3:self.collectionView.contentSize.height];\n\
+                                                }",dic[@"ViewController的名字"]]] ToStrM:textStrM];
+            }
+            
+            
             for (NSString *cellCollectionView in arrCollectionViewCells) {
                 NSString *tempCell=[ZHStoryboardTextManager lowerFirstCharacter:cellCollectionView];
                 [self insertValueAndNewlines:@[[NSString stringWithFormat:@"if ([modelObjct isKindOfClass:[%@CellModel class]]){",cellCollectionView],[NSString stringWithFormat:@"%@CollectionViewCell *%@Cell=[collectionView dequeueReusableCellWithReuseIdentifier:@\"%@CollectionViewCell\" forIndexPath:indexPath];",cellCollectionView,tempCell,cellCollectionView]] ToStrM:textStrM];
@@ -451,6 +500,14 @@
             [self insertValueAndNewlines:@[@"#pragma mark - 必须实现的方法:",@"- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{",@"return 1;",@"}"] ToStrM:textStrM];
             
             [self insertValueAndNewlines:@[@"- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{",@"return self.dataArr.count;",@"}",@"- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{"] ToStrM:textStrM];
+            
+            if([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"\n//如果这一行的高度发生变化,就会调用ViewController里面的block来更新\n\
+                                                if (self.dataModel.cellContentSizeHeight!=self.tableView.contentSize.height) {\n\
+                                                self.dataModel.cellContentSizeHeight=self.tableView.contentSize.height;\n\
+                                                [ZHBlockSingleCategroy runBlockThreeCGFloatIdentity:@\"%@CellHeight\" Float1:self.indexPath.row Float2:self.indexPath.section Float3:self.tableView.contentSize.height];\n\
+                                                }",dic[@"ViewController的名字"]]] ToStrM:textStrM];
+            }
             
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"])[self insertValueAndNewlines:@[@"id modelObjct=self.dataArr[indexPath.row];"] ToStrM:textStrM];
             
@@ -488,7 +545,15 @@
                                        @property (nonatomic,copy)NSString *content;\n\
                                        @property (nonatomic,assign)CGSize size;\n\
                                        @property (nonatomic,assign)CGFloat width;\n\
-                                       @property (nonatomic,strong)NSMutableArray *dataArr;",@"@end"] ToStrM:textStrM];
+                                       @property (nonatomic,strong)NSMutableArray *dataArr;"] ToStrM:textStrM];
+        
+        if([dic[@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
+            if (hasContain) {
+                [self insertValueAndNewlines:@[@"@property (nonatomic,assign)CGFloat cellContentSizeHeight;"] ToStrM:textStrM];
+            }
+        }
+    
+        [self insertValueAndNewlines:@[@"@end"] ToStrM:textStrM];
         
         [self saveText:textStrM toFileName:@[dic[@"最大文件夹名字"],@"model",[NSString stringWithFormat:@"%@CellModel.h",cell]]];
         

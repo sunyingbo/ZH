@@ -84,7 +84,7 @@
         [zhCollectionView creatFatherFile:@"代码助手" andData:@[@"最大文件夹名字",@"ViewController的名字",@"自定义Cell,以逗号隔开",@"是否需要对应的Model 1:0 (不填写么默认为否)",@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)"]];
     }else if (indexPath.row==2) {
         tableViewContain=[tableViewContainColloectionView new];
-        [tableViewContain creatFatherFile:@"代码助手" andData:@[@"最大文件夹名字",@"ViewController的名字",@"自定义Cell,以逗号隔开",@"自定义Cell标识符:(无:0 TableView:1(子cell以;隔开) ColloectionView:2(子cell以;隔开)),以逗号隔开",@"例如cell有A,B  那么嵌套这一行为:1(A1;A2),2(B1;B2)",@"是否需要对应的Model 1:0 (不填写么默认为否)",@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)",@"自定义cell可编辑(删除) 1:0 (不填写么默认为否)"]];
+        [tableViewContain creatFatherFile:@"代码助手" andData:@[@"最大文件夹名字",@"ViewController的名字",@"自定义Cell,以逗号隔开",@"自定义Cell标识符:(无:0 TableView:1(子cell以;隔开) ColloectionView:2(子cell以;隔开)),以逗号隔开",@"例如cell有A,B  那么嵌套这一行为:1(A1;A2),2(B1;B2)",@"是否需要自动计算cell(嵌套控件)的高度 1:0 (不填写么默认为否)",@"是否需要对应的Model 1:0 (不填写么默认为否)",@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)",@"自定义cell可编辑(删除) 1:0 (不填写么默认为否)"]];
     }
     
     [ZHAlertAction alertWithTitle:model.title withMsg:Msg addToViewController:self withCancleBlock:nil withOkBlock:^{

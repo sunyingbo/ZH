@@ -1,12 +1,6 @@
 #import "ZHCollectionView.h"
 
 @implementation ZHCollectionView
-- (NSString *)description{
-    
-    [self creatFatherFile:@"CollectionViewController" andData:@[@"最大文件夹名字",@"ViewController的名字",@"自定义Cell,以逗号隔开",@"是否需要对应的Model 1:0 (不填写么默认为否)",@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)",@"是否需要检测网络和请求数据 1:0 (不填写么默认为否)"]];
-    
-    return @"指导文件已经创建在桌面上: CollectionViewController指导文件.m  ,请勿修改指定内容,否则格式不对将无法生成CollectionView的ViewController";
-}
 - (void)Begin:(NSString *)str toView:(UIView *)view{
     
     NSDictionary *dic=[self getDicFromFileName:str];
