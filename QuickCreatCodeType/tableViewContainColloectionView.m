@@ -94,7 +94,7 @@
                                         //Float1是indexPath.row Float2是indexPath.section Float3是嵌套控件的内容高度值 当cell中嵌套控件高度发生改变时,就会调用这个block来重新刷新对应行\n\
                                         \n//其实就是把每一行的高度保存到字典中\n\
                                         weakSelf.rowHeightDic[[NSString stringWithFormat:@\"%%ld_%%ld\",(long)Float1,(long)Float2]]=@(Float3+85);\n\
-                                        [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:Float1 inSection:Float2]] withRowAnimation:(UITableViewRowAnimationNone)];\n\
+                                        [weakSelf.tableView reloadData];\n\
                                         } WithIdentity:@\"%@CellHeight\"];",dic[@"ViewController的名字"]]] ToStrM:textStrM];
     }
     
