@@ -239,7 +239,7 @@ static NSString *ZHProjectPath;
                 }
             }
             
-            if ([tempStr hasPrefix:@"</tableViewCell"]) {
+            if ([tempStr hasPrefix:@"</tableViewCell"]||[tempStr hasPrefix:@"</collectionViewCell"]) {
                 CellFileName=@"noExsit";
             }
         }

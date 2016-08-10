@@ -193,8 +193,6 @@
         }
     }
     
-    [self creatFatherFile:@"CollectionViewController" andData:@[@"最大文件夹名字",@"ViewController的名字",@"自定义Cell,以逗号隔开",@"是否需要对应的Model 1:0 (不填写么默认为否)",@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)",@"是否需要检测网络和请求数据 1:0 (不填写么默认为否)"]];
-    
     //如果需要StroyBoard
     if([dic[@"是否需要对应的StroyBoard 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
         if (![self judge:dic[@"ViewController的名字"]]) {
