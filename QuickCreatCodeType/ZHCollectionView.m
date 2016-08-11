@@ -48,8 +48,18 @@
     
     [self insertValueAndNewlines:@[@"@end",@"\n",[NSString stringWithFormat:@"@implementation %@ViewController",dic[@"ViewController的名字"]]] ToStrM:textStrM];
     
-    [self insertValueAndNewlines:@[@"- (NSMutableArray *)dataArr{",@"if (!_dataArr) {",@"_dataArr=[NSMutableArray array];",@"}",@"return _dataArr;",@"}"] ToStrM:textStrM];
+    //假数据
+    NSMutableString *fakeDataStrM=[NSMutableString string];
+    if ([self judge:cells]) {
+        for (NSString *cell in arrCells) {
+            if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
+                [fakeDataStrM appendFormat:@"%@CellModel *%@Model=[%@CellModel new];\n%@Model.title=@\"\";\n%@Model.iconImageName=@\"\";\n[_dataArr addObject:%@Model];\n//[self.dataArr addObject:%@Model];\n",cell,cell,cell,cell,cell,cell,cell];
+            }
+        }
+    }
     
+    if (fakeDataStrM.length==0)[fakeDataStrM setString:@""];;
+    [self insertValueAndNewlines:@[@"- (NSMutableArray *)dataArr{",@"if (!_dataArr) {",@"_dataArr=[NSMutableArray array];",fakeDataStrM,@"}",@"return _dataArr;",@"}"] ToStrM:textStrM];
     
     [self insertValueAndNewlines:@[@"\n- (void)viewDidLoad{",@"[super viewDidLoad];",@"[self addFlowLayoutToCollectionView:self.collectionView];",@"//self.edgesForExtendedLayout=UIRectEdgeNone;"] ToStrM:textStrM];
     
@@ -145,10 +155,11 @@
             
             [textStrM setString:@""];
             [self insertValueAndNewlines:@[[NSString stringWithFormat:@"#import \"%@CollectionViewCell.h\"\n",cell]] ToStrM:textStrM];
-            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@interface %@CollectionViewCell ()",cell],@"@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"",@"",@"@end\n"] ToStrM:textStrM];
+            [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@interface %@CollectionViewCell ()",cell],@"@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;",@"@property (weak, nonatomic) IBOutlet UILabel *nameLabel;",@"",[NSString stringWithFormat:@"@property (nonatomic,weak)%@CellModel *dataModel;",cell],@"@end\n"] ToStrM:textStrM];
+            
             [self insertValueAndNewlines:@[[NSString stringWithFormat:@"@implementation %@CollectionViewCell",cell],@"\n"] ToStrM:textStrM];
             if([dic[@"是否需要对应的Model 1:0 (不填写么默认为否)"] isEqualToString:@"1"]){
-                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"- (void)refreshUI:(%@CellModel *)dataModel{",cell],@"self.nameLabel.text=dataModel.title;\n\
+                [self insertValueAndNewlines:@[[NSString stringWithFormat:@"- (void)refreshUI:(%@CellModel *)dataModel{",cell],@"_dataModel=dataModel;",@"self.nameLabel.text=dataModel.title;\n\
                                                self.iconImageView.image=[UIImage imageNamed:dataModel.iconImageName];",@"}\n\n"] ToStrM:textStrM];
             }
             [self insertValueAndNewlines:@[@"- (void)awakeFromNib {",@"[super awakeFromNib];",@"}\n",@"- (void)setSelected:(BOOL)selected{\n\
