@@ -20,7 +20,8 @@
 +(BOOL)isValidateNumber:(NSString *)number;
 /**验证字符串是否全部是中文*/
 +(BOOL)isValidateChinese:(NSString *)chineseName;
-
+/**判断是否含有中文*/
++(BOOL)isContainChinese:(NSString *)chineseName;
 /**获取AppVersion*/
 +(NSString*)getAppVersion;
 /**获取AppName*/
@@ -51,4 +52,13 @@
 
 /**返回指定目标字符串在总字符串中的个数*/
 + (NSInteger)getCountTargetString:(NSString *)targetStr inText:(NSString *)text;
+
+/**返回指定目标字符串在总字符串中的个数*/
++ (NSInteger)getCountLeftString:(NSString *)leftString rightString:(NSString *)rightString priorityIsLeft:(BOOL)isLeft notContainStringArr:(NSArray *)notContainStringArr inText:(NSString *)text;
+
+/**是否在某两个字符串中间*/
++ (BOOL)isBetweenLeftString:(NSString *)leftString RightString:(NSString *)rightString targetStringRange:(NSRange)range inText:(NSString *)text;
+
+/**是否在某两个字符串中间*/
++ (BOOL)hasBetweenLeftString:(NSString *)leftString RightString:(NSString *)rightString targetString:(NSString *)targetString inText:(NSString *)text;
 @end

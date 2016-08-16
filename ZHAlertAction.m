@@ -44,7 +44,7 @@ static ZHAlertAction * zhAlertActionDefault;
 }
 
 /**带多个选择的的警告框,带确多个方法执行和取消的方法执行体*/
-+ (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController ActionSheet:(BOOL)actionSheet otherButtonBlocks:(NSArray *)blocks otherButtonTitles:(NSString *)otherButtonTitles, ...{
++ (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController ActionSheet:(BOOL)actionSheet otherButtonBlocks:(NSArray *)blocks otherButtonTitles:(NSArray *)otherButtonTitles{
     [[self AlertAction]alertWithTitle:title withMsg:msg addToViewController:viewController ActionSheet:actionSheet otherButtonBlocks:blocks otherButtonTitles:otherButtonTitles];
 }
 
@@ -108,31 +108,16 @@ static ZHAlertAction * zhAlertActionDefault;
 
 
 /**带多个选择的的警告框,带确多个方法执行和取消的方法执行体*/
-- (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController ActionSheet:(BOOL)actionSheet otherButtonBlocks:(NSArray *)blocks otherButtonTitles:(NSString *)otherButtonTitles, ...{
+- (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController ActionSheet:(BOOL)actionSheet otherButtonBlocks:(NSArray *)blocks otherButtonTitles:(NSArray *)otherButtonTitles{
     UIAlertController *alertController=[UIAlertController alertControllerWithTitle:title message:msg preferredStyle:(actionSheet?UIAlertControllerStyleActionSheet:UIAlertControllerStyleAlert)];
     
     NSMutableArray *arrM=[NSMutableArray array];
-    
-    if (otherButtonTitles.length>0) {
-        [arrM addObject:otherButtonTitles];
-    }
-    
-    va_list args;
-    va_start(args, otherButtonTitles);
-    if (otherButtonTitles)
-    {
-        NSString *otherString;
-        while ((otherString = va_arg(args, NSString *)))
-        {
-            [arrM addObject:otherString];
-        }
-    }
-    va_end(args);
+    [arrM addObjectsFromArray:otherButtonTitles];
     
     typedef void(^MyblockWithNULL)(void);
     __weak typeof(alertController) weakAlertController=alertController;
+    NSInteger index=0;
     for (NSString *title in arrM) {
-        NSInteger index=[arrM indexOfObject:title];
         if (index>=blocks.count) {
             break;
         }
@@ -144,6 +129,7 @@ static ZHAlertAction * zhAlertActionDefault;
             [weakAlertController dismissViewControllerAnimated:YES completion:nil];
         }];
         [alertController addAction:Action];
+        index++;
     }
     
     if (![arrM containsObject:@"取消"]) {

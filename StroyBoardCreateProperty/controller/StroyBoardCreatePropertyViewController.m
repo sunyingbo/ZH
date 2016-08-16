@@ -137,34 +137,7 @@
 		[self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationAutomatic)];
         [ZHSaveDataToFMDB insertDataWithData:self.dataArr WithIdentity:@"StroyBoardCreatePropertyCellModel"];
 	}];
-    UITableViewRowAction *backUpRowAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"备份路径" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-        
-        StroyBoardCreatePropertyCellModel *model=self.dataArr[indexPath.row];
-        //有后缀的文件名
-        NSString *tempFileName=[ZHFileManager getFileNameFromFilePath:model.title];
-        
-        //无后缀的文件名
-        NSString *fileName=[ZHFileManager getFileNameNoPathComponentFromFilePath:model.title];
-        
-        //获取无文件名的路径
-        NSString *newFilePath=[model.title stringByReplacingOccurrencesOfString:tempFileName withString:@""];
-        
-        //拿到新的有后缀的文件名
-        tempFileName=[tempFileName stringByReplacingOccurrencesOfString:fileName withString:[NSString stringWithFormat:@"%@备份",fileName]];
-        
-        newFilePath = [newFilePath stringByAppendingPathComponent:tempFileName];
-        
-        NSString *macDesktopPath=[ZHFileManager getMacDesktop];
-        macDesktopPath = [macDesktopPath stringByAppendingPathComponent:@"代码助手.m"];
-        
-        [newFilePath writeToFile:macDesktopPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-        
-        NSString *Msg=@"文件已经生成在桌面,名字为\"代码助手.m\",里面有备份路径";
-        
-        [ZHAlertAction alertWithTitle:Msg withMsg:nil addToViewController:self withOkBlock:nil ActionSheet:NO];
-    }];
-    backUpRowAction.backgroundColor=[UIColor blueColor];
-	return  @[deleteRowAction,backUpRowAction];
+	return  @[deleteRowAction];
 }
 
 @end

@@ -51,6 +51,10 @@
 		048098641D49989E0097F577 /* ZHStroyBoardToPureHandProject.m in Sources */ = {isa = PBXBuildFile; fileRef = 048098631D49989E0097F577 /* ZHStroyBoardToPureHandProject.m */; };
 		048098671D4999310097F577 /* PureHandProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 048098661D4999310097F577 /* PureHandProjectViewController.m */; };
 		048CF72C1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 048CF72B1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m */; };
+		048F15961D61749B008594B5 /* SmallFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 048F158F1D61749B008594B5 /* SmallFunctionViewController.m */; };
+		048F15971D61749B008594B5 /* SmallFunctionCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 048F15921D61749B008594B5 /* SmallFunctionCellModel.m */; };
+		048F15981D61749B008594B5 /* SmallFunctionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 048F15951D61749B008594B5 /* SmallFunctionTableViewCell.m */; };
+		048F159B1D6191DC008594B5 /* ZHRemoveTheComments.m in Sources */ = {isa = PBXBuildFile; fileRef = 048F159A1D6191DC008594B5 /* ZHRemoveTheComments.m */; };
 		04B749111D39D0FD003B046A /* ZHAlertAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749101D39D0FD003B046A /* ZHAlertAction.m */; };
 		04B749131D39D39A003B046A /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = 04B749121D39D39A003B046A /* check.png */; };
 		04B7493D1D3A0504003B046A /* QuickCreatCodeTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749361D3A0504003B046A /* QuickCreatCodeTypeViewController.m */; };
@@ -61,6 +65,7 @@
 		04B749601D3A1C91003B046A /* tableViewContainColloectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B7495F1D3A1C91003B046A /* tableViewContainColloectionView.m */; };
 		04B749631D3A35E6003B046A /* ViewProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B749621D3A35E6003B046A /* ViewProperty.m */; };
 		04B838211D48ADA8004931F5 /* StroyBoardPropertySetValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B838201D48ADA8004931F5 /* StroyBoardPropertySetValue.m */; };
+		04BCF2E51D62B42800E6FA67 /* ZHStatisticalCodeRows.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BCF2E41D62B42800E6FA67 /* ZHStatisticalCodeRows.m */; };
 		04CA74721D38880A004541F7 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA746B1D38880A004541F7 /* HelpViewController.m */; };
 		04CA74731D38880A004541F7 /* HelpCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA746E1D38880A004541F7 /* HelpCellModel.m */; };
 		04CA74741D38880A004541F7 /* HelpTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA74711D38880A004541F7 /* HelpTableViewCell.m */; };
@@ -209,6 +214,14 @@
 		048098661D4999310097F577 /* PureHandProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PureHandProjectViewController.m; sourceTree = "<group>"; };
 		048CF72A1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHStoryboardPropertyManager.h; sourceTree = "<group>"; };
 		048CF72B1D3C9D5D0081CF07 /* ZHStoryboardPropertyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHStoryboardPropertyManager.m; sourceTree = "<group>"; };
+		048F158E1D61749B008594B5 /* SmallFunctionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallFunctionViewController.h; sourceTree = "<group>"; };
+		048F158F1D61749B008594B5 /* SmallFunctionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallFunctionViewController.m; sourceTree = "<group>"; };
+		048F15911D61749B008594B5 /* SmallFunctionCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallFunctionCellModel.h; sourceTree = "<group>"; };
+		048F15921D61749B008594B5 /* SmallFunctionCellModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallFunctionCellModel.m; sourceTree = "<group>"; };
+		048F15941D61749B008594B5 /* SmallFunctionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallFunctionTableViewCell.h; sourceTree = "<group>"; };
+		048F15951D61749B008594B5 /* SmallFunctionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallFunctionTableViewCell.m; sourceTree = "<group>"; };
+		048F15991D6191DC008594B5 /* ZHRemoveTheComments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHRemoveTheComments.h; sourceTree = "<group>"; };
+		048F159A1D6191DC008594B5 /* ZHRemoveTheComments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHRemoveTheComments.m; sourceTree = "<group>"; };
 		04B749081D39CBD4003B046A /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		04B7490F1D39D0FD003B046A /* ZHAlertAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHAlertAction.h; sourceTree = "<group>"; };
 		04B749101D39D0FD003B046A /* ZHAlertAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHAlertAction.m; sourceTree = "<group>"; };
@@ -229,6 +242,8 @@
 		04B749621D3A35E6003B046A /* ViewProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewProperty.m; sourceTree = "<group>"; };
 		04B8381F1D48ADA8004931F5 /* StroyBoardPropertySetValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StroyBoardPropertySetValue.h; sourceTree = "<group>"; };
 		04B838201D48ADA8004931F5 /* StroyBoardPropertySetValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StroyBoardPropertySetValue.m; sourceTree = "<group>"; };
+		04BCF2E31D62B42800E6FA67 /* ZHStatisticalCodeRows.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHStatisticalCodeRows.h; sourceTree = "<group>"; };
+		04BCF2E41D62B42800E6FA67 /* ZHStatisticalCodeRows.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHStatisticalCodeRows.m; sourceTree = "<group>"; };
 		04CA746A1D38880A004541F7 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		04CA746B1D38880A004541F7 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 		04CA746D1D38880A004541F7 /* HelpCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpCellModel.h; sourceTree = "<group>"; };
@@ -349,12 +364,14 @@
 				04B8381F1D48ADA8004931F5 /* StroyBoardPropertySetValue.h */,
 				04B838201D48ADA8004931F5 /* StroyBoardPropertySetValue.m */,
 			);
-			path = "StroyBoard生成属性";
+			name = "StroyBoard生成属性";
+			path = "../StroyBoard生成属性";
 			sourceTree = "<group>";
 		};
 		040501DC1D45BE4A00CC35FD /* StroyBoardCreateProperty */ = {
 			isa = PBXGroup;
 			children = (
+				040501D81D45A92100CC35FD /* StroyBoard生成属性 */,
 				040501DD1D45BE4A00CC35FD /* controller */,
 				040501E01D45BE4A00CC35FD /* model */,
 				040501E31D45BE4A00CC35FD /* view */,
@@ -413,9 +430,9 @@
 				040501FD1D46038700CC35FD /* libsqlite3.tbd */,
 				04B749081D39CBD4003B046A /* PrefixHeader.pch */,
 				044D97DD1DDAA749000257A9 /* Main.storyboard */,
+				048F158C1D61749B008594B5 /* SmallFunction */,
 				048098611D4998470097F577 /* 将工程转换成纯手写 */,
 				040501DC1D45BE4A00CC35FD /* StroyBoardCreateProperty */,
-				040501D81D45A92100CC35FD /* StroyBoard生成属性 */,
 				04B749331D3A0504003B046A /* QuickCreatCodeType */,
 				04CA74DB1D38B8F9004541F7 /* json_To_Model */,
 				0476FF581D2E1FE700CD167C /* 辅助类(与项目无多大关系) */,
@@ -606,6 +623,47 @@
 				048098661D4999310097F577 /* PureHandProjectViewController.m */,
 			);
 			path = "将工程转换成纯手写";
+			sourceTree = "<group>";
+		};
+		048F158C1D61749B008594B5 /* SmallFunction */ = {
+			isa = PBXGroup;
+			children = (
+				048F158D1D61749B008594B5 /* controller */,
+				048F15901D61749B008594B5 /* model */,
+				048F15931D61749B008594B5 /* view */,
+				048F15991D6191DC008594B5 /* ZHRemoveTheComments.h */,
+				048F159A1D6191DC008594B5 /* ZHRemoveTheComments.m */,
+				04BCF2E31D62B42800E6FA67 /* ZHStatisticalCodeRows.h */,
+				04BCF2E41D62B42800E6FA67 /* ZHStatisticalCodeRows.m */,
+			);
+			path = SmallFunction;
+			sourceTree = "<group>";
+		};
+		048F158D1D61749B008594B5 /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				048F158E1D61749B008594B5 /* SmallFunctionViewController.h */,
+				048F158F1D61749B008594B5 /* SmallFunctionViewController.m */,
+			);
+			path = controller;
+			sourceTree = "<group>";
+		};
+		048F15901D61749B008594B5 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				048F15911D61749B008594B5 /* SmallFunctionCellModel.h */,
+				048F15921D61749B008594B5 /* SmallFunctionCellModel.m */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		048F15931D61749B008594B5 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				048F15941D61749B008594B5 /* SmallFunctionTableViewCell.h */,
+				048F15951D61749B008594B5 /* SmallFunctionTableViewCell.m */,
+			);
+			path = view;
 			sourceTree = "<group>";
 		};
 		04B749331D3A0504003B046A /* QuickCreatCodeType */ = {
@@ -1042,6 +1100,7 @@
 				04CA749E1D38AD6B004541F7 /* MoreFunctionViewController.m in Sources */,
 				044D97DC1DDAA749000257A9 /* ViewController.m in Sources */,
 				04CA74D71D38B8C8004541F7 /* UIImageView+AFNetworking.m in Sources */,
+				048F15961D61749B008594B5 /* SmallFunctionViewController.m in Sources */,
 				04CA74CA1D38B8C8004541F7 /* AFHTTPRequestOperation.m in Sources */,
 				040501E71D45BE4A00CC35FD /* StroyBoardCreatePropertyCellModel.m in Sources */,
 				04CA74D31D38B8C8004541F7 /* AFNetworkActivityIndicatorManager.m in Sources */,
@@ -1063,7 +1122,9 @@
 				0476FF531D2E1F8800CD167C /* TabBarAndNavagation.m in Sources */,
 				04B7495D1D3A1848003B046A /* ZHCollectionView.m in Sources */,
 				04CA74D81D38B8C8004541F7 /* UIProgressView+AFNetworking.m in Sources */,
+				048F159B1D6191DC008594B5 /* ZHRemoveTheComments.m in Sources */,
 				040501FB1D46037100CC35FD /* FMDatabaseQueue.m in Sources */,
+				048F15971D61749B008594B5 /* SmallFunctionCellModel.m in Sources */,
 				044D98091DDAA7AD000257A9 /* ReadXML.m in Sources */,
 				047462931D2524DF00F4DDCF /* FatherClass.m in Sources */,
 				04B7495A1D3A14C6003B046A /* ZHTableView.m in Sources */,
@@ -1071,6 +1132,7 @@
 				04CA74CD1D38B8C8004541F7 /* AFNetworkReachabilityManager.m in Sources */,
 				04CA74D01D38B8C8004541F7 /* AFURLRequestSerialization.m in Sources */,
 				044D97D91DDAA749000257A9 /* AppDelegate.m in Sources */,
+				048F15981D61749B008594B5 /* SmallFunctionTableViewCell.m in Sources */,
 				04CA74D11D38B8C8004541F7 /* AFURLResponseSerialization.m in Sources */,
 				04CA74DA1D38B8C8004541F7 /* UIWebView+AFNetworking.m in Sources */,
 				0474628D1D25247900F4DDCF /* ZHWordWrap.m in Sources */,
@@ -1107,6 +1169,7 @@
 				04CA75051D38BF50004541F7 /* JSONSourceTableViewCell.m in Sources */,
 				04CA74841D3890C8004541F7 /* DetailContentCellModel.m in Sources */,
 				04CA74CB1D38B8C8004541F7 /* AFHTTPRequestOperationManager.m in Sources */,
+				04BCF2E51D62B42800E6FA67 /* ZHStatisticalCodeRows.m in Sources */,
 				04B7493E1D3A0504003B046A /* QuickCreatCodeTypeCellModel.m in Sources */,
 				044D980F1DDAA9DF000257A9 /* TreeNode.m in Sources */,
 			);

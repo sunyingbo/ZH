@@ -417,10 +417,10 @@
                                    //self.accessoryType=UITableViewCellAccessoryDisclosureIndicator;"] ToStrM:textStrM];
     if (hasContain){
         if (isTableView==NO) {
-            [self insertValueAndNewlines:@[@"[self addFlowLayoutToCollectionView:self.collectionView];"] ToStrM:textStrM];
+            [self insertValueAndNewlines:@[@"[self addFlowLayoutToCollectionView:self.collectionView];\nself.collectionView.bounces=NO;"] ToStrM:textStrM];
         }else{
             [self insertValueAndNewlines:@[@"self.tableView.delegate=self;\n\
-                                           self.tableView.dataSource=self;"] ToStrM:textStrM];
+                                           self.tableView.dataSource=self;\nself.tableView.bounces=NO;"] ToStrM:textStrM];
         }
     }
     
@@ -434,8 +434,8 @@
                                            - (void)addFlowLayoutToCollectionView:(UICollectionView *)collectionView{\n\
                                            UICollectionViewFlowLayout *flow = [UICollectionViewFlowLayout new];\n\
                                            \n\
-                                           flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;//水平\n\
-                                           //    flow.scrollDirection = UICollectionViewScrollDirectionVertical;//垂直\n\
+                                           //flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;//水平\n\
+                                           flow.scrollDirection = UICollectionViewScrollDirectionVertical;//垂直\n\
                                            \n\
                                            flow.minimumInteritemSpacing = 10;\n\
                                            flow.minimumLineSpacing = 10;\n\

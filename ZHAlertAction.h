@@ -25,7 +25,7 @@ typedef void (^ZHAlertActionTwoStringBlock)(NSString *str1,NSString *str2);
 - (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController withCancleBlock:(ZHAlertActionBlock)cancleBlock withOkBlock:(ZHAlertActionBlock)okBlock cancelButtonTitle:(NSString *)cancelButtonTitle OkButtonTitle:(NSString *)OkButtonTitle ActionSheet:(BOOL)actionSheet;
 
 /**带多个选择的的警告框,带确多个方法执行和取消的方法执行体*/
-- (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController ActionSheet:(BOOL)actionSheet otherButtonBlocks:(NSArray *)blocks otherButtonTitles:(NSString *)otherButtonTitles, ...;
+- (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController ActionSheet:(BOOL)actionSheet otherButtonBlocks:(NSArray *)blocks otherButtonTitles:(NSArray *)otherButtonTitles;
 
 
 /**最简单的警告框*/
@@ -40,7 +40,7 @@ typedef void (^ZHAlertActionTwoStringBlock)(NSString *str1,NSString *str2);
 + (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController withCancleBlock:(ZHAlertActionBlock)cancleBlock withOkBlock:(ZHAlertActionBlock)okBlock cancelButtonTitle:(NSString *)cancelButtonTitle OkButtonTitle:(NSString *)OkButtonTitle ActionSheet:(BOOL)actionSheet;
 
 /**带多个选择的的警告框,带确多个方法执行和取消的方法执行体*/
-+ (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController ActionSheet:(BOOL)actionSheet otherButtonBlocks:(NSArray *)blocks otherButtonTitles:(NSString *)otherButtonTitles, ...;
++ (void)alertWithTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController ActionSheet:(BOOL)actionSheet otherButtonBlocks:(NSArray *)blocks otherButtonTitles:(NSArray *)otherButtonTitles;
 
 /**带两个输入框*/
 + (void)showTwoTextEntryAlertTitle:(NSString *)title withMsg:(NSString *)msg addToViewController:(UIViewController *)viewController withCancleBlock:(ZHAlertActionBlock)cancleBlock withOkBlock:(ZHAlertActionTwoStringBlock)okBlock cancelButtonTitle:(NSString *)cancelButtonTitle OkButtonTitle:(NSString *)OkButtonTitle onePlaceHold:(NSString *)onePlaceHold twoPlaceHold:(NSString *)twoPlaceHold;

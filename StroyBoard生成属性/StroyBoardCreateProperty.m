@@ -82,8 +82,9 @@ static NSString *ZHProjectPath;
         return -1;
     }
     ZHProjectPath=projectPath;
+    
     //开始备份一份StroyBoard
-    [self backupNewStroyBoard:stroyBoardPath];
+//    [self backupNewStroyBoard:stroyBoardPath];//还是不备份了
     
     //开始查找出自定义属性
     NSString *text=[NSString stringWithContentsOfFile:stroyBoardPath encoding:NSUTF8StringEncoding error:nil];
@@ -251,7 +252,6 @@ static NSString *ZHProjectPath;
 
 /**为StroyBoard添加真的outlet property*/
 + (NSString *)addOutletProperty:(NSString *)text{
-    
     NSArray *arr=[text componentsSeparatedByString:@"\n"];
     NSMutableArray *arrM=[NSMutableArray array];
     NSString *rowStr,*viewIdenity;
@@ -325,10 +325,14 @@ static NSString *ZHProjectPath;
                                 storyBoardIdString=[self getStoryBoardIdString];
                             }
                             NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                            if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
+                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                                 [connections appendString:outlet];
                                 realInsert++;
+                            }else{
+                                [[self defalutCreateId]removeObjectForKey:property];
+                                [[self defalutCreateCategory]removeObjectForKey:property];
                             }
+                            
                         }
                         [connections appendString:@"</connections>"];
                         if (cellPropertys.count>0&&realInsert>0) {
@@ -348,8 +352,11 @@ static NSString *ZHProjectPath;
                                 storyBoardIdString=[self getStoryBoardIdString];
                             }
                             NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                            if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
+                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                                 [arrM insertObject:outlet atIndex:arrM.count-1];
+                            }else{
+                                [[self defalutCreateId]removeObjectForKey:property];
+                                [[self defalutCreateCategory]removeObjectForKey:property];
                             }
                         }
                     }
@@ -377,9 +384,12 @@ static NSString *ZHProjectPath;
                                 storyBoardIdString=[self getStoryBoardIdString];
                             }
                             NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                            if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
+                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                                 [connections appendString:outlet];
                                 realInsert++;
+                            }else{
+                                [[self defalutCreateId]removeObjectForKey:property];
+                                [[self defalutCreateCategory]removeObjectForKey:property];
                             }
                         }
                         [connections appendString:@"</connections>"];
@@ -400,8 +410,11 @@ static NSString *ZHProjectPath;
                                 storyBoardIdString=[self getStoryBoardIdString];
                             }
                             NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                            if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
+                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                                 [arrM insertObject:outlet atIndex:arrM.count-1];
+                            }else{
+                                [[self defalutCreateId]removeObjectForKey:property];
+                                [[self defalutCreateCategory]removeObjectForKey:property];
                             }
                         }
                     }
@@ -428,9 +441,12 @@ static NSString *ZHProjectPath;
                             storyBoardIdString=[self getStoryBoardIdString];
                         }
                         NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                        if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
+                        if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]]  priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                             [connections appendString:outlet];
                             realInsert++;
+                        }else{
+                            [[self defalutCreateId]removeObjectForKey:property];
+                            [[self defalutCreateCategory]removeObjectForKey:property];
                         }
                     }
                     [connections appendString:@"</connections>"];
@@ -451,8 +467,11 @@ static NSString *ZHProjectPath;
                             storyBoardIdString=[self getStoryBoardIdString];
                         }
                         NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                        if ([text rangeOfString:[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\"",newProperty,[self defalutCreateId][property]]].location==NSNotFound) {
+                        if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]]  priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                             [arrM insertObject:outlet atIndex:arrM.count-1];
+                        }else{
+                            [[self defalutCreateId]removeObjectForKey:property];
+                            [[self defalutCreateCategory]removeObjectForKey:property];
                         }
                     }
                 }
@@ -462,14 +481,15 @@ static NSString *ZHProjectPath;
         }
         [arrM addObject:rowStr];
     }
-    
     return [arrM componentsJoinedByString:@"\n"];
 }
 
 + (void)insertCode{
     for (NSString *fileName in [self defalutCreateProperty]) {
-        [self insertCodePropertys:[self defalutCreateProperty][fileName] toStrM:[self defalutCreateContent][[self defalutCreateFile][fileName]] withFileName:fileName];
-        [self insertModelPropertyString:[self defalutCreateProperty][fileName] withFileName:fileName];
+        if([self defalutCreateFile][fileName]!=nil){
+            [self insertCodePropertys:[self defalutCreateProperty][fileName] toStrM:[self defalutCreateContent][[self defalutCreateFile][fileName]] withFileName:fileName];
+            [self insertModelPropertyString:[self defalutCreateProperty][fileName] withFileName:fileName];
+        }
     }
 }
 
@@ -485,7 +505,7 @@ static NSString *ZHProjectPath;
     
     for (NSString *property in propertys) {
         NSString *newProperty=[self getPropertyCode:property];
-        if ([strM rangeOfString:newProperty].location==NSNotFound) {
+        if (newProperty.length>0&&[strM rangeOfString:newProperty].location==NSNotFound) {
             [ZHStoryboardTextManager addCodeText:newProperty andInsertType:ZHAddCodeType_Interface toStrM:strM insertFunction:nil];
         }
     }
@@ -507,6 +527,10 @@ static NSString *ZHProjectPath;
 
 + (NSString *)getPropertyCode:(NSString *)property{
     NSString *category=[self defalutCreateCategory][property];
+    
+    if (category.length<=0) {
+        return @"";
+    }
     category=[ZHNSString removeSpaceBeforeAndAfterWithString:category];
     
     if ([property hasPrefix:@"_"]) {
@@ -523,13 +547,15 @@ static NSString *ZHProjectPath;
 }
 
 + (NSString *)getValue:(NSString *)viewName category:(NSString *)category{
-    if ([[viewName lowercaseString]hasSuffix:[category lowercaseString]]) {
-        if ([[category lowercaseString]isEqualToString:[@"ImageView" lowercaseString]]) {
-            NSString *remain=[viewName substringToIndex:viewName.length-category.length];
-            remain=[remain stringByAppendingString:@"ImageName"];
-            return remain;
+    if (viewName.length>0&&category.length>0) {
+        if ([[viewName lowercaseString]hasSuffix:[category lowercaseString]]) {
+            if ([[category lowercaseString]isEqualToString:[@"ImageView" lowercaseString]]) {
+                NSString *remain=[viewName substringToIndex:viewName.length-category.length];
+                remain=[remain stringByAppendingString:@"ImageName"];
+                return remain;
+            }
+            return [viewName substringToIndex:viewName.length-category.length];
         }
-        return [viewName substringToIndex:viewName.length-category.length];
     }
     return viewName;
 }
@@ -561,18 +587,21 @@ static NSString *ZHProjectPath;
             NSMutableString *strM=[NSMutableString string];
             for (NSString *property in propertys) {
                 NSString *category=[self defalutCreateCategory][property];
-                category=[ZHNSString removeSpaceBeforeAndAfterWithString:category];
                 
-                NSString *tempProperty=property;
-                if ([tempProperty hasPrefix:@"_"]) {
-                    tempProperty=[tempProperty substringFromIndex:1];
-                }
-                tempProperty=[self getRealKey:tempProperty];
-                tempProperty=[self getValue:tempProperty category:category];
-                if (tempProperty.length>0) {
-                    NSString *code=[NSString stringWithFormat:@"\n@property (nonatomic,copy)NSString *%@;",tempProperty];
-                    if ([text rangeOfString:code].location==NSNotFound) {
-                        [strM appendString:code];
+                if (category.length>0) {
+                    category=[ZHNSString removeSpaceBeforeAndAfterWithString:category];
+                    
+                    NSString *tempProperty=property;
+                    if ([tempProperty hasPrefix:@"_"]) {
+                        tempProperty=[tempProperty substringFromIndex:1];
+                    }
+                    tempProperty=[self getRealKey:tempProperty];
+                    tempProperty=[self getValue:tempProperty category:category];
+                    if (tempProperty.length>0) {
+                        NSString *code=[NSString stringWithFormat:@"\n@property (nonatomic,copy)NSString *%@;",tempProperty];
+                        if ([text rangeOfString:code].location==NSNotFound) {
+                            [strM appendString:code];
+                        }
                     }
                 }
             }
