@@ -8,6 +8,10 @@ static NSMutableDictionary *ZHStroyBoardCreateFile;
 static NSMutableDictionary *ZHStroyBoardCreateContent;
 static NSMutableDictionary *ZHStroyBoardCreateReuse;
 
+static NSMutableArray *ZHPushCellFileName;
+static NSMutableArray *ZHPushTempCellName;
+static NSMutableArray *ZHPushTempControllerName;
+
 static NSString *ZHProjectPath;
 
 @interface StroyBoardCreateProperty ()
@@ -76,6 +80,36 @@ static NSString *ZHProjectPath;
     });
     return ZHStroyBoardCreateReuse;
 }
++ (NSMutableArray *)defalutCellFileName{
+    //添加线程锁
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (ZHPushCellFileName==nil) {
+            ZHPushCellFileName=[NSMutableArray array];
+        }
+    });
+    return ZHPushCellFileName;
+}
++ (NSMutableArray *)defalutTempCellName{
+    //添加线程锁
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (ZHPushTempCellName==nil) {
+            ZHPushTempCellName=[NSMutableArray array];
+        }
+    });
+    return ZHPushTempCellName;
+}
++ (NSMutableArray *)defalutTempControllerName{
+    //添加线程锁
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if (ZHPushTempControllerName==nil) {
+            ZHPushTempControllerName=[NSMutableArray array];
+        }
+    });
+    return ZHPushTempControllerName;
+}
 
 + (NSInteger)createPropertyWithStroyBoardPath:(NSString *)stroyBoardPath withProjectPath:(NSString *)projectPath{
     if ([ZHFileManager fileExistsAtPath:stroyBoardPath]==NO||[ZHFileManager fileExistsAtPath:projectPath]==NO) {
@@ -91,6 +125,8 @@ static NSString *ZHProjectPath;
     
     text=[self getCustomClassFromAllViews:text];
     
+    [[self defalutCellFileName]removeAllObjects];
+    
     NSInteger count=[self defalutCreateCategory].count;
     
     if (count==0) {
@@ -98,6 +134,8 @@ static NSString *ZHProjectPath;
     }
     
     text=[self addOutletProperty:text];
+    
+    text=[self removeTempCustomClass:text];
     
     NSArray *files=[ZHFileManager subPathFileArrInDirector:projectPath hasPathExtension:@[@".m"]];
     
@@ -149,6 +187,25 @@ static NSString *ZHProjectPath;
     }
     return result;
 }
++ (NSString *)removeSpaceSuffix:(NSString *)text{
+    if ([text hasSuffix:@" "]) {
+        text=[text substringToIndex:text.length-1];
+        return [self removeSpaceSuffix:text];
+    }
+    else return text;
+}
+
+/**去除临时的标识符*/
++ (NSString *)removeTempCustomClass:(NSString *)text{
+    for (NSString *cellName in [self defalutTempCellName]) {
+        text=[text stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@" customClass=\"%@\">",cellName] withString:@">"];
+    }
+    for (NSString *controllerName in [self defalutTempControllerName]) {
+        text=[text stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@" customClass=\"%@\">",controllerName] withString:@">"];
+    }
+    return text;
+}
+
 /**获取所有控件自己打上的标识符*/
 + (NSString *)getCustomClassFromAllViews:(NSString *)text{
     NSArray *arr=[text componentsSeparatedByString:@"\n"];
@@ -195,8 +252,18 @@ static NSString *ZHProjectPath;
                 if ([rowStr rangeOfString:@"customClass=\""].location!=NSNotFound) {
                     customClass=[rowStr substringFromIndex:[rowStr rangeOfString:@"customClass=\""].location+13];
                     customClass=[customClass substringToIndex:[customClass rangeOfString:@"\""].location];
+                }else{
+                    //强行加个临时的customClass
+                    customClass=[NSString stringWithFormat:@"&&&$$%ld$$&&&TempCell>",[self defalutTempCellName].count+1];
+                    [[self defalutTempCellName] addObject:customClass];
+                    rowStr = [self removeSpaceSuffix:rowStr];
+                    if ([rowStr hasSuffix:@">"]) {
+                        rowStr=[rowStr substringToIndex:rowStr.length-1];
+                        rowStr=[rowStr stringByAppendingFormat:@" customClass=\"%@\">",customClass];
+                    }
                 }
                 if (customClass.length>0) {
+                    [[self defalutCellFileName]addObject:customClass];
                     CellFileName=customClass;
                 }else{
                     CellFileName=@"noExsit";
@@ -214,7 +281,6 @@ static NSString *ZHProjectPath;
                         idStr=[idStr substringToIndex:[idStr rangeOfString:@"\""].location];
                         
                         NSString *tempCustomStr=[self setProperty:idStr forKey:customClass];
-                        
                         [self addCustomClassProperty:tempCustomStr withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
                         [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:tempCustomStr];//<view <label <button <imageView
                         
@@ -225,23 +291,45 @@ static NSString *ZHProjectPath;
                     }
                 }
             }
-        }else{
+        }
+        else{
             
             NSString *tempStr=[ZHNSString removeSpaceBeforeAndAfterWithString:rowStr];
             if([tempStr hasPrefix:@"<viewController "]){
+                NSString *customClass=@"";
                 if([tempStr rangeOfString:@" customClass=\""].location!=NSNotFound){
-                    NSString *customClass=[rowStr substringFromIndex:[rowStr rangeOfString:@"customClass=\""].location+13];
+                    customClass=[rowStr substringFromIndex:[rowStr rangeOfString:@"customClass=\""].location+13];
                     customClass=[customClass substringToIndex:[customClass rangeOfString:@"\""].location];
-                    if (customClass.length>0) {
-                        ViewControllerFileName=customClass;
-                    }else{
-                        ViewControllerFileName=@"noExsit";
+                }else{
+                    //强行加个临时的customClass
+                    customClass=[NSString stringWithFormat:@"&&&$$%ld$$&&&ViewController>",[self defalutTempControllerName].count+1];
+                    [[self defalutTempControllerName] addObject:customClass];
+                    rowStr = [self removeSpaceSuffix:rowStr];
+                    if ([rowStr hasSuffix:@">"]) {
+                        rowStr=[rowStr substringToIndex:rowStr.length-1];
+                        rowStr=[rowStr stringByAppendingFormat:@" customClass=\"%@\">",customClass];
                     }
                 }
+                if (customClass.length>0) {
+                    ViewControllerFileName=customClass;
+                }else{
+                    ViewControllerFileName=@"noExsit";
+                }
+            }
+            if ([tempStr hasPrefix:@"</viewController>"]) {
+                ViewControllerFileName=@"noExsit";
             }
             
             if ([tempStr hasPrefix:@"</tableViewCell"]||[tempStr hasPrefix:@"</collectionViewCell"]) {
-                CellFileName=@"noExsit";
+                if ([self defalutCellFileName].count>0) {
+                    [[self defalutCellFileName]removeLastObject];
+                    if ([self defalutCellFileName].count>0) {
+                        CellFileName=[[self defalutCellFileName] lastObject];
+                    }else
+                        CellFileName=@"noExsit";
+                }else{
+                    CellFileName=@"noExsit";
+                }
             }
         }
         [arrM addObject:rowStr];
@@ -275,21 +363,26 @@ static NSString *ZHProjectPath;
                     customClass=[customClass substringToIndex:[customClass rangeOfString:@"\""].location];
                 }
                 if (customClass.length>0) {
+                    [[self defalutCellFileName]addObject:customClass];
                     if ([self defalutCreateProperty][customClass]!=nil) {
                         cellPropertys =[self defalutCreateProperty][customClass];
+                    }else{
+                        cellPropertys=nil;
                     }
                 }else{
                     cellPropertys=nil;
                 }
                 
-                if ([rowStr rangeOfString:@"<tableViewCell"].location!=NSNotFound) {
+                if ([rowStr rangeOfString:@"<tableViewCell "].location!=NSNotFound) {
                     isTableViewCell=1;
-                }else if([rowStr rangeOfString:@"<collectionViewCell"].location!=NSNotFound){
+                    [[self defalutCellFileName]addObject:@"1"];
+                }else if([rowStr rangeOfString:@"<collectionViewCell "].location!=NSNotFound){
                     isTableViewCell=2;
+                    [[self defalutCellFileName]addObject:@"2"];
                 }
             }
-        }else{
-            
+        }
+        else{
             NSString *tempStr=[ZHNSString removeSpaceBeforeAndAfterWithString:rowStr];
             if([tempStr hasPrefix:@"<viewController "]){
                 if([tempStr rangeOfString:@" customClass=\""].location!=NSNotFound){
@@ -342,6 +435,9 @@ static NSString *ZHProjectPath;
                     //说明这个cell之前有拉过约束
                     else if(i>0&&[arr[i-1] rangeOfString:@"</connections>"].location!=NSNotFound){
                         for (NSString *property in cellPropertys) {
+                            if ([property isEqualToString:@"_ZHC3"]) {
+                                NSLog(@"%@",@"903qw8e09820938902184902");
+                            }
                             NSString *newProperty=property;
                             newProperty=[self getRealKey:newProperty];
                             if ([newProperty hasPrefix:@"_"]) {
@@ -361,8 +457,20 @@ static NSString *ZHProjectPath;
                         }
                     }
                     
-                    cellPropertys=nil;
                     isTableViewCell=0;
+                }
+                if ([self defalutCellFileName].count>2) {
+                    [[self defalutCellFileName]removeLastObject];
+                    [[self defalutCellFileName]removeLastObject];
+                    if ([self defalutCellFileName].count>2) {
+                        NSString *isTableViewCellTemp=[[self defalutCellFileName] lastObject];
+                        isTableViewCell=[isTableViewCellTemp integerValue];
+                        cellPropertys =[self defalutCreateProperty][[self defalutCellFileName][[self defalutCellFileName].count-2]];
+                    }else{
+                        cellPropertys=nil;
+                    }
+                }else{
+                    cellPropertys=nil;
                 }
             }
             if ([tempStr hasPrefix:@"</collectionViewCell>"]) {
@@ -419,8 +527,20 @@ static NSString *ZHProjectPath;
                         }
                     }
                     
-                    cellPropertys=nil;
                     isTableViewCell=0;
+                }
+                if ([self defalutCellFileName].count>2) {
+                    [[self defalutCellFileName]removeLastObject];
+                    [[self defalutCellFileName]removeLastObject];
+                    if ([self defalutCellFileName].count>2) {
+                        NSString *isTableViewCellTemp=[[self defalutCellFileName] lastObject];
+                        isTableViewCell=[isTableViewCellTemp integerValue];
+                        cellPropertys =[self defalutCreateProperty][[self defalutCellFileName][[self defalutCellFileName].count-2]];
+                    }else{
+                        cellPropertys=nil;
+                    }
+                }else{
+                    cellPropertys=nil;
                 }
             }
             if ([tempStr hasPrefix:@"</viewController>"]) {
@@ -475,7 +595,6 @@ static NSString *ZHProjectPath;
                         }
                     }
                 }
-                
                 viewControllerPropertys=nil;
             }
         }
@@ -645,7 +764,7 @@ static NSString *ZHProjectPath;
 }
 
 + (BOOL)isCell:(NSString *)rowStr{
-    if ([rowStr rangeOfString:@"<tableViewCell"].location!=NSNotFound||[rowStr rangeOfString:@"<collectionViewCell"].location!=NSNotFound) {
+    if ([rowStr rangeOfString:@"<tableViewCell "].location!=NSNotFound||[rowStr rangeOfString:@"<collectionViewCell "].location!=NSNotFound) {
         return YES;
     }
     return NO;
@@ -703,6 +822,9 @@ static NSString *ZHProjectPath;
     [[self defalutCreateContent]removeAllObjects];
     [[self defalutCreateId]removeAllObjects];
     [[self defalutCreateReuse]removeAllObjects];
+    [[self defalutCellFileName] removeAllObjects];
+    [[self defalutTempCellName]removeAllObjects];
+    [[self defalutTempControllerName]removeAllObjects];
 }
 
 + (NSString *)getStoryBoardIdString{
