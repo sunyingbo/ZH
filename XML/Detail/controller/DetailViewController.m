@@ -178,6 +178,7 @@
 }
 
 /**获取指定长度的文字(数字,字母随机)*/
+
 - (NSString *)getRandomStringWithLenth:(NSInteger)len{
     NSMutableString *strM=[NSMutableString string];
     NSInteger sj;

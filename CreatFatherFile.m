@@ -464,8 +464,6 @@
      <rect key=\"frame\" x=\"0.0\" y=\"20\" width=\"600\" height=\"580\"/>\n\
      <color key=\"backgroundColor\" white=\"1\" alpha=\"1\" colorSpace=\"calibratedWhite\"/>\n"];
     
-    
-    
     if (tableviewCells.count>0) {
         [text appendString:@"\n<prototypes>\n"];
         for (NSString *cells in tableviewCells) {
@@ -486,13 +484,17 @@
             NSString *ButtonID=[self getStoryBoardIdString];
             NSString *TextFiledID=[self getStoryBoardIdString];
             
+            NSString *subDicKey=@"";
+            NSString *specialViewId=@"";
+            
             for (NSDictionary *dic in subTableCellDic) {
                 NSString *cellName=[cells stringByReplacingOccurrencesOfString:@"TableViewCell" withString:@""];
                 NSDictionary *subDic=dic[cellName];
+                
                 if (subDic.count>0) {
                     cellHeight=0;
                     
-                    NSString *subDicKey=[subDic allKeys][0];
+                    subDicKey=[subDic allKeys][0];
                     if ([subDicKey isEqualToString:@"0"]) {
                         cellHeight=124;
                         
@@ -533,6 +535,8 @@
                          <rect key=\"frame\" x=\"20.0\" y=\"20.0\" width=\"560\" height=\"%ld\"/>\n\
                          <color key=\"backgroundColor\" white=\"1\" alpha=\"1\" colorSpace=\"calibratedWhite\"/>\n\
                          <prototypes>\n",tableViewID,124*arrCells.count+38];
+                        
+                        specialViewId=tableViewID;
                         
                         cellHeight+=(124*arrCells.count);
                         
@@ -577,11 +581,11 @@
                          </tableView>\n\
                          </subviews>\n\
                          <constraints>\n\
-                         <constraint firstItem=\"%@\" firstAttribute=\"top\" secondItem=\"%@\" secondAttribute=\"top\" constant=\"20\" id=\"W6m-qJ-Nbq\"/>\n\
-                         <constraint firstItem=\"%@\" firstAttribute=\"leading\" secondItem=\"%@\" secondAttribute=\"leading\" constant=\"20\" id=\"i3C-gG-5aC\"/>\n\
-                         <constraint firstAttribute=\"trailing\" secondItem=\"%@\" secondAttribute=\"trailing\" constant=\"20\" id=\"nj1-ZE-W6L\"/>\n\
-                         <constraint firstAttribute=\"bottom\" secondItem=\"%@\" secondAttribute=\"bottom\" constant=\"20\" id=\"qCk-bF-PT5\"/>\n\
-                         </constraints>\n",tableViewID,idText2,tableViewID,idText2,tableViewID,tableViewID];
+                         <constraint firstItem=\"%@\" firstAttribute=\"top\" secondItem=\"%@\" secondAttribute=\"top\" constant=\"20\" id=\"%@\"/>\n\
+                         <constraint firstItem=\"%@\" firstAttribute=\"leading\" secondItem=\"%@\" secondAttribute=\"leading\" constant=\"20\" id=\"%@\"/>\n\
+                         <constraint firstAttribute=\"trailing\" secondItem=\"%@\" secondAttribute=\"trailing\" constant=\"20\" id=\"%@\"/>\n\
+                         <constraint firstAttribute=\"bottom\" secondItem=\"%@\" secondAttribute=\"bottom\" constant=\"20\" id=\"%@\"/>\n\
+                         </constraints>\n",tableViewID,idText2,[self getStoryBoardIdString],tableViewID,idText2,[self getStoryBoardIdString],tableViewID,[self getStoryBoardIdString],tableViewID,[self getStoryBoardIdString]];
                         
                         NSString *tempCode=[text copy];
                         tempCode=[tempCode stringByReplacingOccurrencesOfString:@"***&&&***" withString:[NSString stringWithFormat:@"%ld",cellHeight+38+40]];
@@ -617,6 +621,8 @@
                         <inset key=\"sectionInset\" minX=\"0.0\" minY=\"0.0\" maxX=\"0.0\" maxY=\"0.0\"/>\n\
                         </collectionViewFlowLayout>\n\
                          <cells>\n",collectionId,height,dlowLayoutId];
+                        
+                        specialViewId=collectionId;
                         
                         for (NSString *subCell in arrCells) {
                             NSString *idText5=[self getStoryBoardIdString];
@@ -654,11 +660,11 @@
                          </collectionView>\n\
                          </subviews>\n\
                          <constraints>\n\
-                         <constraint firstItem=\"%@\" firstAttribute=\"top\" secondItem=\"%@\" secondAttribute=\"top\" id=\"Ieb-Yk-z5U\"/>\n\
-                         <constraint firstAttribute=\"bottom\" secondItem=\"%@\" secondAttribute=\"bottom\" id=\"Kem-be-srC\"/>\n\
-                         <constraint firstItem=\"%@\" firstAttribute=\"leading\" secondItem=\"%@\" secondAttribute=\"leading\" id=\"hfX-aN-H0d\"/>\n\
-                         <constraint firstAttribute=\"trailing\" secondItem=\"%@\" secondAttribute=\"trailing\" id=\"mw1-ZA-Ul3\"/>\n\
-                         </constraints>\n",collectionId,idText2,collectionId,collectionId,idText2,collectionId];
+                         <constraint firstItem=\"%@\" firstAttribute=\"top\" secondItem=\"%@\" secondAttribute=\"top\" id=\"%@\"/>\n\
+                         <constraint firstAttribute=\"bottom\" secondItem=\"%@\" secondAttribute=\"bottom\" id=\"%@\"/>\n\
+                         <constraint firstItem=\"%@\" firstAttribute=\"leading\" secondItem=\"%@\" secondAttribute=\"leading\" id=\"%@\"/>\n\
+                         <constraint firstAttribute=\"trailing\" secondItem=\"%@\" secondAttribute=\"trailing\" id=\"%@\"/>\n\
+                         </constraints>\n",collectionId,idText2,[self getStoryBoardIdString],collectionId,[self getStoryBoardIdString],collectionId,idText2,[self getStoryBoardIdString],collectionId,[self getStoryBoardIdString]];
                         
                         NSString *tempCode=[text copy];
                         tempCode=[tempCode stringByReplacingOccurrencesOfString:@"***&&&***" withString:[NSString stringWithFormat:@"%ld",cellHeight+20+10]];
@@ -668,8 +674,23 @@
                     }
                 }
             }
-            [text appendString:@"</tableViewCellContentView>\n\
-             </tableViewCell>\n"];
+            [text appendString:@"</tableViewCellContentView>\n"];
+            
+            if ([subDicKey isEqualToString:@"1"]){
+                if (specialViewId.length>0) {
+                    [text appendFormat:@"<connections>\n\
+                     <outlet property=\"tableView\" destination=\"%@\" id=\"%@\"/>\n\
+                     </connections>\n",specialViewId,[self getStoryBoardIdString]];
+                }
+            }else if ([subDicKey isEqualToString:@"2"]){
+                if (specialViewId.length>0) {
+                    [text appendFormat:@"<connections>\n\
+                     <outlet property=\"collectionView\" destination=\"%@\" id=\"%@\"/>\n\
+                     </connections>\n",specialViewId,[self getStoryBoardIdString]];
+                }
+            }
+            
+            [text appendString:@"</tableViewCell>\n"];
             
         }
         [text appendString:@"\n</prototypes>\n"];
