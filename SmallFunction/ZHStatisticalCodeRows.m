@@ -13,7 +13,7 @@
         case FileTypeFile:
         {
             if ([filePath hasSuffix:@".m"]||[filePath hasSuffix:@".h"]) {
-                return [NSString stringWithFormat:@"总行数:%ld(不包空格)",[self fileRows:filePath]];
+                return [NSString stringWithFormat:@"总行数:%ld(不包空行)",[self fileRows:filePath]];
             }else{
                 return @"不是OC编程文件";
             }
@@ -26,7 +26,7 @@
             for (NSString *fileName in fileArr) {
                 sum+=[self fileRows:fileName];
             }
-            return [NSString stringWithFormat:@"总行数:%ld(不包空格)",sum];
+            return [NSString stringWithFormat:@"总行数:%ld(不包空行)",sum];
         }
             break;
         case FileTypeUnkown:

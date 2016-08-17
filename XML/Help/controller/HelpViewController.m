@@ -19,7 +19,7 @@
 	if (!_dataArr) {
 		_dataArr=[NSMutableArray array];
         
-        NSArray *titles=@[@"StroyBoard生成Masonry简介",@"Xib生成Masonry简介",@"快速生成代码简介",@"JSON转模型简介",@"为什么代码里全是View1,label2之类的?",@"生成property outlet怎么用?",@"将非纯手写工程转换成纯手写简介",@"去除代码注释简介",@"查看工程总代码行数简介"];
+        NSArray *titles=@[@"StroyBoard生成Masonry简介",@"Xib生成Masonry简介",@"快速生成代码简介",@"JSON转模型简介",@"为什么代码里全是View1,label2之类的?",@"生成property outlet怎么用?",@"将非纯手写工程转换成纯手写简介",@"去除代码注释简介",@"查看工程总代码行数简介",@"修改类文件名简介"];
         
         for (NSInteger i=0; i<titles.count; i++) {
             HelpCellModel *HelpModel=[HelpCellModel new];
