@@ -208,7 +208,7 @@
         BOOL result=[ZHFileManager copyItemAtPath:self.filePath toPath:newFilePath];
         
         if (result) {
-            hud.labelText = @"备份成功,正在处理注释...";
+            hud.labelText = @"备份成功,正在修改...";
         }else{
             hud.labelText = @"备份失败!请先关闭工程(XCode)";
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

@@ -645,7 +645,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="PMM-VD-rbR"/>
                                 </constraints>
-                                <state key="normal" backgroundImage="creatLabel.jpg">
+                                <state key="normal">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" red="0.2992818813" green="0.2992818813" blue="0.2992818813" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -1882,7 +1882,6 @@
     </scenes>
     <resources>
         <image name="check.png" width="75" height="75"/>
-        <image name="creatLabel.jpg" width="400" height="100"/>
         <image name="moreFunc.jpg" width="100" height="100"/>
     </resources>
 </document>
