@@ -129,6 +129,7 @@
         [text writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     }
 }
+
 - (void)done{
     
     //这句话一定要加

@@ -847,7 +847,7 @@
             MyblockWithNULL block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block();\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             \n\
@@ -857,7 +857,7 @@
             MyblockWithNSString block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(str1);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockTwoNSStringIdentity:(NSString *)Identity Str1:(NSString *)str1 Str2:(NSString *)str2{\n\
@@ -865,7 +865,7 @@
             MyblockWithTwoNSString block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(str1,str2);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockThreeNSStringIdentity:(NSString *)Identity Str1:(NSString *)str1 Str2:(NSString *)str2 Str3:(NSString *)str3{\n\
@@ -873,7 +873,7 @@
             MyblockWithThreeNSString block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(str1,str2,str3);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             \n\
@@ -883,7 +883,7 @@
             MyblockWithNSInteger block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Intege1);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockTwoNSIntegerIdentity:(NSString *)Identity  Intege1:(NSInteger)Intege1 Intege2:(NSInteger)Intege2{\n\
@@ -891,7 +891,7 @@
             MyblockWithTwoNSInteger block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Intege1,Intege2);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockThreeNSIntegerIdentity:(NSString *)Identity  Intege1:(NSInteger)Intege1 Intege2:(NSInteger)Intege2  Intege3:(NSInteger)Intege3{\n\
@@ -899,7 +899,7 @@
             MyblockWithThreeNSInteger block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Intege1,Intege2,Intege3);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             \n\
@@ -909,7 +909,7 @@
             MyblockWithCGFloat block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Float1);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockTwoCGFloatIdentity:(NSString *)Identity Float1:(CGFloat)Float1 Float2:(CGFloat)Float2{\n\
@@ -917,7 +917,7 @@
             MyblockWithTwoCGFloat block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Float1,Float2);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockThreeCGFloatIdentity:(NSString *)Identity Float1:(CGFloat)Float1 Float2:(CGFloat)Float2  Float3:(CGFloat)Float3{\n\
@@ -925,7 +925,7 @@
             MyblockWithThreeCGFloat block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Float1,Float2,Float3);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             \n\
@@ -935,7 +935,7 @@
             MyblockWithNSArray block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Array1);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockTwoNSArrayIdentity:(NSString *)Identity Array1:(NSArray *)Array1 Array2:(NSArray *)Array2{\n\
@@ -943,7 +943,7 @@
             MyblockWithTwoNSArray block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Array1,Array2);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockThreeNSArrayIdentity:(NSString *)Identity Array1:(NSArray *)Array1  Array2:(NSArray *)Array2 Array3:(NSArray *)Array3{\n\
@@ -951,7 +951,7 @@
             MyblockWithThreeNSArray block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Array1,Array2,Array3);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             \n\
@@ -961,7 +961,7 @@
             MyblockWithNSDictionary block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Dictionary1);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockTwoNSDictionaryIdentity:(NSString *)Identity Dictionary1:(NSDictionary *)Dictionary1 Dictionary2:(NSDictionary *)Dictionary2{\n\
@@ -969,7 +969,7 @@
             MyblockWithTwoNSDictionary block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Dictionary1,Dictionary2);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             + (void)runBlockThreeNSDictionaryIdentity:(NSString *)Identity  Dictionary1:(NSDictionary *)Dictionary1 Dictionary2:(NSDictionary *)Dictionary2 Dictionary3:(NSDictionary *)Dictionary3{\n\
@@ -977,7 +977,7 @@
             MyblockWithThreeNSDictionary block=[ZHBlockSingleCategroy defaultMyblock][Identity];\n\
             block(Dictionary1,Dictionary2,Dictionary3);\n\
             }else{\n\
-            [self AlertMessageWithIdentity:Identity];\n\
+            [self AlertMsg:Identity];\n\
             }\n\
             }\n\
             \n\
@@ -985,7 +985,7 @@
             + (void)removeBlockWithIdentity:(NSString *)Identity{\n\
             [[ZHBlockSingleCategroy defaultMyblock] removeObjectForKey:Identity];\n\
             }\n\
-            + (void)AlertMessageWithIdentity:(NSString *)Identity{\n\
+            + (void)AlertMsg:(NSString *)Identity{\n\
             UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@\"温馨提示\" message:[Identity stringByAppendingString:@\" 的block已经移除或者还未创建!\"]delegate:self cancelButtonTitle:@\"确定\" otherButtonTitles:nil, nil];\n\
             [alert show];\n\
             }\n\

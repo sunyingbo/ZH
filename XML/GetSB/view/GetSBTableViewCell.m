@@ -18,7 +18,12 @@
 - (void)refreshUI:(GetSBCellModel *)dataModel{
 	_dataModel=dataModel;
 	self.nameLabel.text=dataModel.title;
-	self.iconImageView.image=[UIImage imageNamed:dataModel.iconImageName];
+    if (dataModel.iconImageName.length>0) {
+        self.iconImageView.image=[UIImage imageNamed:dataModel.iconImageName];
+    }else{
+        self.iconImageView.image=nil;
+    }
+	
     
     self.creatCodeButton.hidden=dataModel.noFile;
 }
@@ -51,7 +56,7 @@
         
         if ([[NSFileManager defaultManager]fileExistsAtPath:self.dataModel.filePath]==NO) {
             hud.labelText =@"路径不存在";
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[self getViewController].view animated:YES];
             });
             return ;
@@ -63,7 +68,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             hud.labelText=@"生成成功";
             //回调或者说是通知主线程刷新，
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[self getViewController].view animated:YES];
             });
         }); 

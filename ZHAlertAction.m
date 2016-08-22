@@ -132,13 +132,6 @@ static ZHAlertAction * zhAlertActionDefault;
         index++;
     }
     
-    if (![arrM containsObject:@"取消"]) {
-        UIAlertAction *CancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            [weakAlertController dismissViewControllerAnimated:YES completion:nil];
-        }];
-        [alertController addAction:CancelAction];
-    }
-    
     [viewController presentViewController:alertController animated:YES completion:nil];
     
 }

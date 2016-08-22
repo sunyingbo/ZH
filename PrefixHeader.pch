@@ -24,6 +24,8 @@
 #import "ZHStoryboardXMLManager.h"
 #import "ZHStoryboardTextManager.h"
 #import "ZHStroyBoardFileManager.h"
+#import "ZHStroyBoardFileManagerToMVC.h"
+#import "ZHStoryboardTextManagerToMVC.h"
 
 #import "ViewProperty.h"
 
@@ -32,5 +34,9 @@
 #import "StroyBoardCreateProperty.h"
 #import "ZHSaveDataToFMDB.h"
 #import "ZHWordWrap.h"
+#import "ZHChangeCodeFileName.h"
+#import "ZHBlockSingleCategroy.h"
+#import "ZHHelp.h"
+#import "ZHFMDBHelp.h"
 
 #endif /* PrefixHeader_pch */

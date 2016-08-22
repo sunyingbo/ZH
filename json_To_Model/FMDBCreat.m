@@ -76,8 +76,8 @@
 //获取类名
 + (NSString *)getClassNameFromFilePath:(NSString *)filePath{
     filePath=[filePath stringByDeletingPathExtension];
-    if([filePath rangeOfString:@"/" options:NSBackwardsSearch].location!=NSNotFound)
-        filePath=[filePath substringFromIndex:[filePath rangeOfString:@"/" options:NSBackwardsSearch].location+1];
+    if([filePath rangeOfString:@"/" options:NSBackwardsSearch|NSLiteralSearch].location!=NSNotFound)
+        filePath=[filePath substringFromIndex:[filePath rangeOfString:@"/" options:NSBackwardsSearch|NSLiteralSearch].location+1];
     return filePath;
 }
 //生成创建表格的SQL语句(还带了一个参数:缩进多少个\t)

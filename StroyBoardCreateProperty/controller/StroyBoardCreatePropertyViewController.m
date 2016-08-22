@@ -44,7 +44,7 @@
         NSString *path=[NSString stringWithContentsOfFile:macDesktopPath encoding:NSUTF8StringEncoding error:nil];
         
         if ([ZHFileManager fileExistsAtPath:path]==NO) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [ZHAlertAction alertWithMsg:@"路径不存在!请重新填写!" addToViewController:self ActionSheet:NO];
             });
             return ;
@@ -53,12 +53,13 @@
         NSArray *fileArr=[ZHFileManager subPathFileArrInDirector:path hasPathExtension:@[@".storyboard"]];
         
         if(fileArr.count==0){
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [ZHAlertAction alertWithMsg:@"工程路径不存在storyboard文件!请重新填写!" addToViewController:self ActionSheet:NO];
             });
             return;
         }
         
+        BOOL isRepeat=NO;
         for (NSString *fileName in fileArr) {
             NSString *tempStr=[ZHFileManager getFileNameNoPathComponentFromFilePath:fileName];
             if ([tempStr rangeOfString:@"备份"].location!=NSNotFound||[tempStr isEqualToString:@"LaunchScreen"]) {
@@ -69,6 +70,7 @@
             for (StroyBoardCreatePropertyCellModel *model in self.dataArr) {
                 if ([model.title isEqualToString:fileName]&&[model.subTitle isEqualToString:path]) {
                     needAdd=NO;
+                    isRepeat=YES;
                     break;
                 }
             }
@@ -78,6 +80,11 @@
                 StroyBoardCreatePropertyModel.subTitle=path;
                 [self.dataArr addObject:StroyBoardCreatePropertyModel];
             }
+        }
+        if(isRepeat){
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [ZHAlertAction alertWithMsg:@"已经存在,不能重复添加!" addToViewController:self ActionSheet:NO];
+            });
         }
        
         [self.tableView reloadData];
@@ -126,7 +133,6 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
 	return UITableViewCellEditingStyleDelete;
 }
-
 
 /**设置编辑的控件  删除,置顶,收藏*/
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath{

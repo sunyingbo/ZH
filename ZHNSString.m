@@ -145,16 +145,16 @@
     
     NSMutableArray *arrM=[NSMutableArray array];
     
-    NSInteger indexStart=[text rangeOfString:leftString options:NSCaseInsensitiveSearch range:NSMakeRange(startIndex, text.length-startIndex)].location;
+    NSInteger indexStart=[text rangeOfString:leftString options:NSLiteralSearch range:NSMakeRange(startIndex, text.length-startIndex)].location;
     NSInteger indexEnd;
     NSInteger stopIndex=0;
     if (indexStart!=NSNotFound&&indexStart<text.length-1) {
-        indexEnd=[text rangeOfString:rightString options:NSCaseInsensitiveSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
+        indexEnd=[text rangeOfString:rightString options:NSLiteralSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
         
         if (stopString.length==0) {
             stopIndex=text.length+1;
         }else{
-            stopIndex=[text rangeOfString:rightString options:NSCaseInsensitiveSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
+            stopIndex=[text rangeOfString:rightString options:NSLiteralSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
         }
     }else{
         indexEnd=NSNotFound;
@@ -169,9 +169,9 @@
         
         indexStart=indexEnd+1;
         
-        indexStart=[text rangeOfString:leftString options:NSCaseInsensitiveSearch range:NSMakeRange(indexStart, text.length-indexStart)].location;
+        indexStart=[text rangeOfString:leftString options:NSLiteralSearch range:NSMakeRange(indexStart, text.length-indexStart)].location;
         if (indexStart!=NSNotFound&&indexStart<text.length-1) {
-            indexEnd=[text rangeOfString:rightString options:NSCaseInsensitiveSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
+            indexEnd=[text rangeOfString:rightString options:NSLiteralSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
         }else break;
     }
     return arrM;
@@ -187,7 +187,7 @@
     BOOL success=YES;
     if(pathArr.count>0){
         for (NSString *path in pathArr) {
-            index=[text rangeOfString:path options:NSCaseInsensitiveSearch range:NSMakeRange(index, text.length-index)].location;
+            index=[text rangeOfString:path options:NSLiteralSearch range:NSMakeRange(index, text.length-index)].location;
             if (index!=NSNotFound) {
                 continue;
             }else{
@@ -224,7 +224,7 @@
         indexStart+=targetStr.length;
         
         if (indexStart<text.length-1) {
-            indexStart=[text rangeOfString:targetStr options:NSCaseInsensitiveSearch range:NSMakeRange(indexStart, text.length-indexStart)].location;
+            indexStart=[text rangeOfString:targetStr options:NSLiteralSearch range:NSMakeRange(indexStart, text.length-indexStart)].location;
         }else break;
     }
     return count;
@@ -245,7 +245,7 @@
     NSInteger endStart;
     while (indexStart!=NSNotFound) {
         
-        endStart=[text rangeOfString:rightString options:NSCaseInsensitiveSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
+        endStart=[text rangeOfString:rightString options:NSLiteralSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
         
         if (endStart!=NSNotFound) {
             
@@ -268,7 +268,7 @@
             
             if (indexStart<text.length-1) {
                 indexStart=[text rangeOfString:
-                            leftString options:NSCaseInsensitiveSearch
+                            leftString options:NSLiteralSearch
                                          range:NSMakeRange(indexStart, text.length-indexStart)].location;
             }else break;
         }else{
@@ -289,7 +289,7 @@
     while (endStart!=NSNotFound) {
         
         indexStart=[text rangeOfString:leftString
-                               options:NSBackwardsSearch
+                               options:NSBackwardsSearch|NSLiteralSearch
                                  range:NSMakeRange(indexStart, endStart-indexStart)].location;
         
         if (indexStart!=NSNotFound) {
@@ -313,7 +313,7 @@
             
             if (endStart<text.length-1) {
                 endStart=[text rangeOfString:rightString
-                                     options:NSCaseInsensitiveSearch
+                                     options:NSLiteralSearch
                                        range:NSMakeRange(endStart, text.length-endStart)].location;
             }else break;
         }else{
@@ -338,17 +338,17 @@
         //        rightStringAtRightIndex 右边的字符串在右边的位置
         //        leftStringAtRightIndex 左边的字符串在右边的位置
         
-        leftStringAtLeftIndex=[text rangeOfString:leftString options:NSBackwardsSearch range:NSMakeRange(0, index)].location;
+        leftStringAtLeftIndex=[text rangeOfString:leftString options:NSBackwardsSearch|NSLiteralSearch range:NSMakeRange(0, index)].location;
         if (leftStringAtLeftIndex!=NSNotFound&&[leftString rangeOfString:rightString].location!=NSNotFound) {
-            rightStringAtLeftIndex=[text rangeOfString:rightString options:NSBackwardsSearch range:NSMakeRange(0, leftStringAtLeftIndex)].location;
+            rightStringAtLeftIndex=[text rangeOfString:rightString options:NSBackwardsSearch|NSLiteralSearch range:NSMakeRange(0, leftStringAtLeftIndex)].location;
         }else
-            rightStringAtLeftIndex=[text rangeOfString:rightString options:NSBackwardsSearch range:NSMakeRange(0, index)].location;
+            rightStringAtLeftIndex=[text rangeOfString:rightString options:NSBackwardsSearch|NSLiteralSearch range:NSMakeRange(0, index)].location;
         
-        rightStringAtRightIndex=[text rangeOfString:rightString options:NSCaseInsensitiveSearch range:NSMakeRange(index+targetString.length, text.length-index-targetString.length)].location;
+        rightStringAtRightIndex=[text rangeOfString:rightString options:NSLiteralSearch range:NSMakeRange(index+targetString.length, text.length-index-targetString.length)].location;
         if (rightStringAtRightIndex!=NSNotFound&&[rightString rangeOfString:leftString].location!=NSNotFound) {
-            leftStringAtRightIndex=[text rangeOfString:leftString options:NSCaseInsensitiveSearch range:NSMakeRange(leftStringAtRightIndex+targetString.length, text.length-leftStringAtRightIndex-targetString.length)].location;
+            leftStringAtRightIndex=[text rangeOfString:leftString options:NSLiteralSearch range:NSMakeRange(leftStringAtRightIndex+targetString.length, text.length-leftStringAtRightIndex-targetString.length)].location;
         }else{
-            leftStringAtRightIndex=[text rangeOfString:leftString options:NSCaseInsensitiveSearch range:NSMakeRange(index+targetString.length, text.length-index-targetString.length)].location;
+            leftStringAtRightIndex=[text rangeOfString:leftString options:NSLiteralSearch range:NSMakeRange(index+targetString.length, text.length-index-targetString.length)].location;
         }
         
         /**满足以下条件*/
@@ -380,7 +380,7 @@
         if ([self isBetweenLeftString:leftString RightString:rightString targetStringRange:range inText:text]) {
             return YES;
         }
-        range=[text rangeOfString:targetString options:NSCaseInsensitiveSearch range:NSMakeRange(range.location+1, text.length-range.location-1)];
+        range=[text rangeOfString:targetString options:NSLiteralSearch range:NSMakeRange(range.location+1, text.length-range.location-1)];
     }
     return NO;
 }

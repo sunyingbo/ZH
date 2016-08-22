@@ -106,7 +106,7 @@
             self.OkButton.backgroundColor=[UIColor grayColor];
             
             //回调或者说是通知主线程刷新，
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             });
         });
@@ -173,7 +173,7 @@
         NSString *path=[NSString stringWithContentsOfFile:macDesktopPath encoding:NSUTF8StringEncoding error:nil];
         
         if ([ZHFileManager fileExistsAtPath:path]==NO) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [ZHAlertAction alertWithMsg:@"路径不存在!请重新填写!" addToViewController:self ActionSheet:NO];
             });
             return ;
@@ -182,7 +182,7 @@
         NSArray *fileArr=[ZHFileManager subPathFileArrInDirector:path hasPathExtension:@[@".storyboard"]];
         
         if(fileArr.count==0){
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [ZHAlertAction alertWithMsg:@"工程路径不存在storyboard文件!请重新填写工程路径!" addToViewController:self ActionSheet:NO];
             });
             return;
@@ -205,7 +205,7 @@
             self.OkButton.enabled=YES;
             self.OkButton.backgroundColor=[UIColor blackColor];
         }else{
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [ZHAlertAction alertWithMsg:@"工程路径不存在相关的storyboard文件!请重新填写工程路径!" addToViewController:self ActionSheet:NO];
             });
         }

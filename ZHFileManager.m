@@ -411,6 +411,23 @@
     return NO;
 }
 
+/**旧名字改成新名字*/
++ (NSString *)changeFileOldName:(NSString *)oldName newFileName:(NSString *)newName{
+    NSString *newPath=@"";
+    NSString *fileName=[ZHFileManager getFileNameFromFilePath:oldName];
+    newPath=[oldName substringToIndex:oldName.length-fileName.length];
+    NSString *pathExtension=[oldName pathExtension];
+    newPath=[newPath stringByAppendingPathComponent:newName];
+    newPath=[newPath stringByAppendingString:[NSString stringWithFormat:@".%@",pathExtension]];
+    return newPath;
+}
+
+/**获取去除掉文件名的文件路径*/
++ (NSString *)getFilePathByRemoveFileName:(NSString *)filePath{
+    NSString *fileName=[ZHFileManager getFileNameFromFilePath:filePath];
+    return [filePath substringToIndex:filePath.length-fileName.length];
+}
+
 #pragma mark 原生态自带的
 /**判断某文件或者文件夹是否存在*/
 + (BOOL)fileExistsAtPath:(NSString *)path{

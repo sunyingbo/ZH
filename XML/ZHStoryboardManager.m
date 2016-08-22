@@ -11,14 +11,12 @@
 @end
 
 @implementation ZHStoryboardManager
-- (void)StroyBoard_To_Masonry:(NSString *)stroyBoard{
+- (NSString *)StroyBoard_To_Masonry:(NSString *)stroyBoard{
     _viewCount=0;
-    NSLog(@"%@",@"开始");
-    
     NSString *filePath=stroyBoard;
     
     if ([ZHFileManager fileExistsAtPath:filePath]==NO) {
-        return;
+        return @"";
     }
     
     NSString *context=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
@@ -53,7 +51,6 @@
     NSDictionary *idAndViews=[ZHStoryboardXMLManager getAllViewWithAllViewControllerArrM:allViewControllers andXMLHandel:xml];
     self.idAndViews=idAndViews;
     
-    
     NSDictionary *idAndViewPropertys=[ZHStoryboardPropertyManager getPropertysForView:idAndViews withCustomAndName:customAndName andXMLHandel:xml];
     self.idAndViewPropertys=idAndViewPropertys;
     
@@ -64,7 +61,6 @@
         if(dic[@"customClass"]!=nil){
             viewController=dic[@"customClass"];
             {
-                
                 NSString *viewControllerFileName=[viewController stringByAppendingString:viewController];//对应的ViewController字典key值,通过这个key值可以找到对应存放在字典中的文件内容
                 
                 //先创建所有cell文件
@@ -302,6 +298,8 @@
         }
     }
     
+    NSString *mainPath=[ZHStroyBoardFileManager getMainDirectory];
+    
     NSInteger count=0;
     
     count=[ZHStoryboardTextManager getAllViewCount];
@@ -317,9 +315,7 @@
     customAndId=nil;
     customAndName=nil;
     xml=nil;
-    
-    NSLog(@"%@",@"结束");//时间花销 0.6s
-    NSLog(@"%ld",_viewCount);
+    return mainPath;
 }
 
 - (void)Xib_To_Masonry:(NSString *)xib{
@@ -550,8 +546,11 @@
         //再添加refreshUI方法
         [ZHStoryboardTextManager addCodeText:[NSString stringWithFormat:@"- (void)refreshUI:(%@ *)dataModel;",[fatherCellName stringByAppendingString:@"Model"]] andInsertType:ZHAddCodeType_Interface toStrM:[ZHStroyBoardFileManager get_H_ContextByIdentity:NewFileName] insertFunction:nil];
         
+        //给.m文件添加model弱引用
+        [ZHStoryboardTextManagerToMVC addCodeText:[NSString stringWithFormat:@"@property (weak, nonatomic) %@ *dataModel;//model弱引用\n",[fatherCellName stringByAppendingString:@"Model"]] andInsertType:ZHAddCodeType_Interface toStrM:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] insertFunction:nil];
+        
         //给.m文件添加refreshUI
-        [ZHStoryboardTextManager addCodeText:[NSString stringWithFormat:@"\n- (void)refreshUI:(%@ *)dataModel{\n\
+        [ZHStoryboardTextManager addCodeText:[NSString stringWithFormat:@"\n- (void)refreshUI:(%@ *)dataModel{\n_dataModel=dataModel;\n\
                                               \n\
                                               }",[fatherCellName stringByAppendingString:@"Model"]] andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:NewFileName] insertFunction:nil];
         

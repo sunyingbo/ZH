@@ -18,7 +18,7 @@
 	if (!_dataArr) {
 		_dataArr=[NSMutableArray array];
         
-        NSArray *titles=@[@"快速生成代码(常用)",@"生成property outlet,不用自己拉线",@"小功能",@"JSON转模型(Model)",@"将非纯手写工程转换成纯手写工程"];
+        NSArray *titles=@[@"快速生成代码(常用)",@"生成property outlet,不用自己拉线",@"JSON转模型(Model)",@"将非纯手写工程转换成纯手写工程",@"StroyBoard xib生成masonr纯代码",@"小功能"];
         
         for (NSInteger i=0; i<titles.count; i++) {
             @autoreleasepool {
@@ -40,8 +40,12 @@
     
     self.title=@"更多功能";
     [TabBarAndNavagation setLeftBarButtonItemTitle:@"<返回" TintColor:[UIColor blackColor] target:self action:@selector(backAction)];
+    [TabBarAndNavagation setRightBarButtonItemTitle:@"使用简介" TintColor:[UIColor blackColor] target:self action:@selector(helpAction)];
 }
 
+- (void)helpAction{
+    [TabBarAndNavagation pushViewController:@"HelpViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
+}
 - (void)backAction{
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -81,6 +85,8 @@
         [TabBarAndNavagation pushViewController:@"PureHandProjectViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
     }else if ([model.title isEqualToString:@"小功能"]) {
         [TabBarAndNavagation pushViewController:@"SmallFunctionViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
+    }else if ([model.title isEqualToString:@"StroyBoard xib生成masonr纯代码"]) {
+        [TabBarAndNavagation pushViewController:@"GetSBViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
     }
 }
 

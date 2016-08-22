@@ -12,7 +12,7 @@
             break;
         case FileTypeFile:
         {
-            if ([filePath hasSuffix:@".m"]||[filePath hasSuffix:@".h"]||[filePath hasSuffix:@".pch"]||[filePath hasSuffix:@".mm"]) {
+            if ([filePath hasSuffix:@".m"]||[filePath hasSuffix:@".h"]||[filePath hasSuffix:@".pch"]||[filePath hasSuffix:@".mm"]||[filePath hasSuffix:@".cpp"]) {
                 
                 NSString *text=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
                 text=[self removeComments:text type:type];
@@ -31,7 +31,7 @@
             break;
         case FileTypeDirectory:
         {
-            NSArray *fileArr=[ZHFileManager subPathFileArrInDirector:filePath hasPathExtension:@[@".h",@".m",@".pch",@".mm"]];
+            NSArray *fileArr=[ZHFileManager subPathFileArrInDirector:filePath hasPathExtension:@[@".h",@".m",@".pch",@".mm",@".cpp"]];
             for (NSString *fileName in fileArr) {
                 
                 NSString *text=[NSString stringWithContentsOfFile:fileName encoding:NSUTF8StringEncoding error:nil];
@@ -91,9 +91,9 @@
 
 /**删除全部注释*/
 + (NSString *)removeAllComments:(NSString *)text{
+    text=[self removeFileInstructionsComments:text];
     text=[self removeFuncInstructionsComments:text noDeleteChineseComment:NO];
     text=[self removeDoubleSlashComments:text noDeleteChineseComment:NO];
-    text=[self removeFileInstructionsComments:text];
     return text;
 }
 
@@ -166,6 +166,8 @@
 /**删除/ **\/或\/ ***\/注释*/
 + (NSString *)removeFuncInstructionsComments:(NSString *)text noDeleteChineseComment:(BOOL)noDeleteChineseComment{
     
+    text=[text stringByReplacingOccurrencesOfString:@"//*" withString:@"/*"];//有人注释是这样写的    //*注释内容*/
+    
     text=[text stringByReplacingOccurrencesOfString:@"\\\"" withString:@"##$$$%%"];
     text=[text stringByReplacingOccurrencesOfString:@"@\"" withString:@"##***%%"];
     NSInteger indexStart=[text rangeOfString:@"/*"].location;
@@ -173,17 +175,17 @@
     //如果/*在字符串中间
     while (indexStart!=NSNotFound&&[ZHNSString isBetweenLeftString:@"##***%%" RightString:@"\"" targetStringRange:NSMakeRange(indexStart, 2) inText:text]) {
         indexStart=[text rangeOfString:
-                    @"/*" options:NSCaseInsensitiveSearch
+                    @"/*" options:NSLiteralSearch
                                  range:NSMakeRange(indexStart+2, text.length-indexStart-2)].location;
     }
     
     NSInteger endStart;
     while (indexStart!=NSNotFound) {
         
-        endStart=[text rangeOfString:@"*/" options:NSCaseInsensitiveSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
+        endStart=[text rangeOfString:@"*/" options:NSLiteralSearch range:NSMakeRange(indexStart+1, text.length-indexStart-1)].location;
         //如果*/在字符串中间
         while (endStart!=NSNotFound&&[ZHNSString isBetweenLeftString:@"##***%%" RightString:@"\"" targetStringRange:NSMakeRange(endStart, 2) inText:text]) {
-            endStart=[text rangeOfString:@"*/" options:NSCaseInsensitiveSearch range:NSMakeRange(endStart+1, text.length-endStart-1)].location;
+            endStart=[text rangeOfString:@"*/" options:NSLiteralSearch range:NSMakeRange(endStart+1, text.length-endStart-1)].location;
         }
         if (endStart!=NSNotFound) {
             
@@ -197,12 +199,12 @@
             
             if (indexStart<text.length-2) {
                 indexStart=[text rangeOfString:
-                                 @"/*" options:NSCaseInsensitiveSearch
+                                 @"/*" options:NSLiteralSearch
                                          range:NSMakeRange(indexStart+2, text.length-indexStart-2)].location;
                 //如果/*在字符串中间
                 while (indexStart!=NSNotFound&&[ZHNSString isBetweenLeftString:@"##***%%" RightString:@"\"" targetStringRange:NSMakeRange(indexStart, 2) inText:text]) {
                     indexStart=[text rangeOfString:
-                                @"/*" options:NSCaseInsensitiveSearch
+                                @"/*" options:NSLiteralSearch
                                              range:NSMakeRange(indexStart+2, text.length-indexStart-2)].location;
                 }
             }else break;
@@ -239,6 +241,7 @@
     }else
         return text;
 }
+
 + (BOOL)isDoubleSlashCommentsSpecial:(NSString *)text thisRowHasPrefixDoubleSlash:(BOOL)thisRowHasPrefixDoubleSlash{
     //如果//后面带有*/,说明/**/中含有//,那么不能删除这个注释,否则/**/就只剩/*了
     if ([text rangeOfString:@"*/"].location!=NSNotFound) {
@@ -271,8 +274,6 @@
 /**.h中函数声明隔一行*/
 + (NSString *)lineBetweenLineSpace:(NSString *)text{
     text=[text stringByReplacingOccurrencesOfString:@";\n" withString:@";\n\n"];
-    text=[text stringByReplacingOccurrencesOfString:@"\n- (" withString:@"\n\n- ("];
-    text=[text stringByReplacingOccurrencesOfString:@"\n+ (" withString:@"\n\n+ ("];
     
     text=[text stringByReplacingOccurrencesOfString:@"\n\n\n" withString:@"\n\n"];
     text=[text stringByReplacingOccurrencesOfString:@"\n\n\n" withString:@"\n\n"];

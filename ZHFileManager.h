@@ -29,6 +29,10 @@ typedef NS_ENUM(NSUInteger, FileType) {
 + (NSString *)getUpLeverDirector:(NSString *)DirectorPath;
 /**获取上一层的文件路径*/
 + (NSString *)getFilePathRemoveFileName:(NSString *)filePath;
+/**旧名字改成新名字*/
++ (NSString *)changeFileOldName:(NSString *)oldName newFileName:(NSString *)newName;
+/**获取去除掉文件名的文件路径*/
++ (NSString *)getFilePathByRemoveFileName:(NSString *)filePath;
 
 + (NSString *)getMacDesktop;
 #pragma mark 创建文件(夹)操作

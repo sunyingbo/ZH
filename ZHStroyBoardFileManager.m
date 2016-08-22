@@ -24,6 +24,12 @@ static NSString *MainDirectory;
     });
     return ZHStroyBoardContextDicM;
 }
++ (NSString *)getMainDirectory{
+    if (MainDirectory.length>0) {
+        return MainDirectory;
+    }
+    return @"";
+}
 
 + (NSMutableString *)get_H_ContextByIdentity:(NSString *)identity{
     if ([identity hasSuffix:@".h"]==NO) {
@@ -57,7 +63,6 @@ static NSString *MainDirectory;
     return [formatter stringFromDate:[NSDate date]];
 }
 
-
 + (void)creatFileDirectory{
     NSString *fileDirectory=[self getCurDateString];
     fileDirectory = [fileDirectory stringByAppendingString:@"代码生成"];
@@ -71,7 +76,6 @@ static NSString *MainDirectory;
     MainDirectory=directory;
 }
 
-
 +(void)done{
     //开始保存text到指定路径
     
@@ -81,15 +85,12 @@ static NSString *MainDirectory;
         [context writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     }
     
-//    NSLog(@"%@",[self defalutContextDicM]);
-//    NSLog(@"%@",[self defalutFileDicM]);
-    
     MainDirectory=nil;
     [ZHStroyBoardContextDicM removeAllObjects];
     [ZHStroyBoardFileDicM removeAllObjects];
 }
 
-+ (void)creat_m_h_file:(NSString *)fileName isModel:(BOOL)isModel isView:(BOOL)isView isController:(BOOL)isController isTableView:(BOOL)isTableView isCollectionView:(BOOL)isCollectionView forViewController:(NSString *)viewController{
++ (void)creat_m_h_file:(NSString *)fileName isModel:(BOOL)isModel isView:(BOOL)isView isController:(BOOL)isController isTableView:(BOOL)isTableView isCollectionView:(BOOL)isCollectionView forViewController:(NSString *)viewController {
     if (MainDirectory.length<=0) {
         [self creat_MVC_WithViewControllerName:viewController];
     }
@@ -179,13 +180,14 @@ static NSString *MainDirectory;
     }
     
     [text appendString:@"@property (nonatomic,copy)NSString *iconImageName;\n\
-    @property (nonatomic,assign)BOOL isSelect;\n\
-    @property (nonatomic,assign)BOOL shouldShowImage;\n\
-    @property (nonatomic,copy)NSString *name;\n\
-    @property (nonatomic,copy)NSString *title;\n\
-    @property (nonatomic,assign)CGFloat width;\n\
-    @property (nonatomic,copy)NSString *autoWidthText;\n\
-    @property (nonatomic,strong)NSMutableArray *dataArr;\n\
+     @property (nonatomic,assign)BOOL isSelect;\n\
+     @property (nonatomic,assign)BOOL shouldShowImage;\n\
+     @property (nonatomic,copy)NSString *title;\n\
+     @property (nonatomic,assign)NSInteger index;\n\
+     @property (nonatomic,copy)NSString *content;\n\
+     @property (nonatomic,assign)CGSize size;\n\
+     @property (nonatomic,assign)CGFloat width;\n\
+     @property (nonatomic,strong)NSMutableArray *dataArr;\n\
      @end"];
     
     [self creatFileWithViewController:viewController name:name text:text isM:NO isModel:YES isView:NO isController:NO];
@@ -209,16 +211,18 @@ static NSString *MainDirectory;
     }
     
     [text appendString:@"- (NSMutableArray *)dataArr{\n\
-    if (!_dataArr) {\n\
-    _dataArr=[NSMutableArray array];\n\
-    }\n\
-    return _dataArr;\n\
-    }\n\
-    - (void)setAutoWidthText:(NSString *)autoWidthText{\n\
-    _autoWidthText=autoWidthText;\n\
-    self.width=[autoWidthText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size.width;\n\
-    }\n\
-    \n\
+     if (!_dataArr) {\n\
+     _dataArr=[NSMutableArray array];\n\
+     }\n\
+     return _dataArr;\n\
+     }\n\
+     - (void)setContent:(NSString *)content{\n\
+     _content=content;\n\
+     if (self.width==0) {\n\
+     self.width=200;\n\
+     }\n\
+     self.size=[content boundingRectWithSize:CGSizeMake(self.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size;\n\
+     }\n\
      @end"];
     
     if ([[name lowercaseString]hasSuffix:@"model"]==NO) {
@@ -244,7 +248,6 @@ static NSString *MainDirectory;
     if (isTableView) {
         name=[self getAdapterTableViewCellName:name];
         name=[name stringByAppendingString:@"TableViewCell"];
-//        NSLog(@"%@",name);
         [self creatOriginalTableViewCell_m:name forViewController:viewController];
     }else if (isCollectionView){
         name=[self getAdapterCollectionViewCellName:name];
@@ -363,12 +366,6 @@ static NSString *MainDirectory;
     }
     
     directory=[directory stringByAppendingString:h_m];
-    
-    //最开始的做法,比较消耗性能
-//    [[NSFileManager defaultManager]createFileAtPath:directory contents:nil attributes:nil];
-//    [text writeToFile:directory atomically:YES encoding:NSUTF8StringEncoding error:nil];
-//    [[ZHWordWrap new]wordWrap:directory];
-//    [[self defalutContextDicM] setValue:[NSString stringWithContentsOfFile:directory encoding:NSUTF8StringEncoding error:nil] forKey:directory];
     
     //后面就做成不用创建文件,到最后一次性创建文件
 //    text=[[ZHWordWrap new]wordWrapText:text];//为了便于ZHAddCode好寻找位置,这里先对其进行代码缩进处理

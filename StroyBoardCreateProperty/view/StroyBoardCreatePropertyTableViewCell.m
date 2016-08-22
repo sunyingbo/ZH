@@ -40,17 +40,15 @@
             if(count==-1){
                 hud.labelText=[NSString stringWithFormat:@"工程路径已不存在"];
             }else if(count==0){
-                hud.labelText=[NSString stringWithFormat:@"工程StroyBoard没有做自定义属性"];
+                hud.labelText=[NSString stringWithFormat:@"找到 0 个(空!)"];
             }else
                 hud.labelText=[NSString stringWithFormat:@"处理了%ld个outlet属性",count];
             //回调或者说是通知主线程刷新，
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[self getViewController].view animated:YES];
             });
         });
-        
     });
-    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

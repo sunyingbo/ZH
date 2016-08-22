@@ -1097,7 +1097,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     
     NSInteger index=[text rangeOfString:@"interface"].location;
     if (index!=NSNotFound) {
-        index=[text rangeOfString:@"()" options:NSCaseInsensitiveSearch range:NSMakeRange(index, text.length-index)].location;
+        index=[text rangeOfString:@"()" options:NSLiteralSearch range:NSMakeRange(index, text.length-index)].location;
         if (index!=NSNotFound) {
             NSString *starText,*endText;
             starText=[text substringToIndex:index+2];
@@ -1105,7 +1105,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
             
             //如果之前没有添加过代理
             NSInteger historyIndex=index+2;
-            index=[endText rangeOfString:@"<" options:NSCaseInsensitiveSearch range:NSMakeRange(0, 30)].location;
+            index=[endText rangeOfString:@"<" options:NSLiteralSearch range:NSMakeRange(0, 30)].location;
             if (index==NSNotFound) {
                 NSString *delegateStr=[NSString stringWithFormat:@"<%@>",myCode];
                 NSMutableString *strM=[NSMutableString string];
@@ -1138,7 +1138,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 
 /**往最后面的那个@end代码块中添加函数代码*/
 + (void)addCodeToLastEnd:(NSString *)myCode toText:(NSMutableString *)text{
-    NSInteger endIndex=[text rangeOfString:@"@end" options:NSBackwardsSearch].location;
+    NSInteger endIndex=[text rangeOfString:@"@end" options:NSBackwardsSearch|NSLiteralSearch].location;
     if (endIndex!=NSNotFound) {
         NSString *startString=[text substringToIndex:endIndex];
         NSString *endString=[text substringFromIndex:endIndex];
@@ -1185,12 +1185,12 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
     NSInteger implementationIndex=[text rangeOfString:@"@implementation"].location;
     if(implementationCount>1){
         //这里选择后面的那个implementation为默认
-        implementationIndex = [text rangeOfString:@"@implementation" options:NSBackwardsSearch].location;
+        implementationIndex = [text rangeOfString:@"@implementation" options:NSBackwardsSearch|NSLiteralSearch].location;
     }
     if (implementationIndex==NSNotFound) {
         return;
     }
-    NSInteger startIndex=[text rangeOfString:@"\n" options:NSCaseInsensitiveSearch range:NSMakeRange(implementationIndex, text.length-implementationIndex)].location;
+    NSInteger startIndex=[text rangeOfString:@"\n" options:NSLiteralSearch range:NSMakeRange(implementationIndex, text.length-implementationIndex)].location;
     if (startIndex!=NSNotFound) {
         NSString *startString=[text substringToIndex:startIndex];
         NSString *endString=[text substringFromIndex:startIndex];
@@ -1207,13 +1207,13 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 /**往头文件中添加代码*/
 + (void)addCodeToImport:(NSString *)myCode toText:(NSMutableString *)text{
     
-    NSInteger index=[text rangeOfString:@"#import" options:NSBackwardsSearch].location;
+    NSInteger index=[text rangeOfString:@"#import" options:NSBackwardsSearch|NSLiteralSearch].location;
     if (index!=NSNotFound) {
         NSInteger len=100;
         if (len>text.length-index-1) {
             len=text.length-index-1;
         }
-        index=[text rangeOfString:@"\n" options:NSCaseInsensitiveSearch range:NSMakeRange(index+1, len)].location;
+        index=[text rangeOfString:@"\n" options:NSLiteralSearch range:NSMakeRange(index+1, len)].location;
         if (index!=NSNotFound) {
             NSString *startString=[text substringToIndex:index];
             NSString *endString=[text substringFromIndex:index];
@@ -1312,7 +1312,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
         indexStart+=targetStr.length;
         
         if (indexStart<text.length-1) {
-            indexStart=[text rangeOfString:targetStr options:NSCaseInsensitiveSearch range:NSMakeRange(indexStart, text.length-indexStart)].location;
+            indexStart=[text rangeOfString:targetStr options:NSLiteralSearch range:NSMakeRange(indexStart, text.length-indexStart)].location;
         }else break;
     }
     return count;
@@ -1387,7 +1387,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
             %@TableViewCellModel *model=modelObjct;\n\
             [%@Cell refreshUI:model];\n\
             return %@Cell;\n\
-             }\n",adapterCell,tempCell,adapterCell,adapterCell,adapterCell,tempCell,tempCell];
+             }\n",adapterCell,adapterCell,tempCell,adapterCell,adapterCell,tempCell,tempCell];
         }
         
         //注册cell
@@ -1510,7 +1510,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                  %@TableViewCellModel *model=modelObjct;\n\
                  [%@Cell refreshUI:model];\n\
                  return %@Cell;\n\
-                 }\n",adapterCell,tempCell,adapterCell,adapterCell,adapterCell,tempCell,tempCell];
+                 }\n",adapterCell,adapterCell,tempCell,adapterCell,adapterCell,tempCell,tempCell];
             }
             [strM appendString:@"}\n"];
         }
@@ -1651,7 +1651,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
              %@CollectionViewCellModel *model=modelObjct;\n\
              [%@Cell refreshUI:model];\n\
              return %@Cell;\n\
-             }\n",adapterCell,tempCell,adapterCell,adapterCell,adapterCell,tempCell,tempCell];
+             }\n",adapterCell,adapterCell,tempCell,adapterCell,adapterCell,tempCell,tempCell];
         }
         
         
@@ -1783,7 +1783,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                  %@CollectionViewCellModel *model=modelObjct;\n\
                  [%@Cell refreshUI:model];\n\
                  return %@Cell;\n\
-                 }\n",adapterCell,tempCell,adapterCell,adapterCell,adapterCell,tempCell,tempCell];
+                 }\n",adapterCell,adapterCell,tempCell,adapterCell,adapterCell,tempCell,tempCell];
             }
             [strM appendString:@"}\n"];
         }
