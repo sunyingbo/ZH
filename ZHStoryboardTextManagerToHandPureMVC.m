@@ -1,18 +1,13 @@
-#import "ZHStoryboardTextManagerToMVC.h"
+#import "ZHStoryboardTextManagerToHandPureMVC.h"
 
-@implementation ZHStoryboardTextManagerToMVC
+@implementation ZHStoryboardTextManagerToHandPureMVC
+//viewCategory 控件的真名类别  viewName控件customClass的属性值
 + (NSString *)getPropertyWithViewName:(NSString *)viewName withViewCategory:(NSString *)viewCategory{
-    
-    if (viewName.length<=0||viewCategory.length<=0) {
-        return @"";
-    }
-    
     //第一个字母大写
     viewCategory=[self upFirstCharacter:viewCategory];
     
-    return [NSString stringWithFormat:@"@property (weak, nonatomic) IBOutlet UI%@ *%@;",viewCategory,viewName];
+    return [NSString stringWithFormat:@"@property (strong, nonatomic) UI%@ *%@;",viewCategory,viewName];
 }
-
 + (void)addDelegateFunctionToText:(NSMutableString *)text withTableViews:(NSDictionary *)tableViewsDic isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView withIdAndOutletViewsDic:(NSDictionary *)idAndOutletViews{
     
     NSMutableArray *tableViews=[NSMutableArray array];
@@ -80,6 +75,24 @@
              }\n",adapterCell,adapterCell,tempCell,adapterCell,adapterCell,tempCell,tempCell];
         }
         
+        //注册cell
+        NSMutableString *registerClassText=[NSMutableString string];
+        NSString *oneTableViewNameTemp=[tableViewsDic allKeys][0];
+        if (idAndOutletViews[oneTableViewNameTemp]!=nil) {
+            oneTableViewNameTemp=idAndOutletViews[oneTableViewNameTemp];
+        }
+        for (NSString *cell in cells) {
+            NSString *adapterCell=[ZHStroyBoardFileManager getAdapterTableViewCellName:cell];
+            if (isOnlyTableViewOrCollectionView&&[self hasSuffixNumber:oneTableViewNameTemp]) {
+                [registerClassText appendFormat:@"[self.%@ registerClass:[%@TableViewCell class] forCellReuseIdentifier:@\"%@TableViewCell\"];\n",oneTableViewNameTemp,adapterCell,adapterCell];
+            }else{
+                [registerClassText appendFormat:@"[self.%@ registerClass:[%@TableViewCell class] forCellReuseIdentifier:@\"%@TableViewCell\"];\n",oneTableViewNameTemp,adapterCell,adapterCell];
+            }
+        }
+        if(registerClassText.length>0)
+            [self addCodeText:registerClassText andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
+        
+        
         [strM appendString:@"//随便给一个cell\n\
          UITableViewCell *cell=[UITableViewCell new];\n\
          return cell;\n\
@@ -120,6 +133,24 @@
                                }",oneTableViewName_new,oneTableViewName_new,oneTableViewName_new,oneTableViewName_new] andInsertType:ZHAddCodeType_Implementation toStrM:text insertFunction:nil];
             [self addCodeText:[NSString stringWithFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;",oneTableViewName,oneTableViewName] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
         }
+        
+        //注册cell
+        NSMutableString *registerClassText=[NSMutableString string];
+        
+        for (NSInteger i=0; i<allTbaleViews.count; i++) {
+            NSString *tableView=allTbaleViews[i];
+            NSString *keyTableView=tableView;
+            if (idAndOutletViews[tableView]!=nil) {
+                tableView=idAndOutletViews[tableView];
+            }
+            NSArray *cells=allTableViewDicM[keyTableView];
+            for (NSString *cell in cells) {
+                NSString *adapterCell=[ZHStroyBoardFileManager getAdapterTableViewCellName:cell];
+                [registerClassText appendFormat:@"[self.%@ registerClass:[%@TableViewCell class] forCellReuseIdentifier:@\"%@TableViewCell\"];\n",tableView,adapterCell,adapterCell];
+            }
+        }
+        if(registerClassText.length>0)
+            [self addCodeText:registerClassText andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
         
         NSMutableString *strM=[NSMutableString string];
         [strM appendString:@"#pragma mark - TableView必须实现的方法:\n\
@@ -322,6 +353,26 @@
              }\n",adapterCell,adapterCell,tempCell,adapterCell,adapterCell,tempCell,tempCell];
         }
         
+        
+        //注册cell
+        NSMutableString *registerClassText=[NSMutableString string];
+        NSString *oneCollectionViewNameTemp=[collectionViewsDic allKeys][0];
+        if (idAndOutletViews[oneCollectionViewNameTemp]!=nil) {
+            oneCollectionViewNameTemp=idAndOutletViews[oneCollectionViewNameTemp];
+        }
+        
+        for (NSString *cell in cells) {
+            NSString *adapterCell=[ZHStroyBoardFileManager getAdapterCollectionViewCellName:cell];
+            if (isOnlyTableViewOrCollectionView&&[self hasSuffixNumber:oneCollectionViewNameTemp]) {
+                [registerClassText appendFormat:@"[self.%@ registerClass:[%@CollectionViewCell class] forCellWithReuseIdentifier:@\"%@CollectionViewCell\"];\n",oneCollectionViewNameTemp,adapterCell,adapterCell];
+            }else{
+                [registerClassText appendFormat:@"[self.%@ registerClass:[%@CollectionViewCell class] forCellWithReuseIdentifier:@\"%@CollectionViewCell\"];\n",oneCollectionViewNameTemp,adapterCell,adapterCell];
+            }
+        }
+        
+        if(registerClassText.length>0)
+            [self addCodeText:registerClassText andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
+        
         [strM appendString:@"    //随便给一个cell\n\
          UICollectionViewCell *cell=[UICollectionViewCell new];\n\
          return cell;\n\
@@ -348,6 +399,23 @@
             [allCollectionViews addObject:[collectionDic allKeys][0]];
             [allCollectionViewDicM setValue:collectionDic[[collectionDic allKeys][0]] forKey:[collectionDic allKeys][0]];
         }
+        
+        //注册cell
+        NSMutableString *registerClassText=[NSMutableString string];
+        for (NSInteger i=0; i<allCollectionViews.count; i++) {
+            NSString *collectionView=allCollectionViews[i];
+            NSString *keyCollectionView=collectionView;
+            if (idAndOutletViews[collectionView]!=nil) {
+                collectionView=idAndOutletViews[collectionView];
+            }
+            NSArray *cells=allCollectionViewDicM[keyCollectionView];
+            for (NSString *cell in cells) {
+                NSString *adapterCell=[ZHStroyBoardFileManager getAdapterCollectionViewCellName:cell];
+                [registerClassText appendFormat:@"[self.%@ registerClass:[%@CollectionViewCell class] forCellWithReuseIdentifier:@\"%@CollectionViewCell\"];\n",collectionView,adapterCell,adapterCell];
+            }
+        }
+        if(registerClassText.length>0)
+            [self addCodeText:registerClassText andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
         
         for (NSString *oneCollectionViewNameTemp in allCollectionViews) {
             NSString *oneCollectionViewName=oneCollectionViewNameTemp;

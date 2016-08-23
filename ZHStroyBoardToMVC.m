@@ -6,32 +6,8 @@
 @property (nonatomic,strong)NSDictionary *idAndViewPropertys;
 @property (nonatomic,strong)NSDictionary *idAndOutletViews;
 @property (nonatomic,strong)NSDictionary *idAndViews;
-@property (nonatomic,copy)NSString *projectPath;
-@property (nonatomic,strong) NSMutableDictionary *ZHStroyBoardCreateFile;
-@property (nonatomic,strong) NSMutableDictionary *ZHStroyBoardCreateContent;
-@property (nonatomic,strong)NSMutableArray *didDoneDataArr;
 @end
 @implementation ZHStroyBoardToMVC
-- (NSMutableArray *)didDoneDataArr{
-    if (!_didDoneDataArr) {
-        _didDoneDataArr=[NSMutableArray array];
-    }
-    return _didDoneDataArr;
-}
-- (NSMutableDictionary *)ZHStroyBoardCreateFile{
-    if (!_ZHStroyBoardCreateFile) {
-        _ZHStroyBoardCreateFile=[NSMutableDictionary dictionary];
-    }
-    return _ZHStroyBoardCreateFile;
-}
-
-- (NSMutableDictionary *)ZHStroyBoardCreateContent{
-    if (!_ZHStroyBoardCreateContent) {
-        _ZHStroyBoardCreateContent=[NSMutableDictionary dictionary];
-    }
-    return _ZHStroyBoardCreateContent;
-}
-
 - (NSString *)StroyBoard_To_MVC:(NSString *)stroyBoard{
     NSString *filePath=stroyBoard;
     
@@ -186,8 +162,8 @@
                     }
                     
                     //添加代理方法
-                    [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withTableViews:tableViewCellDic isOnlyTableViewOrCollectionView:NO];
-                    [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withCollectionViews:collectionViewCellDic isOnlyTableViewOrCollectionView:NO];
+                    [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withTableViews:tableViewCellDic isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:self.idAndOutletViews];
+                    [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withCollectionViews:collectionViewCellDic isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:self.idAndOutletViews];
                 }
                 else if (tableViewCellDic.count>0){
                     //获取该ViewController的tableview的个数
@@ -200,10 +176,10 @@
                     
                     if (tableViewCount==1) {
                         //添加代理方法
-                        [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withTableViews:tableViewCellDic isOnlyTableViewOrCollectionView:YES];
+                        [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withTableViews:tableViewCellDic isOnlyTableViewOrCollectionView:YES withIdAndOutletViewsDic:self.idAndOutletViews];
                     }else{
                         //添加代理方法
-                        [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withTableViews:tableViewCellDic isOnlyTableViewOrCollectionView:NO];
+                        [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withTableViews:tableViewCellDic isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:self.idAndOutletViews];
                     }
                     
                 }
@@ -219,13 +195,12 @@
                     
                     if (collectionViewCount==1) {
                         //添加代理方法
-                        [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withCollectionViews:collectionViewCellDic isOnlyTableViewOrCollectionView:YES];
+                        [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withCollectionViews:collectionViewCellDic isOnlyTableViewOrCollectionView:YES withIdAndOutletViewsDic:self.idAndOutletViews];
                     }else{
                         //添加代理方法
-                        [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withCollectionViews:collectionViewCellDic isOnlyTableViewOrCollectionView:NO];
+                        [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] withCollectionViews:collectionViewCellDic isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:self.idAndOutletViews];
                     }
                 }
-//                [self dealWithSmallProblem:viewControllerFileName];
             }
             
             NSArray *tableViewCellDic=[ZHStoryboardXMLManager getTableViewCellNamesWithViewControllerDic:dic andXMLHandel:xml];
@@ -351,8 +326,8 @@
             }
             
             //添加代理方法
-            [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withTableViews:subTableViewCells isOnlyTableViewOrCollectionView:NO];
-            [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withCollectionViews:subCollectionViewCells isOnlyTableViewOrCollectionView:NO];
+            [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withTableViews:subTableViewCells isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:self.idAndOutletViews];
+            [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withCollectionViews:subCollectionViewCells isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:self.idAndOutletViews];
         }
         else if (subTableViewCells.count>0){
             //获取该ViewController的tableview的个数
@@ -365,10 +340,10 @@
             
             if (tableViewCount==1) {
                 //添加代理方法
-                [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withTableViews:subTableViewCells isOnlyTableViewOrCollectionView:YES];
+                [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withTableViews:subTableViewCells isOnlyTableViewOrCollectionView:YES withIdAndOutletViewsDic:self.idAndOutletViews];
             }else{
                 //添加代理方法
-                [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withTableViews:subTableViewCells isOnlyTableViewOrCollectionView:NO];
+                [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withTableViews:subTableViewCells isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:self.idAndOutletViews];
             }
             
         }
@@ -384,14 +359,12 @@
             
             if (collectionViewCount==1) {
                 //添加代理方法
-                [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withCollectionViews:subCollectionViewCells isOnlyTableViewOrCollectionView:YES];
+                [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withCollectionViews:subCollectionViewCells isOnlyTableViewOrCollectionView:YES withIdAndOutletViewsDic:self.idAndOutletViews];
             }else{
                 //添加代理方法
-                [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withCollectionViews:subCollectionViewCells isOnlyTableViewOrCollectionView:NO];
+                [ZHStoryboardTextManagerToMVC addDelegateFunctionToText:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:NewFileName] withCollectionViews:subCollectionViewCells isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:self.idAndOutletViews];
             }
         }
-        
-//        [self dealWithSmallProblem:NewFileName];
         
         NSArray *tableViewCellDic=[ZHStoryboardXMLManager getTableViewCellNamesWithViewControllerDic:subDic andXMLHandel:xml];
         NSArray *collectionViewCellDic=[ZHStoryboardXMLManager getCollectionViewCellNamesWithViewControllerDic:subDic andXMLHandel:xml];
@@ -399,15 +372,6 @@
         [self detailSubCells:tableViewCellDic andXMLHandel:xml withFatherViewController:viewController];
         [self detailSubCells:collectionViewCellDic andXMLHandel:xml withFatherViewController:viewController];
     }
-}
-
-/**处理一些小问题*/
-- (void)dealWithSmallProblem:(NSString *)fileName{
-    NSMutableString *strM=[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:fileName];
-    NSString *tempStr=[strM copy];
-    tempStr=[tempStr stringByReplacingOccurrencesOfString:@"@property (strong, nonatomic) UITableView *tableView;" withString:@""];
-    tempStr=[tempStr stringByReplacingOccurrencesOfString:@"\n\n\n" withString:@"\n\n"];
-    [strM setString:tempStr];
 }
 
 @end

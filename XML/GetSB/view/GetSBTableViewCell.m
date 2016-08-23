@@ -2,6 +2,8 @@
 #import "UIView+ZHView.h"
 
 #import "ZHStoryboardManager.h"
+#import "ZHStroyBoardToPureHandMVC.h"
+#import "ZHStroyBoardToMVC.h"
 
 #import "MBProgressHUD.h"
 
@@ -52,7 +54,9 @@
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
         // 处理耗时操作的代码块...
-        ZHStoryboardManager *manager=[ZHStoryboardManager new];
+//        ZHStoryboardManager *manager=[ZHStoryboardManager new];
+        ZHStroyBoardToPureHandMVC *manager=[ZHStroyBoardToPureHandMVC new];
+//        ZHStroyBoardToMVC *manager=[ZHStroyBoardToMVC new];
         
         if ([[NSFileManager defaultManager]fileExistsAtPath:self.dataModel.filePath]==NO) {
             hud.labelText =@"路径不存在";
@@ -62,7 +66,9 @@
             return ;
         }
         
-        [manager StroyBoard_To_Masonry:self.dataModel.filePath];
+//        [manager StroyBoard_To_Masonry:self.dataModel.filePath];
+        [manager StroyBoard_To_PureHand_MVC:self.dataModel.filePath];
+//        [manager StroyBoard_To_MVC:self.dataModel.filePath];
         
         //通知主线程刷新
         dispatch_async(dispatch_get_main_queue(), ^{

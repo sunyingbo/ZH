@@ -297,7 +297,7 @@
                 
                 for (NSString *idStr in views) {
                     NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
-                    NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] withOutletView:self.idAndOutletViews addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:NO];
+                    NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] withOutletView:self.idAndOutletViews addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:nil];
                     
                     if ([shouldOutlet containsObject:idStr]) {
                         creatCode=[creatCode stringByAppendingFormat:@"self.%@=%@;\n",self.customAndId[idStr],self.customAndId[idStr]];
@@ -314,7 +314,7 @@
                     [ZHStoryboardXMLManager getViewAllConstraintWithViewDic:self.idAndViews[idStr] andXMLHandel:xml withViewIdStr:idStr withSelfConstraintDicM:originalConstraintDicM_Self];
                     
                     //创建约束
-                    NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW withSelfConstraintDic:originalConstraintDicM_Self withOutletView:self.idAndOutletViews isCell:NO withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:NO];
+                    NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW withSelfConstraintDic:originalConstraintDicM_Self withOutletView:self.idAndOutletViews isCell:NO withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:nil];
                     
                     //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
                     if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){
@@ -498,7 +498,7 @@
         for (NSString *idStr in views) {
             NSString *fatherView=[ZHStoryboardTextManager getFatherView:self.customAndId[idStr] inViewRelationShipDic:viewRelationShipDic];
 
-            NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] withOutletView:self.idAndOutletViews addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:NO];
+            NSString *creatCode=[ZHStoryboardTextManager getCreateViewCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withViewCategoryName:self.customAndName[idStr] withOutletView:self.idAndOutletViews addToFatherView:fatherView withDoneArrM:brotherOrderArrM isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:nil];
             
             if ([shouldOutlet containsObject:idStr]) {
                 creatCode=[creatCode stringByAppendingFormat:@"self.%@=%@;\n",self.customAndId[idStr],self.customAndId[idStr]];
@@ -515,7 +515,7 @@
             [ZHStoryboardXMLManager getViewAllConstraintWithViewDic:self.idAndViews[idStr] andXMLHandel:xml withViewIdStr:idStr withSelfConstraintDicM:originalConstraintDicM_Self];
             
             //创建约束
-            NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW withSelfConstraintDic:originalConstraintDicM_Self withOutletView:self.idAndOutletViews isCell:YES withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:NO];
+            NSString *constraintCode=[ZHStoryboardTextManager getCreatConstraintCodeWithIdStr:idStr WithViewName:self.customAndId[idStr] withConstraintDic:viewConstraintDicM_Self_NEW withSelfConstraintDic:originalConstraintDicM_Self withOutletView:self.idAndOutletViews isCell:YES withDoneArrM:brotherOrderArrM withCustomAndNameDic:self.customAndName addToFatherView:fatherView isOnlyTableViewOrCollectionView:NO withIdAndOutletViewsDic:nil];
             
             //有时我们在StroyBoard或者xib中忘记添加约束,这是就用默认的frame作为约束
             if([constraintCode rangeOfString:@".equalTo"].location==NSNotFound&&[constraintCode rangeOfString:@"make."].location==NSNotFound){

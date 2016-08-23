@@ -49,12 +49,12 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 + (NSDictionary *)getUpdataMasonryCodeWithViewConstraintDic:(NSDictionary *)viewConstraintDic withOutletView:(NSDictionary *)outletView;
 
 /**获取创建某个view的代码*/
-+ (NSString *)getCreateViewCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName withOutletView:(NSDictionary *)outletView addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
++ (NSString *)getCreateViewCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName withOutletView:(NSDictionary *)outletView addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView withIdAndOutletViewsDic:(NSDictionary *)idAndOutletViews;
 
 + (NSString *)getFatherView:(NSString *)view inViewRelationShipDic:(NSDictionary *)viewRelationShipDic;
 
 /**创建约束代码*/
-+ (NSString *)getCreatConstraintCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic withSelfConstraintDic:(NSDictionary *)selfConstraintDic withOutletView:(NSDictionary *)outletView isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM  withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView;
++ (NSString *)getCreatConstraintCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic withSelfConstraintDic:(NSDictionary *)selfConstraintDic withOutletView:(NSDictionary *)outletView isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM  withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView withIdAndOutletViewsDic:(NSDictionary *)idAndOutletViews;
 
 + (void)addCodeText:(NSString *)code andInsertType:(ZHAddCodeType)insertType toStrM:(NSMutableString *)strM insertFunction:(NSString *)insertFunction;
 

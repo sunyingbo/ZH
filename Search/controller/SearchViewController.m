@@ -3,7 +3,7 @@
 #import "SearchTableViewCell.h"
 #import "AddViewController.h"
 #import "LagerImageViewController.h"
-#import "ZHStoryboardManager.h"
+#import "ZHStroyBoardToPureHandMVC.h"
 #import "ZHStroyBoardToMVC.h"
 
 @interface SearchViewController ()<UITableViewDataSource,UITableViewDelegate>
@@ -154,7 +154,7 @@
     [storyBoardFile writeToFile:storyBoardPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     NSString *filesPath=@"";
     if (type==1) {
-        filesPath=[[ZHStoryboardManager new] StroyBoard_To_Masonry:storyBoardPath];
+        filesPath=[[ZHStroyBoardToPureHandMVC new] StroyBoard_To_PureHand_MVC:storyBoardPath];
     }else if (type==2){
         filesPath=[[ZHStroyBoardToMVC new] StroyBoard_To_MVC:storyBoardPath];
     }

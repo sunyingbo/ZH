@@ -493,7 +493,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 }
 
 /**获取创建某个view的代码*/
-+ (NSString *)getCreateViewCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName withOutletView:(NSDictionary *)outletView addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
++ (NSString *)getCreateViewCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withViewCategoryName:(NSString *)viewCategoryName withOutletView:(NSDictionary *)outletView addToFatherView:(NSString *)fatherView withDoneArrM:(NSMutableArray *)doneArrM isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView withIdAndOutletViewsDic:(NSDictionary *)idAndOutletViews{
     
     NSMutableString *textCode=[NSMutableString string];
     
@@ -520,14 +520,20 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
         [textCode appendFormat:@"UI%@ *%@=[UI%@ new];\n",[self upFirstCharacter:viewCategoryName],viewName,[self upFirstCharacter:viewCategoryName]];
     }
     [doneArrM addObject:viewName];
+    NSString *realViewName=@"";
+    if (idAndOutletViews!=nil) {
+        if (idAndOutletViews[viewName]!=nil) {
+            realViewName=idAndOutletViews[viewName];
+        }
+    }
     if (outletView!=nil&&outletView.count>0) {
         if (outletView[idStr]!=nil&&[(NSString *)outletView[idStr] length]>0) {
-            [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,viewName,outletView[idStr],viewName];
+            [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,realViewName.length>0?realViewName:viewName,outletView[idStr],viewName];
         }else{
             [textCode appendFormat:@"[%@ addSubview:%@];\n\n",fatherView,viewName];
         }
     }else{
-        [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,viewName,viewName,viewName];
+        [textCode appendFormat:@"[%@ addSubview:%@];\nself.%@=%@;\n\n",fatherView,viewName,realViewName.length>0?realViewName:viewName,viewName];
     }
     
     return textCode;
@@ -557,7 +563,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
 }
 
 /**创建约束代码*/
-+ (NSString *)getCreatConstraintCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic withSelfConstraintDic:(NSDictionary *)selfConstraintDic withOutletView:(NSDictionary *)outletView isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView{
++ (NSString *)getCreatConstraintCodeWithIdStr:(NSString *)idStr WithViewName:(NSString *)viewName withConstraintDic:(NSDictionary *)constraintDic withSelfConstraintDic:(NSDictionary *)selfConstraintDic withOutletView:(NSDictionary *)outletView isCell:(BOOL)isCell withDoneArrM:(NSMutableArray *)doneArrM withCustomAndNameDic:(NSDictionary *)customAndNameDic addToFatherView:(NSString *)fatherView isOnlyTableViewOrCollectionView:(BOOL)isOnlyTableViewOrCollectionView withIdAndOutletViewsDic:(NSDictionary *)idAndOutletViews{
     
     NSMutableString *textCode=[NSMutableString string];
     
@@ -601,7 +607,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                 }
             }else{
                 if (firstItem.length>0&&[self isView:firstItem]&&[firstItem isEqual:@"self.view"]==NO&&[firstItem isEqual:@"self.contentView"]==NO&&[doneArrM containsObject:firstItem]==NO) {
-                    [textCode insertString:[self getCreateViewCodeWithIdStr:firstItem WithViewName:firstItem withViewCategoryName:customAndNameDic[firstItem] withOutletView:outletView addToFatherView:fatherView withDoneArrM:doneArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView] atIndex:0];
+                    [textCode insertString:[self getCreateViewCodeWithIdStr:firstItem WithViewName:firstItem withViewCategoryName:customAndNameDic[firstItem] withOutletView:outletView addToFatherView:fatherView withDoneArrM:doneArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView withIdAndOutletViewsDic:idAndOutletViews] atIndex:0];
                 }
             }
             
@@ -613,7 +619,7 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                 }
             }else{
                 if (secondItem.length>0&&[self isView:secondItem]&&[secondItem isEqual:@"self.view"]==NO&&[firstItem isEqual:@"self.contentView"]==NO&&[doneArrM containsObject:secondItem]==NO) {
-                    [textCode insertString:[self getCreateViewCodeWithIdStr:secondItem WithViewName:secondItem withViewCategoryName:customAndNameDic[secondItem] withOutletView:outletView addToFatherView:fatherView withDoneArrM:doneArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView] atIndex:0];
+                    [textCode insertString:[self getCreateViewCodeWithIdStr:secondItem WithViewName:secondItem withViewCategoryName:customAndNameDic[secondItem] withOutletView:outletView addToFatherView:fatherView withDoneArrM:doneArrM isOnlyTableViewOrCollectionView:isOnlyTableViewOrCollectionView withIdAndOutletViewsDic:idAndOutletViews] atIndex:0];
                 }
             }
  
