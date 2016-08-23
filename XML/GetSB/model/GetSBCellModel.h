@@ -1,5 +1,4 @@
 #import <UIKit/UIKit.h>
-
 @interface GetSBCellModel : NSObject
 @property (nonatomic,copy)NSString *iconImageName;
 @property (nonatomic,assign)BOOL isSelect;
@@ -10,4 +9,5 @@
 @property (nonatomic,assign)CGFloat width;
 @property (nonatomic,copy)NSString *autoWidthText;
 @property (nonatomic,strong)NSMutableArray *dataArr;
+@property (nonatomic,copy)NSString *type;
 @end

@@ -3,6 +3,7 @@
 #import "MoreFunctionTableViewCell.h"
 
 #import "TabBarAndNavagation.h"
+#import "GetSBViewController.h"
 
 @interface MoreFunctionViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -18,7 +19,7 @@
 	if (!_dataArr) {
 		_dataArr=[NSMutableArray array];
         
-        NSArray *titles=@[@"快速生成代码(常用)",@"生成property outlet,不用自己拉线",@"JSON转模型(Model)",@"将非纯手写工程转换成纯手写工程",@"StroyBoard xib生成masonr纯代码",@"小功能"];
+        NSArray *titles=@[@"快速生成代码(常用)",@"生成property outlet,不用自己拉线",@"JSON转模型(Model)",@"将非纯手写工程转换成纯手写工程",@"StroyBoard xib生成masonry纯代码",@"StroyBoard xib生成非纯手写代码",@"小功能"];
         
         for (NSInteger i=0; i<titles.count; i++) {
             @autoreleasepool {
@@ -85,8 +86,14 @@
         [TabBarAndNavagation pushViewController:@"PureHandProjectViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
     }else if ([model.title isEqualToString:@"小功能"]) {
         [TabBarAndNavagation pushViewController:@"SmallFunctionViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
-    }else if ([model.title isEqualToString:@"StroyBoard xib生成masonr纯代码"]) {
-        [TabBarAndNavagation pushViewController:@"GetSBViewController" toTarget:self pushHideTabBar:YES backShowTabBar:NO];
+    }else if ([model.title isEqualToString:@"StroyBoard xib生成masonry纯代码"]) {
+        GetSBViewController *vc=(GetSBViewController *)[TabBarAndNavagation getViewControllerFromStoryBoardWithIdentity:@"GetSBViewController"];
+        vc.type=GetSBViewControllerTypePureHand;
+        [TabBarAndNavagation pushViewControllerNoStroyBoard:vc toTarget:self pushHideTabBar:YES backShowTabBar:NO];
+    }else if ([model.title isEqualToString:@"StroyBoard xib生成非纯手写代码"]) {
+        GetSBViewController *vc=(GetSBViewController *)[TabBarAndNavagation getViewControllerFromStoryBoardWithIdentity:@"GetSBViewController"];
+        vc.type=GetSBViewControllerTypeMVC;
+        [TabBarAndNavagation pushViewControllerNoStroyBoard:vc toTarget:self pushHideTabBar:YES backShowTabBar:NO];
     }
 }
 

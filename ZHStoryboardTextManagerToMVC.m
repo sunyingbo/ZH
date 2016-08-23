@@ -27,14 +27,15 @@
     if (tableViews.count==1) {
         
         NSString *oneTableViewName=[tableViewsDic allKeys][0];
-        if (idAndOutletViews[oneTableViewName]!=nil) {
-            oneTableViewName=idAndOutletViews[oneTableViewName];
+        NSString *oneTableViewName_realName=oneTableViewName;
+        if (idAndOutletViews[oneTableViewName_realName]!=nil) {
+            oneTableViewName_realName=idAndOutletViews[oneTableViewName_realName];
         }
         
         BOOL isonlyOne=NO;
         
         //开始添加 属性和代理
-        if(isOnlyTableViewOrCollectionView&&[self hasSuffixNumber:oneTableViewName]){
+        if(isOnlyTableViewOrCollectionView){
             [self addCodeText:@"@property (strong, nonatomic) NSMutableArray *dataArr;" andInsertType:ZHAddCodeType_Interface toStrM:text insertFunction:nil];
             [self addCodeText:@"- (NSMutableArray *)dataArr{\n\
              if (!_dataArr) {\n\
@@ -42,10 +43,10 @@
              }\n\
              return _dataArr;\n\
              }" andInsertType:ZHAddCodeType_Implementation toStrM:text insertFunction:nil];
-            [self addCodeText:[NSString stringWithFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;",oneTableViewName,oneTableViewName] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
+            [self addCodeText:[NSString stringWithFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;",oneTableViewName_realName,oneTableViewName_realName] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
             isonlyOne=YES;
         }else{
-            NSString *oneTableViewName_new=[self upFirstCharacter:oneTableViewName];
+            NSString *oneTableViewName_new=[self upFirstCharacter:oneTableViewName_realName];
             [self addCodeText:[NSString stringWithFormat:@"@property (strong, nonatomic) NSMutableArray *dataArr%@;",oneTableViewName_new] andInsertType:ZHAddCodeType_Interface toStrM:text insertFunction:nil];
             [self addCodeText:[NSString stringWithFormat:@"- (NSMutableArray *)dataArr%@{\n\
                                if (!_dataArr%@) {\n\
@@ -53,7 +54,7 @@
                                }\n\
                                return _dataArr%@;\n\
                                }",oneTableViewName_new,oneTableViewName_new,oneTableViewName_new,oneTableViewName_new] andInsertType:ZHAddCodeType_Implementation toStrM:text insertFunction:nil];
-            [self addCodeText:[NSString stringWithFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;",oneTableViewName,oneTableViewName] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
+            [self addCodeText:[NSString stringWithFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;",oneTableViewName_realName,oneTableViewName_realName] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
         }
         
         NSMutableString *strM=[NSMutableString string];
@@ -63,9 +64,9 @@
          }\n\
          - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{\n\n\
          return self.dataArr%@.count;\n\
-         }\n",isonlyOne?@"":[self upFirstCharacter:oneTableViewName]];
+         }\n",isonlyOne?@"":[self upFirstCharacter:oneTableViewName_realName]];
         [strM appendFormat:@"- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{\n\n\
-         id modelObjct=self.dataArr%@[indexPath.row];\n",isonlyOne?@"":[self upFirstCharacter:oneTableViewName]];
+         id modelObjct=self.dataArr%@[indexPath.row];\n",isonlyOne?@"":[self upFirstCharacter:oneTableViewName_realName]];
         
         NSDictionary *tableDic=tableViews[0];
         NSArray *cells=tableDic[[tableDic allKeys][0]];
@@ -260,14 +261,15 @@
     if (collectionViews.count==1) {
         
         NSString *oneCollectionViewName=[collectionViewsDic allKeys][0];
-        if (idAndOutletViews[oneCollectionViewName]!=nil) {
-            oneCollectionViewName=idAndOutletViews[oneCollectionViewName];
+        NSString *oneCollectionViewName_realName=oneCollectionViewName;
+        if (idAndOutletViews[oneCollectionViewName_realName]!=nil) {
+            oneCollectionViewName_realName=idAndOutletViews[oneCollectionViewName_realName];
         }
         
         BOOL isonlyOne=NO;
         
         //开始添加 属性和代理
-        if(isOnlyTableViewOrCollectionView&&[self hasSuffixNumber:oneCollectionViewName]){
+        if(isOnlyTableViewOrCollectionView){
             [self addCodeText:@"@property (strong, nonatomic) NSMutableArray *dataArr;" andInsertType:ZHAddCodeType_Interface toStrM:text insertFunction:nil];
             [self addCodeText:@"- (NSMutableArray *)dataArr{\n\
              if (!_dataArr) {\n\
@@ -275,11 +277,10 @@
              }\n\
              return _dataArr;\n\
              }" andInsertType:ZHAddCodeType_Implementation toStrM:text insertFunction:nil];
-            [self addCodeText:[NSString stringWithFormat:@"self.collectionView.delegate=self;\nself.collectionView.dataSource=self;"] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
+            [self addCodeText:[NSString stringWithFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;",oneCollectionViewName_realName,oneCollectionViewName_realName] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
             isonlyOne=YES;
-            
         }else{
-            NSString *oneCollectionViewName_new=[self upFirstCharacter:oneCollectionViewName];
+            NSString *oneCollectionViewName_new=[self upFirstCharacter:oneCollectionViewName_realName];
             [self addCodeText:[NSString stringWithFormat:@"@property (strong, nonatomic) NSMutableArray *dataArr%@;",oneCollectionViewName_new] andInsertType:ZHAddCodeType_Interface toStrM:text insertFunction:nil];
             [self addCodeText:[NSString stringWithFormat:@"- (NSMutableArray *)dataArr%@{\n\
                                if (!_dataArr%@) {\n\
@@ -287,7 +288,7 @@
                                }\n\
                                return _dataArr%@;\n\
                                }",oneCollectionViewName_new,oneCollectionViewName_new,oneCollectionViewName_new,oneCollectionViewName_new] andInsertType:ZHAddCodeType_Implementation toStrM:text insertFunction:nil];
-            [self addCodeText:[NSString stringWithFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;",oneCollectionViewName,oneCollectionViewName] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
+            [self addCodeText:[NSString stringWithFormat:@"self.%@.delegate=self;\nself.%@.dataSource=self;",oneCollectionViewName_realName,oneCollectionViewName_realName] andInsertType:ZHAddCodeType_InsertFunction toStrM:text insertFunction:@"- (void)viewDidLoad{"];
         }
         
         NSMutableString *strM=[NSMutableString string];
@@ -301,12 +302,12 @@
          - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section\n\
          {\n\
          return self.dataArr%@.count;\n\
-         }\n",isonlyOne?@"":[self upFirstCharacter:oneCollectionViewName]];
+         }\n",isonlyOne?@"":[self upFirstCharacter:oneCollectionViewName_realName]];
         
         [strM appendFormat:@"// 3.返回每一个item（cell）对象;\n\
          - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath\n\
          {\n\
-         id modelObjct=self.dataArr%@[indexPath.row];\n",isonlyOne?@"":[self upFirstCharacter:oneCollectionViewName]];
+         id modelObjct=self.dataArr%@[indexPath.row];\n",isonlyOne?@"":[self upFirstCharacter:oneCollectionViewName_realName]];
         
         NSDictionary *collectionDic=collectionViews[0];
         NSArray *cells=collectionDic[[collectionDic allKeys][0]];

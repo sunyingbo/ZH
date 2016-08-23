@@ -52,7 +52,12 @@
 	self.edgesForExtendedLayout=UIRectEdgeNone;
     
     [TabBarAndNavagation setTitleColor:[UIColor blackColor] forNavagationBar:self];
-    self.title=@"SB XIB 生成Masonry";
+    
+    if (self.type==GetSBViewControllerTypePureHand) {
+        self.title=@"SB XIB 生成纯手写";
+    }else{
+        self.title=@"SB XIB 生成非纯手写";
+    }
     
     [self loadData];
     
@@ -100,11 +105,13 @@
             GetXIBModel.title=filePath;
             GetXIBModel.filePath=[mainPath stringByAppendingPathComponent:filePath];
             GetXIBModel.iconImageName=@"xib.png";
+            GetXIBModel.type=self.type==GetSBViewControllerTypePureHand?@"GetSBViewControllerTypePureHand":@"GetSBViewControllerTypeMVC";
             [filesXIB addObject:GetXIBModel];
         }else if ([filePath hasSuffix:@"storyboard"]){
             GetSBCellModel *GetSBModel=[GetSBCellModel new];
             GetSBModel.filePath=[mainPath stringByAppendingPathComponent:filePath];
             GetSBModel.title=filePath;
+            GetSBModel.type=self.type==GetSBViewControllerTypePureHand?@"GetSBViewControllerTypePureHand":@"GetSBViewControllerTypeMVC";
             [recoderArrM addObject:filePath];
             GetSBModel.iconImageName=@"sb.png";
             [filesSB addObject:GetSBModel];
@@ -130,12 +137,14 @@
         GetSBModel.title=@"桌面无StroyBoard文件";
         GetSBModel.iconImageName=@"sb.png";
         GetSBModel.noFile=YES;
+        GetSBModel.type=self.type==GetSBViewControllerTypePureHand?@"GetSBViewControllerTypePureHand":@"GetSBViewControllerTypeMVC";
         [filesSB addObject:GetSBModel];
     }
     if (filesXIB.count==0) {
         GetXIBCellModel *GetXIBModel=[GetXIBCellModel new];
         GetXIBModel.title=@"桌面无Xib文件";
         GetXIBModel.iconImageName=@"xib.png";
+        GetXIBModel.type=self.type==GetSBViewControllerTypePureHand?@"GetSBViewControllerTypePureHand":@"GetSBViewControllerTypeMVC";
         GetXIBModel.noFile=YES;
         [filesXIB addObject:GetXIBModel];
     }

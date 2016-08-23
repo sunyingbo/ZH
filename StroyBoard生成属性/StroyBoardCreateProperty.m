@@ -1,5 +1,6 @@
 #import "StroyBoardCreateProperty.h"
 #import "StroyBoardPropertySetValue.h"
+#import "StroyBoardCreateConstant.h"
 
 static NSMutableDictionary *ZHStroyBoardCreateProperty;
 static NSMutableDictionary *ZHStroyBoardCreateCategory;
@@ -14,12 +15,16 @@ static NSMutableArray *ZHPushTempControllerName;
 
 static NSString *ZHProjectPath;
 
+static NSInteger customCount;
+
 @interface StroyBoardCreateProperty ()
 
 @end
 
 @implementation StroyBoardCreateProperty
 
+
+#pragma mark 懒加载
 + (NSMutableDictionary *)defalutCreateProperty{
     //添加线程锁
     static dispatch_once_t onceToken;
@@ -111,7 +116,60 @@ static NSString *ZHProjectPath;
     return ZHPushTempControllerName;
 }
 
++ (NSString *)getConstantTypeFromFirstAttribute:(NSString *)firstAttribute{
+    if ([firstAttribute isEqualToString:@"top"]) {
+        return @"t";
+    }
+    if ([firstAttribute isEqualToString:@"bottom"]) {
+        return @"b";
+    }
+    if ([firstAttribute isEqualToString:@"leading"]) {
+        return @"l";
+    }
+    if ([firstAttribute isEqualToString:@"trailing"]) {
+        return @"r";
+    }
+    if ([firstAttribute isEqualToString:@"width"]) {
+        return @"w";
+    }
+    if ([firstAttribute isEqualToString:@"height"]) {
+        return @"h";
+    }
+    if ([firstAttribute isEqualToString:@"centerX"]) {
+        return @"x";
+    }
+    if ([firstAttribute isEqualToString:@"centerY"]) {
+        return @"y";
+    }
+    return @"";
+}
+
++ (NSDictionary *)getConstantTypeAndIds:(NSDictionary *)ConstantDic{
+    if (ConstantDic==nil) {
+        return nil;
+    }
+    NSMutableDictionary *dicM=[NSMutableDictionary dictionary];
+    for (NSString *key in ConstantDic) {
+        
+        NSArray *arrTemp=ConstantDic[key];
+        NSMutableArray *arrM=[NSMutableArray array];
+        
+        for (NSDictionary *dicTemp in arrTemp) {
+            if (dicTemp!=nil) {
+                NSString *type=[self getConstantTypeFromFirstAttribute:dicTemp[@"firstAttribute"]];
+                if (type.length>0) {
+                    [arrM addObject:type];
+                }
+            }
+        }
+        
+        [dicM setValue:arrM forKey:key];
+    }
+    
+    return dicM;
+}
 + (NSInteger)createPropertyWithStroyBoardPath:(NSString *)stroyBoardPath withProjectPath:(NSString *)projectPath{
+    
     if ([ZHFileManager fileExistsAtPath:stroyBoardPath]==NO||[ZHFileManager fileExistsAtPath:projectPath]==NO) {
         return -1;
     }
@@ -120,20 +178,29 @@ static NSString *ZHProjectPath;
     //开始备份一份StroyBoard
 //    [self backupNewStroyBoard:stroyBoardPath];//还是不备份了
     
+    NSMutableDictionary *resultDicM=[NSMutableDictionary dictionary];
+    [[StroyBoardCreateConstant new]getConstant:stroyBoardPath toConstantDicM:resultDicM];
+    
+    NSLog(@"%@",resultDicM);
+    
+    NSDictionary *useConstantIdDic=[self getConstantTypeAndIds:resultDicM];
+    
     //开始查找出自定义属性
     NSString *text=[NSString stringWithContentsOfFile:stroyBoardPath encoding:NSUTF8StringEncoding error:nil];
     
-    text=[self getCustomClassFromAllViews:text];
+    customCount=0;
+    
+    text=[self getCustomClassFromAllViews:text withUseConstantIdDic:useConstantIdDic];
     
     [[self defalutCellFileName]removeAllObjects];
     
     NSInteger count=[self defalutCreateCategory].count;
     
-    if (count==0) {
+    if (count==0&&customCount==0) {
         return 0;
     }
     
-    text=[self addOutletProperty:text];
+    text=[self addOutletProperty:text withUseConstantIdDic:useConstantIdDic withResultDicM:resultDicM];
     
     text=[self removeTempCustomClass:text];
     
@@ -156,6 +223,7 @@ static NSString *ZHProjectPath;
     [text writeToFile:stroyBoardPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     
     [self done];
+    customCount=0;
     return count;
 }
 
@@ -205,9 +273,53 @@ static NSString *ZHProjectPath;
     }
     return text;
 }
+/**判断是否是约束*/
++ (BOOL)isConstain:(NSString *)text{
+    if (text.length>2) {
+        unichar ch=[text characterAtIndex:1];
+        if (ch=='_') {
+            return YES;
+        }
+    }
+    return NO;
+}
+/**拿取约束类型*/
++ (NSString *)getConstainType:(NSString *)text{
+    if (text.length>2) {
+        unichar ch=[text characterAtIndex:1];
+        if (ch=='_') {
+            ch=[text characterAtIndex:0];
+            NSString *constainType=[NSString stringWithFormat:@"%C",ch];
+            constainType=[constainType lowercaseString];
+            ch=[constainType characterAtIndex:0];
+            if(ch=='w'||ch=='h'||ch=='t'||ch=='b'||ch=='l'||ch=='r'||ch=='x'||ch=='y'){
+                return constainType;
+            }
+        }
+    }
+    return @"";
+}
+
++ (NSString *)getValueWithConstantType:(NSString *)constantType withIds:(NSString *)ids withResultDicM:(NSDictionary *)resultDicM{
+    if (resultDicM[ids]!=nil) {
+        NSArray *arr=resultDicM[ids];
+        for (NSDictionary *dicTemp in arr) {
+            if (dicTemp!=nil) {
+                
+                NSString *type=[self getConstantTypeFromFirstAttribute:dicTemp[@"firstAttribute"]];
+                
+                if ([type isEqualToString:constantType]) {
+                    return dicTemp[@"id"];
+                }
+            }
+        }
+    }
+    return @"";
+}
 
 /**获取所有控件自己打上的标识符*/
-+ (NSString *)getCustomClassFromAllViews:(NSString *)text{
++ (NSString *)getCustomClassFromAllViews:(NSString *)text withUseConstantIdDic:(NSDictionary *)useConstantIdDic{
+    NSArray *allIds=[useConstantIdDic allKeys];
     NSArray *arr=[text componentsSeparatedByString:@"\n"];
     NSMutableArray *arrM=[NSMutableArray array];
     NSString *rowStr,*viewIdenity;
@@ -242,6 +354,32 @@ static NSString *ZHProjectPath;
                         [arrM addObject:[rowStr stringByReplacingOccurrencesOfString:removeCustom withString:@""]];
                         
                         continue;
+                    }else if ([self isConstain:customStr]){//如果是约束
+                        NSString *constainType=[self getConstainType:customStr];
+                        
+                        if (constainType.length==1) {
+                            NSString *idStr=[rowStr substringFromIndex:[rowStr rangeOfString:@"id=\""].location+4];
+                            idStr=[idStr substringToIndex:[idStr rangeOfString:@"\""].location];
+                            
+                            if([allIds containsObject:idStr]==YES){
+                                
+                                NSArray *arr=useConstantIdDic[idStr];
+                                if ([arr containsObject:constainType]) {
+                                    
+                                    NSString *tempCustomStr=[self setProperty:idStr forKey:customStr];
+                                    
+                                    [self addCustomClassProperty:tempCustomStr withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
+                                    [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:tempCustomStr];//<view <label <button <imageView
+                                    
+                                    NSLog(@"存在");
+                                }
+                            }
+                            
+                            customCount ++;
+                            NSString *removeCustom=[NSString stringWithFormat:@" customClass=\"%@\"",customStr];
+                            [arrM addObject:[rowStr stringByReplacingOccurrencesOfString:removeCustom withString:@""]];
+                            continue;
+                        }
                     }
                 }
             }
@@ -288,6 +426,30 @@ static NSString *ZHProjectPath;
                         [arrM addObject:[rowStr stringByReplacingOccurrencesOfString:removeCustom withString:@""]];
                         
                         continue;
+                    }else if ([self isConstain:customClass]){//如果是约束
+                        NSString *constainType=[self getConstainType:customClass];
+                        
+                        if (constainType.length==1) {
+                            
+                            NSString *idStr=[rowStr substringFromIndex:[rowStr rangeOfString:@"id=\""].location+4];
+                            idStr=[idStr substringToIndex:[idStr rangeOfString:@"\""].location];
+                            
+                            if([allIds containsObject:idStr]==YES){
+                                NSArray *arr=useConstantIdDic[idStr];
+                                if ([arr containsObject:constainType]) {
+                                    NSString *tempCustomStr=[self setProperty:idStr forKey:customClass];
+                                    [self addCustomClassProperty:tempCustomStr withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
+                                    [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:tempCustomStr];//<view <label <button <imageView
+                                    
+                                    NSLog(@"存在");
+                                }
+                            }
+                            customCount ++;
+                            
+                            NSString *removeCustom=[NSString stringWithFormat:@" customClass=\"%@\"",customClass];
+                            [arrM addObject:[rowStr stringByReplacingOccurrencesOfString:removeCustom withString:@""]];
+                            continue;
+                        }
                     }
                 }
             }
@@ -339,7 +501,7 @@ static NSString *ZHProjectPath;
 }
 
 /**为StroyBoard添加真的outlet property*/
-+ (NSString *)addOutletProperty:(NSString *)text{
++ (NSString *)addOutletProperty:(NSString *)text withUseConstantIdDic:(NSDictionary *)useConstantIdDic withResultDicM:(NSDictionary *)resultDicM{
     NSArray *arr=[text componentsSeparatedByString:@"\n"];
     NSMutableArray *arrM=[NSMutableArray array];
     NSString *rowStr,*viewIdenity;
@@ -410,15 +572,30 @@ static NSString *ZHProjectPath;
                         for (NSString *property in cellPropertys) {
                             NSString *newProperty=property;
                             newProperty=[self getRealKey:newProperty];
+                            
+                            NSString *destinationStr=[self defalutCreateId][property];
                             if ([newProperty hasPrefix:@"_"]) {
                                 newProperty=[newProperty substringFromIndex:1];
+                            }else if ([self isConstain:newProperty]){
+                                NSString *constainType=[self getConstainType:newProperty];
+                                if (constainType.length==1) {
+                                    destinationStr=[self getValueWithConstantType:constainType withIds:[self defalutCreateId][property] withResultDicM:resultDicM];
+                                    newProperty=[newProperty substringFromIndex:2];
+                                }
                             }
+                            
+                            if (destinationStr.length<=0) {
+                                continue;
+                            }
+                            
                             NSString *storyBoardIdString=[self getStoryBoardIdString];
                             while ([text rangeOfString:storyBoardIdString].location!=NSNotFound) {
                                 storyBoardIdString=[self getStoryBoardIdString];
                             }
-                            NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
+                            
+                            NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,destinationStr,storyBoardIdString];
+                            
+                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",destinationStr] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                                 [connections appendString:outlet];
                                 realInsert++;
                             }else{
@@ -435,20 +612,31 @@ static NSString *ZHProjectPath;
                     //说明这个cell之前有拉过约束
                     else if(i>0&&[arr[i-1] rangeOfString:@"</connections>"].location!=NSNotFound){
                         for (NSString *property in cellPropertys) {
-                            if ([property isEqualToString:@"_ZHC3"]) {
-                                NSLog(@"%@",@"903qw8e09820938902184902");
-                            }
                             NSString *newProperty=property;
                             newProperty=[self getRealKey:newProperty];
+                            NSString *destinationStr=[self defalutCreateId][property];
                             if ([newProperty hasPrefix:@"_"]) {
                                 newProperty=[newProperty substringFromIndex:1];
+                            }else if ([self isConstain:newProperty]){
+                                NSString *constainType=[self getConstainType:newProperty];
+                                if (constainType.length==1) {
+                                    NSString *constainType=[self getConstainType:newProperty];
+                                    if (constainType.length==1) {
+                                        destinationStr=[self getValueWithConstantType:constainType withIds:[self defalutCreateId][property] withResultDicM:resultDicM];
+                                        newProperty=[newProperty substringFromIndex:2];
+                                    }
+                                }
+                            }
+                            
+                            if (destinationStr.length<=0) {
+                                continue;
                             }
                             NSString *storyBoardIdString=[self getStoryBoardIdString];
                             while ([text rangeOfString:storyBoardIdString].location!=NSNotFound) {
                                 storyBoardIdString=[self getStoryBoardIdString];
                             }
-                            NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
+                            NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,destinationStr,storyBoardIdString];
+                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",destinationStr] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                                 [arrM insertObject:outlet atIndex:arrM.count-1];
                             }else{
                                 [[self defalutCreateId]removeObjectForKey:property];
@@ -484,15 +672,29 @@ static NSString *ZHProjectPath;
                         for (NSString *property in cellPropertys) {
                             NSString *newProperty=property;
                             newProperty=[self getRealKey:newProperty];
+                            NSString *destinationStr=[self defalutCreateId][property];
                             if ([newProperty hasPrefix:@"_"]) {
                                 newProperty=[newProperty substringFromIndex:1];
+                            }else if ([self isConstain:newProperty]){
+                                NSString *constainType=[self getConstainType:newProperty];
+                                if (constainType.length==1) {
+                                    NSString *constainType=[self getConstainType:newProperty];
+                                    if (constainType.length==1) {
+                                        destinationStr=[self getValueWithConstantType:constainType withIds:[self defalutCreateId][property] withResultDicM:resultDicM];
+                                        newProperty=[newProperty substringFromIndex:2];
+                                    }
+                                }
+                            }
+                            
+                            if (destinationStr.length<=0) {
+                                continue;
                             }
                             NSString *storyBoardIdString=[self getStoryBoardIdString];
                             while ([text rangeOfString:storyBoardIdString].location!=NSNotFound) {
                                 storyBoardIdString=[self getStoryBoardIdString];
                             }
-                            NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
+                            NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,destinationStr,storyBoardIdString];
+                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",destinationStr] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                                 [connections appendString:outlet];
                                 realInsert++;
                             }else{
@@ -510,15 +712,29 @@ static NSString *ZHProjectPath;
                         for (NSString *property in cellPropertys) {
                             NSString *newProperty=property;
                             newProperty=[self getRealKey:newProperty];
+                            NSString *destinationStr=[self defalutCreateId][property];
                             if ([newProperty hasPrefix:@"_"]) {
                                 newProperty=[newProperty substringFromIndex:1];
+                            }else if ([self isConstain:newProperty]){
+                                NSString *constainType=[self getConstainType:newProperty];
+                                if (constainType.length==1) {
+                                    NSString *constainType=[self getConstainType:newProperty];
+                                    if (constainType.length==1) {
+                                        destinationStr=[self getValueWithConstantType:constainType withIds:[self defalutCreateId][property] withResultDicM:resultDicM];
+                                        newProperty=[newProperty substringFromIndex:2];
+                                    }
+                                }
+                            }
+                            
+                            if (destinationStr.length<=0) {
+                                continue;
                             }
                             NSString *storyBoardIdString=[self getStoryBoardIdString];
                             while ([text rangeOfString:storyBoardIdString].location!=NSNotFound) {
                                 storyBoardIdString=[self getStoryBoardIdString];
                             }
-                            NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
+                            NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,destinationStr,storyBoardIdString];
+                            if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",destinationStr] priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                                 [arrM insertObject:outlet atIndex:arrM.count-1];
                             }else{
                                 [[self defalutCreateId]removeObjectForKey:property];
@@ -553,15 +769,29 @@ static NSString *ZHProjectPath;
                     for (NSString *property in viewControllerPropertys) {
                         NSString *newProperty=property;
                         newProperty=[self getRealKey:newProperty];
+                        NSString *destinationStr=[self defalutCreateId][property];
                         if ([newProperty hasPrefix:@"_"]) {
                             newProperty=[newProperty substringFromIndex:1];
+                        }else if ([self isConstain:newProperty]){
+                            NSString *constainType=[self getConstainType:newProperty];
+                            if (constainType.length==1) {
+                                NSString *constainType=[self getConstainType:newProperty];
+                                if (constainType.length==1) {
+                                    destinationStr=[self getValueWithConstantType:constainType withIds:[self defalutCreateId][property] withResultDicM:resultDicM];
+                                    newProperty=[newProperty substringFromIndex:2];
+                                }
+                            }
+                        }
+                        
+                        if (destinationStr.length<=0) {
+                            continue;
                         }
                         NSString *storyBoardIdString=[self getStoryBoardIdString];
                         while ([text rangeOfString:storyBoardIdString].location!=NSNotFound) {
                             storyBoardIdString=[self getStoryBoardIdString];
                         }
-                        NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                        if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]]  priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
+                        NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>\n",newProperty,destinationStr,storyBoardIdString];
+                        if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",destinationStr]  priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                             [connections appendString:outlet];
                             realInsert++;
                         }else{
@@ -579,15 +809,29 @@ static NSString *ZHProjectPath;
                     for (NSString *property in viewControllerPropertys) {
                         NSString *newProperty=property;
                         newProperty=[self getRealKey:newProperty];
+                        NSString *destinationStr=[self defalutCreateId][property];
                         if ([newProperty hasPrefix:@"_"]) {
                             newProperty=[newProperty substringFromIndex:1];
+                        }else if ([self isConstain:newProperty]){
+                            NSString *constainType=[self getConstainType:newProperty];
+                            if (constainType.length==1) {
+                                NSString *constainType=[self getConstainType:newProperty];
+                                if (constainType.length==1) {
+                                    destinationStr=[self getValueWithConstantType:constainType withIds:[self defalutCreateId][property] withResultDicM:resultDicM];
+                                    newProperty=[newProperty substringFromIndex:2];
+                                }
+                            }
+                        }
+                        
+                        if (destinationStr.length<=0) {
+                            continue;
                         }
                         NSString *storyBoardIdString=[self getStoryBoardIdString];
                         while ([text rangeOfString:storyBoardIdString].location!=NSNotFound) {
                             storyBoardIdString=[self getStoryBoardIdString];
                         }
-                        NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,[self defalutCreateId][property],storyBoardIdString];
-                        if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",[self defalutCreateId][property]]  priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
+                        NSString *outlet=[NSString stringWithFormat:@"<outlet property=\"%@\" destination=\"%@\" id=\"%@\"/>",newProperty,destinationStr,storyBoardIdString];
+                        if ([ZHNSString getCountLeftString:@"<outlet property=\"" rightString:[NSString stringWithFormat:@"destination=\"%@\"",destinationStr]  priorityIsLeft:NO notContainStringArr:@[@"<",@">"] inText:text]==0) {
                             [arrM insertObject:outlet atIndex:arrM.count-1];
                         }else{
                             [[self defalutCreateId]removeObjectForKey:property];
@@ -623,7 +867,9 @@ static NSString *ZHProjectPath;
     }
     
     for (NSString *property in propertys) {
+        
         NSString *newProperty=[self getPropertyCode:property];
+        
         if (newProperty.length>0&&[strM rangeOfString:newProperty].location==NSNotFound) {
             [ZHStoryboardTextManager addCodeText:newProperty andInsertType:ZHAddCodeType_Interface toStrM:strM insertFunction:nil];
         }
@@ -645,17 +891,29 @@ static NSString *ZHProjectPath;
 }
 
 + (NSString *)getPropertyCode:(NSString *)property{
+    
+    if ([self isConstain:property]){
+        NSString *constainType=[self getConstainType:property];
+        if (constainType.length==1) {
+            property=[property substringFromIndex:2];
+            return [NSString stringWithFormat:@"@property (weak, nonatomic) IBOutlet NSLayoutConstraint *%@;",property];
+        }
+    }
+    
     NSString *category=[self defalutCreateCategory][property];
     
     if (category.length<=0) {
         return @"";
     }
+    
     category=[ZHNSString removeSpaceBeforeAndAfterWithString:category];
+    
+    property=[self getRealKey:property];
     
     if ([property hasPrefix:@"_"]) {
         property=[property substringFromIndex:1];
     }
-    property=[self getRealKey:property];
+    
     NSString *viewCategory;
     if ([category hasPrefix:@"mapView"]) {
         viewCategory=@"MKMapView";
@@ -741,6 +999,7 @@ static NSString *ZHProjectPath;
     }
     
     for (NSString *property in propertys) {
+        
         NSString *category=[self defalutCreateCategory][property];
         category=[ZHNSString removeSpaceBeforeAndAfterWithString:category];
         
@@ -748,6 +1007,8 @@ static NSString *ZHProjectPath;
         propertyTemp=[self getRealKey:propertyTemp];
         if ([propertyTemp hasPrefix:@"_"]) {
             propertyTemp=[propertyTemp substringFromIndex:1];
+        }else{
+            continue;
         }
         
         NSString *code=[StroyBoardPropertySetValue getCodePropertysForViewName:propertyTemp WithViewCategory:category];

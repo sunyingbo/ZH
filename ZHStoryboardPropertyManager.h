@@ -13,4 +13,5 @@
 
 /**获取事件代码*/
 + (NSString *)getSelectorEventTypeForViewName:(NSString *)viewName withProperty:(ViewProperty *)property;
++ (NSString *)getSelectorEventTypeForViewNameForNoPureHand:(NSString *)viewName withProperty:(ViewProperty *)property;
 @end

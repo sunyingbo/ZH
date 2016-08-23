@@ -515,7 +515,21 @@
     }
     return @"";
 }
-
+/**获取事件代码*/
++ (NSString *)getSelectorEventTypeForViewNameForNoPureHand:(NSString *)viewName withProperty:(ViewProperty *)property{
+    if (property.selector.length>0&&property.eventType.length>0){
+        if ([property.selector hasSuffix:@":"]) {
+            return [NSString stringWithFormat:@"- (IBAction)%@(id)sender{\n\
+                    \n\
+                    }\n",property.selector];
+        }else{
+            return [NSString stringWithFormat:@"- (IBAction)%@{\n\
+                    \n\
+                    }\n",property.selector];
+        }
+    }
+    return @"";
+}
 /**根据公共属性生成代码*/
 + (void)getPublicPropertyCodeForView:(NSString *)viewName WithProperty:(ViewProperty *)property toCodeText:(NSMutableString *)codeText{
     //1.Color

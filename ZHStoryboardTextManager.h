@@ -12,6 +12,10 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 };
 
 @interface ZHStoryboardTextManager : NSObject
+
++ (NSMutableDictionary *)defaultIDDicM;
++ (NSMutableDictionary *)defaultDicM;
+
 /**为View打上所有标识符(默认顺序) 包括(为所有view的id打上标识符,对应的标识符就是CustomClass)*/
 + (NSString *)addCustomClassToAllViews:(NSString *)text;
 
@@ -79,4 +83,9 @@ typedef NS_ENUM(NSUInteger, ZHAddCodeType) {
 + (NSString *)upFirstCharacter:(NSString *)text;
 /**第一个字母小写写*/
 + (NSString *)lowerFirstCharacter:(NSString *)text;
+
++ (NSString *)getViewCountIdenityWithViewIdenity:(NSString *)viewIdenity;
++ (NSString *)replaceAllIdByCustomClass:(NSString *)text;
++ (NSString *)detailSpecialCustomClassLikeCell:(NSString *)rowStr;
++ (NSString *)noDetailSpecialCustomClassLikeCell:(NSString *)rowStr;
 @end

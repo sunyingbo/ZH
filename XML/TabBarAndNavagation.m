@@ -126,7 +126,6 @@
         if (backShow) {
             ((UIViewController *)target).hidesBottomBarWhenPushed=NO;
         }
-        
     }else if ([target isKindOfClass:[UITableViewCell class]]){
         if (pushHide) {
             [((UITableViewCell *)target) getViewController].hidesBottomBarWhenPushed=YES;

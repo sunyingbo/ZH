@@ -91,8 +91,6 @@
 + (void)createRelationShipWithControllerDic:(NSDictionary *)dic andXMLHandel:(ReadXML *)xml WithViews:(NSMutableArray *)views withRelationShipDic:(NSMutableDictionary *)relationShipDicM isCell:(BOOL)isCell;
 
 
-
-
 /**获取所有ViewController 的 self.view.subviews  格式 ViewController,CustomClass,id */
 + (NSDictionary *)getViewControllerSubViewsIdAndViewNameWithDic:(NSDictionary *)MyDic andXMLHandel:(ReadXML *)xml withCustomClassDicM:(NSMutableArray *)CustomClassArrM;
 
@@ -101,5 +99,11 @@
 
 /**获取所有ViewController 的 CollectionViewCell.subviews  格式 ViewController,CollectionViewCell,CustomClass,id */
 + (NSDictionary *)getCollectionViewCellSubViewsIdAndViewNameWithDic:(NSDictionary *)MyDic andXMLHandel:(ReadXML *)xml withCustomClassDicM:(NSMutableArray *)CustomClassArrM;
+
+/**获取所有有用约束id*/
++ (NSArray *)getAllUseConstantIdWithDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml;
+
+/**获取所有无用约束id*/
++ (NSArray *)getAllUnUseConstantIdWithDic:(NSDictionary *)tempDic andXMLHandel:(ReadXML *)xml;
 
 @end

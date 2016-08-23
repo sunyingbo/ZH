@@ -127,9 +127,6 @@ static NSMutableDictionary *ZHStoryboardIDDicM;
                     NSString *viewCountIdenity=[self getViewCountIdenityWithViewIdenity:@"<self.view "];
                     [[self defaultIDDicM]setValue:idStr forKey:viewCountIdenity];
                 }
-                //                <view key="view" contentMode="scaleToFill" id="hQd-8a-jIj">
-                //                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                
                 [arrM addObject:[self replaceAllIdByCustomClass:rowStr]];
                 continue;
             }

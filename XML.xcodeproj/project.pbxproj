@@ -41,6 +41,8 @@
 		040E8D631D68B7060044AF20 /* ZHFMDBHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = 040E8D621D68B7060044AF20 /* ZHFMDBHelp.m */; };
 		040E8D6C1D68B7270044AF20 /* ConditionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 040E8D671D68B7270044AF20 /* ConditionViewController.m */; };
 		040E8D6D1D68B7280044AF20 /* ConditionTableViewNewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040E8D6B1D68B7270044AF20 /* ConditionTableViewNewCell.m */; };
+		0416F1F51D6C35AA00B8158C /* StroyBoardCreateConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = 0416F1F41D6C35AA00B8158C /* StroyBoardCreateConstant.m */; };
+		0416F1F81D6C392100B8158C /* ZHStoryboardTextManagerConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = 0416F1F71D6C392100B8158C /* ZHStoryboardTextManagerConstant.m */; };
 		044D97D61DDAA749000257A9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 044D97D51DDAA749000257A9 /* main.m */; };
 		044D97D91DDAA749000257A9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 044D97D81DDAA749000257A9 /* AppDelegate.m */; };
 		044D97DC1DDAA749000257A9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 044D97DB1DDAA749000257A9 /* ViewController.m */; };
@@ -230,6 +232,10 @@
 		040E8D671D68B7270044AF20 /* ConditionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConditionViewController.m; sourceTree = "<group>"; };
 		040E8D6A1D68B7270044AF20 /* ConditionTableViewNewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConditionTableViewNewCell.h; sourceTree = "<group>"; };
 		040E8D6B1D68B7270044AF20 /* ConditionTableViewNewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConditionTableViewNewCell.m; sourceTree = "<group>"; };
+		0416F1F31D6C35AA00B8158C /* StroyBoardCreateConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StroyBoardCreateConstant.h; sourceTree = "<group>"; };
+		0416F1F41D6C35AA00B8158C /* StroyBoardCreateConstant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StroyBoardCreateConstant.m; sourceTree = "<group>"; };
+		0416F1F61D6C392100B8158C /* ZHStoryboardTextManagerConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHStoryboardTextManagerConstant.h; sourceTree = "<group>"; };
+		0416F1F71D6C392100B8158C /* ZHStoryboardTextManagerConstant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHStoryboardTextManagerConstant.m; sourceTree = "<group>"; };
 		044D97D11DDAA749000257A9 /* XML.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XML.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		044D97D51DDAA749000257A9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		044D97D71DDAA749000257A9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -470,6 +476,10 @@
 				040501DA1D45A93900CC35FD /* StroyBoardCreateProperty.m */,
 				04B8381F1D48ADA8004931F5 /* StroyBoardPropertySetValue.h */,
 				04B838201D48ADA8004931F5 /* StroyBoardPropertySetValue.m */,
+				0416F1F31D6C35AA00B8158C /* StroyBoardCreateConstant.h */,
+				0416F1F41D6C35AA00B8158C /* StroyBoardCreateConstant.m */,
+				0416F1F61D6C392100B8158C /* ZHStoryboardTextManagerConstant.h */,
+				0416F1F71D6C392100B8158C /* ZHStoryboardTextManagerConstant.m */,
 			);
 			name = "StroyBoard生成属性";
 			path = "../StroyBoard生成属性";
@@ -1474,6 +1484,7 @@
 				04B749111D39D0FD003B046A /* ZHAlertAction.m in Sources */,
 				04CA74CC1D38B8C8004541F7 /* AFHTTPSessionManager.m in Sources */,
 				047462811D24C0C700F4DDCF /* ZHStoryboardXMLManager.m in Sources */,
+				0416F1F81D6C392100B8158C /* ZHStoryboardTextManagerConstant.m in Sources */,
 				040E8D561D68B6990044AF20 /* ConditionTableViewCell.m in Sources */,
 				046B87021D67059B0011C840 /* ZHBlockSingleCategroy.m in Sources */,
 				047462961D25250700F4DDCF /* ZHFileManager.m in Sources */,
@@ -1495,6 +1506,7 @@
 				040E8D2C1D68B5450044AF20 /* SearchTableViewCell.m in Sources */,
 				048F159B1D6191DC008594B5 /* ZHRemoveTheComments.m in Sources */,
 				040501FB1D46037100CC35FD /* FMDatabaseQueue.m in Sources */,
+				0416F1F51D6C35AA00B8158C /* StroyBoardCreateConstant.m in Sources */,
 				048F15971D61749B008594B5 /* SmallFunctionCellModel.m in Sources */,
 				044D98091DDAA7AD000257A9 /* ReadXML.m in Sources */,
 				047462931D2524DF00F4DDCF /* FatherClass.m in Sources */,

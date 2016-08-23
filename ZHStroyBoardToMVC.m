@@ -141,6 +141,13 @@
                     }
                 }
                 
+                for (NSString *idStr in views) {
+                    NSString *selectorEventType=[ZHStoryboardPropertyManager getSelectorEventTypeForViewNameForNoPureHand:idStr withProperty:self.idAndViewPropertys[idStr]];
+                    if (selectorEventType.length>0) {
+                        [ZHStoryboardTextManagerToMVC addCodeText:selectorEventType andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:viewControllerFileName] insertFunction:nil];
+                    }
+                }
+                
                 //解决UIMapView *mapView1;的问题
                 [ZHStoryboardTextManagerToMVC dealWith_UIMapView:[ZHStroyBoardFileManagerToMVC get_M_ContextByIdentity:viewControllerFileName] needInserFramework:YES];
                 
@@ -301,6 +308,13 @@
                 isOnlyTableViewOrCollectionView=YES;
             }else{
                 isOnlyTableViewOrCollectionView=NO;
+            }
+        }
+        
+        for (NSString *idStr in views) {
+            NSString *selectorEventType=[ZHStoryboardPropertyManager getSelectorEventTypeForViewNameForNoPureHand:idStr withProperty:self.idAndViewPropertys[idStr]];
+            if (selectorEventType.length>0) {
+                [ZHStoryboardTextManagerToMVC addCodeText:selectorEventType andInsertType:ZHAddCodeType_Implementation toStrM:[ZHStroyBoardFileManager get_M_ContextByIdentity:NewFileName] insertFunction:nil];
             }
         }
         
