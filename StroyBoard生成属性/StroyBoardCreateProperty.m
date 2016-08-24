@@ -181,8 +181,6 @@ static NSInteger customCount;
     NSMutableDictionary *resultDicM=[NSMutableDictionary dictionary];
     [[StroyBoardCreateConstant new]getConstant:stroyBoardPath toConstantDicM:resultDicM];
     
-    NSLog(@"%@",resultDicM);
-    
     NSDictionary *useConstantIdDic=[self getConstantTypeAndIds:resultDicM];
     
     //开始查找出自定义属性
@@ -371,7 +369,6 @@ static NSInteger customCount;
                                     [self addCustomClassProperty:tempCustomStr withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
                                     [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:tempCustomStr];//<view <label <button <imageView
                                     
-                                    NSLog(@"存在");
                                 }
                             }
                             
@@ -440,8 +437,6 @@ static NSInteger customCount;
                                     NSString *tempCustomStr=[self setProperty:idStr forKey:customClass];
                                     [self addCustomClassProperty:tempCustomStr withCellFileName:CellFileName withViewControllerFileName:ViewControllerFileName];
                                     [[self defalutCreateCategory]setValue:[viewIdenity substringFromIndex:1] forKey:tempCustomStr];//<view <label <button <imageView
-                                    
-                                    NSLog(@"存在");
                                 }
                             }
                             customCount ++;

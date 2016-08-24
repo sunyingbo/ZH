@@ -100,23 +100,42 @@
     xml=nil;
     
     //开始替换
-    
     NSMutableDictionary *resultConstantDicM=[NSMutableDictionary dictionary];
-    for (NSDictionary *dic in self.ConstantArrM) {
-        for (NSString *str in dic) {
-            NSArray *arrTemp=dic[str];
+    for (NSInteger j=0; j<self.ConstantArrM.count; j++) {
+        NSMutableDictionary *dic=[NSMutableDictionary dictionaryWithDictionary:self.ConstantArrM[j]];
+        NSArray *dicKeys=[dic allKeys];
+        for (NSInteger k=0; k<dicKeys.count; k++) {
+            NSString *dicKey=dicKeys[k];
+            NSMutableArray *arrTemp=[NSMutableArray arrayWithArray:dic[dicKey]];
             if (arrTemp!=nil) {
                 if (arrTemp.count>0) {
-                    if(self.IdsCustomDicM[str]!=nil){
-                        if (resultConstantDicM[self.IdsCustomDicM[str]]!=nil) {
-                            [resultConstantDicM[self.IdsCustomDicM[str]] addObjectsFromArray:arrTemp];
+                    if(self.IdsCustomDicM[dicKey]!=nil){
+                        for (NSInteger i=0; i<arrTemp.count; i++) {
+                            NSMutableDictionary *subDic=[NSMutableDictionary dictionaryWithDictionary:arrTemp[i]];
+                            if (subDic[@"firstItem"]==nil||([subDic[@"firstItem"] isKindOfClass:[NSString class]]&&[subDic[@"firstItem"] length]<=0)) {
+                                subDic[@"firstItem"]=self.IdsCustomDicM[dicKey];
+                            }else{
+                                if ([subDic[@"firstItem"] isEqualToString:dicKey]) {
+                                    subDic[@"firstItem"]=self.IdsCustomDicM[dicKey];
+                                }else if ([subDic[@"secondItem"] isEqualToString:dicKey]){
+                                    subDic[@"firstItem"]=self.IdsCustomDicM[dicKey];
+                                    subDic[@"firstAttribute"]=subDic[@"secondAttribute"];
+                                }
+                            }
+                            arrTemp[i]=subDic;
+                        }
+                        
+                        if (resultConstantDicM[self.IdsCustomDicM[dicKey]]!=nil) {
+                            [resultConstantDicM[self.IdsCustomDicM[dicKey]] addObjectsFromArray:arrTemp];
                         }else{
-                            [resultConstantDicM setValue:arrTemp forKey:self.IdsCustomDicM[str]];
+                            [resultConstantDicM setValue:arrTemp forKey:self.IdsCustomDicM[dicKey]];
                         }
                     }
                 }
+                dic[dicKey]=arrTemp;
             }
         }
+        self.ConstantArrM[j]=dic;
     }
     
     for (NSString *key in resultConstantDicM) {
