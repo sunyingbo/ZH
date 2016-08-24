@@ -143,7 +143,6 @@
 		04CA75041D38BF50004541F7 /* JSONFineTuningTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA74F91D38BF50004541F7 /* JSONFineTuningTableViewCell.m */; };
 		04CA75051D38BF50004541F7 /* JSONSourceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA74FB1D38BF50004541F7 /* JSONSourceTableViewCell.m */; };
 		04CA75061D38BF50004541F7 /* JSONTypeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CA74FD1D38BF50004541F7 /* JSONTypeTableViewCell.m */; };
-		04CA75081D38CE3E004541F7 /* creatLabel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04CA75071D38CE3E004541F7 /* creatLabel.jpg */; };
 		04D76BD91CCB13D500235470 /* ZHNSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D76BD81CCB13D500235470 /* ZHNSString.m */; };
 		04FA9D0A1D69CAC60037D8EE /* ZHStroyBoardToMVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FA9D091D69CAC60037D8EE /* ZHStroyBoardToMVC.m */; };
 		04FA9D0D1D69F70C0037D8EE /* ZHStroyBoardFileManagerToMVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FA9D0C1D69F70C0037D8EE /* ZHStroyBoardFileManagerToMVC.m */; };
@@ -434,7 +433,6 @@
 		04CA74FB1D38BF50004541F7 /* JSONSourceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONSourceTableViewCell.m; sourceTree = "<group>"; };
 		04CA74FC1D38BF50004541F7 /* JSONTypeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONTypeTableViewCell.h; sourceTree = "<group>"; };
 		04CA74FD1D38BF50004541F7 /* JSONTypeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONTypeTableViewCell.m; sourceTree = "<group>"; };
-		04CA75071D38CE3E004541F7 /* creatLabel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = creatLabel.jpg; sourceTree = "<group>"; };
 		04D76BD71CCB13D500235470 /* ZHNSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHNSString.h; sourceTree = "<group>"; };
 		04D76BD81CCB13D500235470 /* ZHNSString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHNSString.m; sourceTree = "<group>"; };
 		04FA9D081D69CAC60037D8EE /* ZHStroyBoardToMVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHStroyBoardToMVC.h; sourceTree = "<group>"; };
@@ -1256,7 +1254,6 @@
 			isa = PBXGroup;
 			children = (
 				04B749121D39D39A003B046A /* check.png */,
-				04CA75071D38CE3E004541F7 /* creatLabel.jpg */,
 				04CA74E91D38BF50004541F7 /* controller */,
 				04CA74EC1D38BF50004541F7 /* model */,
 				04CA74F51D38BF50004541F7 /* view */,
@@ -1413,7 +1410,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04CA75081D38CE3E004541F7 /* creatLabel.jpg in Resources */,
 				046B86EF1D66E1EB0011C840 /* qidongtu.jpg in Resources */,
 				044D97E41DDAA749000257A9 /* LaunchScreen.storyboard in Resources */,
 				040E8D2D1D68B5450044AF20 /* xuanzhong.png in Resources */,

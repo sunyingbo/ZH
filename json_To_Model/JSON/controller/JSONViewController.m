@@ -118,15 +118,6 @@
     [self.cancleButton cornerRadiusWithFloat:5];
     
     [self.importDataButton addTarget:self action:@selector(importDataAction) forControlEvents:1<<6];
-    
-    //之所以这么做,是因为不知道为什么加载一张背景图竟然很卡
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        UIImage *image=[UIImage imageNamed:@"creatLabel.jpg"];
-        //通知主线程刷新
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.createButton setBackgroundImage:image forState:(UIControlStateNormal)];
-        });
-    });
 }
 
 - (void)setFold:(BOOL)fold{
@@ -200,7 +191,6 @@
     }else if(selectIndex==2){//plist
         [self localFileToModelWithFilePath:self.dataTextView.text NSNULL:NSNULL NSNUMBER:NSNUMBER NSDATE:NSDATE guidang:guidang];
     }
-    
 }
 
 #pragma mark - 必须实现的方法:

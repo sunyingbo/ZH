@@ -645,7 +645,8 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="PMM-VD-rbR"/>
                                 </constraints>
-                                <state key="normal">
+                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                <state key="normal" title="开始生成model代码到桌面">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" red="0.2992818813" green="0.2992818813" blue="0.2992818813" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
