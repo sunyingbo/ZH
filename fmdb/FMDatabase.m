@@ -213,16 +213,6 @@
 
 #pragma mark Busy handler routines
 
-// NOTE: appledoc seems to choke on this function for some reason;
-//       so when generating documentation, you might want to ignore the
-//       .m files so that it only documents the public interfaces outlined
-//       in the .h files.
-//
-//       This is a known appledoc bug that it has problems with C functions
-//       within a class implementation, but for some reason, only this
-//       C function causes problems; the rest don't. Anyway, ignoring the .m
-//       files with appledoc will prevent this problem from occurring.
-
 static int FMDBDatabaseBusyHandler(void *f, int count) {
     FMDatabase *self = (__bridge FMDatabase*)f;
     
@@ -266,10 +256,6 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     return _maxBusyRetryTimeInterval;
 }
 
-
-// we no longer make busyRetryTimeout public
-// but for folks who don't bother noticing that the interface to FMDatabase changed,
-// we'll still implement the method so they don't get suprise crashes
 - (int)busyRetryTimeout {
     NSLog(@"%s:%d", __FUNCTION__, __LINE__);
     NSLog(@"FMDB: busyRetryTimeout no longer works, please use maxBusyRetryTimeInterval");

@@ -134,9 +134,8 @@
 
 #pragma mark 文件夹操作
 + (void)creatDirectorIfNotExsit:(NSString *)DirectorPath{
-    BOOL yes;
-    if (![[NSFileManager defaultManager]fileExistsAtPath:DirectorPath isDirectory:&yes]) {
-        [[NSFileManager defaultManager]createDirectoryAtPath:DirectorPath withIntermediateDirectories:yes attributes:nil error:nil];
+    if(![[NSFileManager defaultManager]fileExistsAtPath:DirectorPath]){
+        [[NSFileManager defaultManager]createDirectoryAtPath:DirectorPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
 }
 + (NSString *)getDigitalFileName{

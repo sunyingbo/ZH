@@ -60,7 +60,17 @@
             return ;
         }
         
-        [manager Xib_To_Masonry:self.dataModel.filePath];
+        
+        
+        if ([self.dataModel.type isEqual:@"GetSBViewControllerTypePureHand"]) {
+            [manager Xib_To_Masonry:self.dataModel.filePath];
+        }else{
+            hud.labelText =@"无必要,请谅解";
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[self getViewController].view animated:YES];
+            });
+            return ;
+        }
         
         //通知主线程刷新
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -63,7 +63,6 @@
         }
     }
     
-//    NSLog(@"保存的文件:%@",filePath);
     [[NSFileManager defaultManager]createFileAtPath:filePath contents:[text dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
 }
 - (NSString *)getDirectoryPath:(NSString *)fileName{
@@ -96,8 +95,6 @@
         }
     }
     
-//    NSLog(@"保存的文件:%@",filePath);
-    
     if (ViewController.length<=0) {
         [[NSFileManager defaultManager]createFileAtPath:filePath contents:[[self NoViewController] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
     }else if (ViewController.length>0){
@@ -119,8 +116,6 @@
             filePath =[filePath stringByAppendingString:fileNameDegree[i]];
         }
     }
-    
-//    NSLog(@"保存的文件:%@",filePath);
     
     if (ViewController.length<=0) {
         [[NSFileManager defaultManager]createFileAtPath:filePath contents:[[self NoViewController] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];

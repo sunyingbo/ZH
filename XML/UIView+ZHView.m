@@ -255,23 +255,6 @@
     return longPress;
 }
 
-//为view添加长按手势示例代码
-/*
-
-//[self.imageView addUILongPressGestureRecognizerWithTarget:self withAction:@selector(longPress:) withMinimumPressDuration:0.5];
-////长按后触发该方法
-//-(void)longPress:(UILongPressGestureRecognizer *)gestureRecognizer
-//{
-//    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
-//        //        NSLog(@"长按事件开始");
-//
-//    }
-//    else if ([gestureRecognizer state] == UIGestureRecognizerStateEnded) {
-//        //        NSLog(@"长按事件结束");
-//    }
-//}
-*/
-
 //为View添加抛光效果
 - (void)addPolishingWithBackColor:(UIColor *)color{
     CALayer *layer = self.layer;

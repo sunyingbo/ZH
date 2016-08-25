@@ -49,7 +49,6 @@
             if([arrMs[i] rangeOfString:@"<entity"].location!=NSNotFound){
                 NSString *subStr=[arrMs[i] substringFromIndex:14];
                 subStr=[subStr substringToIndex:[subStr rangeOfString:@"\""].location];
-                //NSLog(@"subStr=%@ arrMs[i]=%@",subStr,arrMs[i]);
                 [Target addObject:[subStr copy]];
             }
         }

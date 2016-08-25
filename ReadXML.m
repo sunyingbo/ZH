@@ -320,7 +320,6 @@ void disPlay_TreeNodes(TreeNode *T){//打印里面的兄弟节点
         //如果里面没有value，就保存这一项
         if(Is_added==NO){//如果里面有keys
             if([temp_str_all isEqualToString: @""]==NO){
-                //                NSLog(@"%@",temp_str_all);
                 [temp_str2 appendString:temp_str_all];
                 [arrM_temp addObject:temp_str2];
             }
