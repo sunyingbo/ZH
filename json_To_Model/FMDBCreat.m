@@ -35,15 +35,6 @@
     }
     return lineText;
 }
-//根据个数类获取换行的个数字符串
-+ (NSString *)getTabSpaceWithTCount:(NSInteger)count{
-    return @"";
-//    NSMutableString *tabString=[NSMutableString string];
-//    for(NSInteger i=0;i<count;i++){
-//        [tabString appendString:@"\t"];
-//    }
-//    return tabString;
-}
 
 #pragma mark -----------主体函数
 //获取某个路径下所有的.h文件

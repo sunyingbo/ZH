@@ -185,9 +185,9 @@
             ChangeCodeFileNameCellModel *model=modelObjct;
             //进入另外一个界面
             
-            MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            hud.mode = MBProgressHUDModeText;
-            hud.labelText = @"加载中...";
+            MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+            
+            hud.label.text = @"加载中...";
             
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
                 
@@ -198,7 +198,9 @@
                 //通知主线程刷新
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([ZHFileManager fileExistsAtPath:vc.filePath]==NO) {
-                        hud.labelText = @"路径不存在!请删除";
+                        hud.label.text = @"路径不存在!请删除";
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                        });
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                         });

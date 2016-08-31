@@ -143,7 +143,7 @@
 
 - (IBAction)creatAction:(id)sender {
     if (self.modelName.text.length<=0) {
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"请赋值Model的名字!" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"请赋值Model的名字!" withDuration:1 animated:NO];
         return;
     }
     
@@ -158,7 +158,7 @@
     }
     
     if (selectIndex==-1) {
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"请选择数据来源!" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"请选择数据来源!" withDuration:1 animated:NO];
         return;
     }
     
@@ -297,7 +297,7 @@
 - (IBAction)sureAction:(id)sender{
     
     if (self.dataTextView.text.length<=0) {
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"没有 填写数据 或者 导入数据!" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"没有 填写数据 或者 导入数据!" withDuration:1 animated:NO];
         return;
     }
     
@@ -310,7 +310,7 @@
         if(dictTemp==nil){
             arrTemp=[NSJSONSerialization JSONObjectWithData:[strJson dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
             if(arrTemp==nil){
-                [MBProgressHUD showHUDAddedTo:self.view withText:@"Json数据有误!" withDuration:1];
+                [MBProgressHUD showHUDAddedToView:self.view withText:@"Json数据有误!" withDuration:1 animated:NO];
                 return;
             }
         }
@@ -324,7 +324,7 @@
     }else if([_promoteLabel.text rangeOfString:@"plist"].location!=NSNotFound){
         //检验这个plist文件路径
         if ([ZHFileManager fileExistsAtPath:self.dataTextView.text]==NO) {
-            [MBProgressHUD showHUDAddedTo:self.view withText:@"plist文件路径不存在!" withDuration:1];
+            [MBProgressHUD showHUDAddedToView:self.view withText:@"plist文件路径不存在!" withDuration:1 animated:NO];
             return;
         }
         for (JSONSourceCellModel * JSONSourceModel in self.dataArr[0]) {
@@ -397,7 +397,7 @@
     if(self.savaPath.length>0){
         //判断用户是否直接保存到了桌面
         if([self.savaPath isEqualToString:[NSHomeDirectory() stringByAppendingString:@"/Desktop/"]]||[self.savaPath isEqualToString:[NSHomeDirectory() stringByAppendingString:@"/Desktop"]]){
-            [MBProgressHUD showHUDAddedTo:self.view withText:@"请不要文件直接存在桌面上!" withDuration:1];
+            [MBProgressHUD showHUDAddedToView:self.view withText:@"请不要文件直接存在桌面上!" withDuration:1 animated:NO];
             return;
         }
         if([self.savaPath hasSuffix:@"/"]==NO){
@@ -409,7 +409,7 @@
         if(_dict==nil){
             _arr=[NSJSONSerialization JSONObjectWithData:[strJson dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
             if(_arr==nil){
-                [MBProgressHUD showHUDAddedTo:self.view withText:@"Json数据有误" withDuration:1];
+                [MBProgressHUD showHUDAddedToView:self.view withText:@"Json数据有误" withDuration:1 animated:NO];
                 return;
             }
         }
@@ -420,7 +420,7 @@
             [self JsonToPlistWithFilePath:self.filePath withDicOrArr:_arr];
         }
     }else{
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"保存路径不能为空" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"保存路径不能为空" withDuration:1 animated:NO];
     }
     [self removeData];
 }
@@ -439,17 +439,17 @@
 }
 
 - (void)auto_creat:(NSString *)url NSNULL:(BOOL)NSNULL NSNUMBER:(BOOL)NSNUMBER NSDATE:(BOOL)NSDATE guidang:(BOOL)guidang{
-    [MBProgressHUD showHUDAddedTo:self.view withText:@"正在生成中..." withDuration:1];
+    [MBProgressHUD showHUDAddedToView:self.view withText:@"正在生成中..." withDuration:1 animated:NO];
     
     if([self judgURL:url]==NO){
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"网址存在%?控制符" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"网址存在%?控制符" withDuration:1 animated:NO];
         return;
     }
     //判断保存路径是否存在
     if(self.savaPath.length>0){
         //判断用户是否直接保存到了桌面
         if([self.savaPath isEqualToString:[NSHomeDirectory() stringByAppendingString:@"/Desktop/"]]||[self.savaPath isEqualToString:[NSHomeDirectory() stringByAppendingString:@"/Desktop"]]){
-            [MBProgressHUD showHUDAddedTo:self.view withText:@"请不要文件直接存在桌面上" withDuration:1];
+            [MBProgressHUD showHUDAddedToView:self.view withText:@"请不要文件直接存在桌面上" withDuration:1 animated:NO];
             return;
         }
         if([self.savaPath hasSuffix:@"/"]==NO){
@@ -468,20 +468,20 @@
                 if([responseObject isKindOfClass:[NSDictionary class]]){
                     _dict=responseObject;
                     if(_dict==nil){
-                        [MBProgressHUD showHUDAddedTo:self.view withText:@"请求的网路数据有误" withDuration:1];
+                        [MBProgressHUD showHUDAddedToView:self.view withText:@"请求的网路数据有误" withDuration:1 animated:NO];
                         return ;
                     }
                 }
                 else if([responseObject isKindOfClass:[NSArray class]]){
                     _arr=responseObject;
                     if(_arr==nil){
-                        [MBProgressHUD showHUDAddedTo:self.view withText:@"请求的网路数据有误" withDuration:1];
+                        [MBProgressHUD showHUDAddedToView:self.view withText:@"请求的网路数据有误" withDuration:1 animated:NO];
                         return ;
                     }
                 }
                 [self succeesNSNULL:NSNULL NSNUMBER:NSNUMBER NSDATE:NSDATE guidang:guidang];
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [MBProgressHUD showHUDAddedTo:self.view withText:@"请检查网址" withDuration:1];
+                [MBProgressHUD showHUDAddedToView:self.view withText:@"请检查网址" withDuration:1 animated:NO];
                 return;
             }];
         }
@@ -499,20 +499,20 @@
                     if([responseObject isKindOfClass:[NSDictionary class]]){
                         _dict=responseObject;
                         if(_dict==nil){
-                            [MBProgressHUD showHUDAddedTo:self.view withText:@"请求的网路数据有误" withDuration:1];
+                            [MBProgressHUD showHUDAddedToView:self.view withText:@"请求的网路数据有误" withDuration:1 animated:NO];
                             return ;
                         }
                     }
                     else if([responseObject isKindOfClass:[NSArray class]]){
                         _arr=responseObject;
                         if(_arr==nil){
-                            [MBProgressHUD showHUDAddedTo:self.view withText:@"请求的网路数据有误" withDuration:1];
+                            [MBProgressHUD showHUDAddedToView:self.view withText:@"请求的网路数据有误" withDuration:1 animated:NO];
                             return ;
                         }
                     }
                     [self succeesNSNULL:NSNULL NSNUMBER:NSNUMBER NSDATE:NSDATE guidang:guidang];
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                    [MBProgressHUD showHUDAddedTo:self.view withText:@"请检查网址" withDuration:1];
+                    [MBProgressHUD showHUDAddedToView:self.view withText:@"请检查网址" withDuration:1 animated:NO];
                     return;
                 }];
             }else{
@@ -523,27 +523,27 @@
                     if([responseObject isKindOfClass:[NSDictionary class]]){
                         _dict=responseObject;
                         if(_dict==nil){
-                            [MBProgressHUD showHUDAddedTo:self.view withText:@"请求的网路数据有误" withDuration:1];
+                            [MBProgressHUD showHUDAddedToView:self.view withText:@"请求的网路数据有误" withDuration:1 animated:NO];
                             return ;
                         }
                     }
                     else if([responseObject isKindOfClass:[NSArray class]]){
                         _arr=responseObject;
                         if(_arr==nil){
-                            [MBProgressHUD showHUDAddedTo:self.view withText:@"请求的网路数据有误" withDuration:1];
+                            [MBProgressHUD showHUDAddedToView:self.view withText:@"请求的网路数据有误" withDuration:1 animated:NO];
                             return ;
                         }
                     }
                     [self succeesNSNULL:NSNULL NSNUMBER:NSNUMBER NSDATE:NSDATE guidang:guidang];
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                    [MBProgressHUD showHUDAddedTo:self.view withText:@"请检查网址" withDuration:1];
+                    [MBProgressHUD showHUDAddedToView:self.view withText:@"请检查网址" withDuration:1 animated:NO];
                     return;
                 }];
             }
         }
         
     }else{
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"保存路径不能为空" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"保存路径不能为空" withDuration:1 animated:NO];
     }
     [self removeData];
 }
@@ -592,7 +592,7 @@
         [CreatPropert clearTextWithModelName:self.modelName.text withGiveData:[self returnModelTypeNSInteger]];
         [CreatPropert creatProperty:_dict fileName:self.modelName.text WithContext:@"" savePath:self.savaPath withNSNULL:NSNULL withNSDATE:NSDATE withNSNUMBER:NSNUMBER withGiveData:[self returnModelTypeNSInteger] withModelName:self.modelName.text withFatherClass:@"" needEcoding:guidang];
         [CreatPropert saveTextWithModelName:self.modelName.text savePath:self.savaPath];
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"生成成功,请打开文件夹" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"生成成功,请打开文件夹" withDuration:1 animated:NO];
         [self JsonToPlistWithFilePath:self.filePath];
     }
     else if(_arr!=nil){
@@ -601,10 +601,10 @@
         [CreatPropert clearTextWithModelName:self.modelName.text withGiveData:[self returnModelTypeNSInteger]];
         [CreatPropert creatProperty:_arr fileName:self.modelName.text WithContext:@"" savePath:self.savaPath withNSNULL:NSNULL withNSDATE:NSDATE withNSNUMBER:NSNUMBER withGiveData:[self returnModelTypeNSInteger] withModelName:self.modelName.text withFatherClass:@"" needEcoding:guidang];
         [CreatPropert saveTextWithModelName:self.modelName.text savePath:self.savaPath];
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"生成成功,请打开文件夹" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"生成成功,请打开文件夹" withDuration:1 animated:NO];
         [self JsonToPlistWithFilePath:self.filePath];
     }
-    else [MBProgressHUD showHUDAddedTo:self.view withText:@"生成失败" withDuration:1];
+    else [MBProgressHUD showHUDAddedToView:self.view withText:@"生成失败" withDuration:1 animated:NO];
     
 //    [FMDBCreat writeToFileWithFilePath:self.savaPath];
 }
@@ -617,7 +617,7 @@
     if(self.savaPath.length>0){
         //判断用户是否直接保存到了桌面
         if([self.savaPath isEqualToString:[NSHomeDirectory() stringByAppendingString:@"/Desktop/"]]||[self.savaPath isEqualToString:[NSHomeDirectory() stringByAppendingString:@"/Desktop"]]){
-            [MBProgressHUD showHUDAddedTo:self.view withText:@"请不要文件直接存在桌面上!" withDuration:1];
+            [MBProgressHUD showHUDAddedToView:self.view withText:@"请不要文件直接存在桌面上!" withDuration:1 animated:NO];
             return;
         }
         if([self.savaPath hasSuffix:@"/"]==NO){
@@ -628,7 +628,7 @@
         if(_dict==nil){
             _arr=[NSArray arrayWithContentsOfFile:filePath];
             if(_arr==nil){
-                [MBProgressHUD showHUDAddedTo:self.view withText:@"Json数据有误" withDuration:1];
+                [MBProgressHUD showHUDAddedToView:self.view withText:@"Json数据有误" withDuration:1 animated:NO];
                 return;
             }
         }
@@ -639,7 +639,7 @@
             [self JsonToPlistWithFilePath:self.filePath withDicOrArr:_arr];
         }
     }else{
-        [MBProgressHUD showHUDAddedTo:self.view withText:@"保存路径不能为空" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:self.view withText:@"保存路径不能为空" withDuration:1 animated:NO];
     }
     [self removeData];
 }

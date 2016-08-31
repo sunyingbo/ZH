@@ -27,9 +27,9 @@
 }
 
 - (void)okAction{
-    MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:[self getViewController].view animated:YES];
-    hud.mode = MBProgressHUDModeText;
-    hud.labelText = @"正在生成代码!";
+    MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:[self getViewController].view animated:YES];
+    
+    hud.label.text = @"正在生成代码!";
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
         // 处理耗时操作的代码块...
@@ -38,11 +38,11 @@
         //通知主线程刷新
         dispatch_async(dispatch_get_main_queue(), ^{
             if(count==-1){
-                hud.labelText=[NSString stringWithFormat:@"工程路径已不存在"];
+                hud.label.text=[NSString stringWithFormat:@"工程路径已不存在"];
             }else if(count==0){
-                hud.labelText=[NSString stringWithFormat:@"找到 0 个(空!)"];
+                hud.label.text=[NSString stringWithFormat:@"找到 0 个(空!)"];
             }else
-                hud.labelText=[NSString stringWithFormat:@"处理了%ld个outlet属性",count];
+                hud.label.text=[NSString stringWithFormat:@"处理了%ld个outlet属性",count];
             //回调或者说是通知主线程刷新，
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[self getViewController].view animated:YES];

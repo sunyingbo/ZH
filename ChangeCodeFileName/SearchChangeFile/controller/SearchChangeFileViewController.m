@@ -153,9 +153,9 @@
         }
     }
     if (paths.count==0) {
-        MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeText;
-        hud.labelText = @"请选中文件再修改";
+        MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+        
+        hud.label.text = @"请选中文件再修改";
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -174,16 +174,16 @@
 }
 
 - (void)changeFile{
-    MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeText;
+    MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+    
     if (self.filePath.length<=0) {
-        hud.labelText = @"路径为空!";
+        hud.label.text = @"路径为空!";
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         });
         return;
     }
-    hud.labelText = [NSString stringWithFormat:@"正在备份(%@)...",[ZHFileManager fileSizeString:self.filePath]];
+    hud.label.text = [NSString stringWithFormat:@"正在备份(%@)...",[ZHFileManager fileSizeString:self.filePath]];
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
@@ -208,9 +208,15 @@
         BOOL result=[ZHFileManager copyItemAtPath:self.filePath toPath:newFilePath];
         
         if (result) {
-            hud.labelText = @"备份成功,正在修改...";
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text = @"备份成功,正在修改...";
+            });
+            
         }else{
-            hud.labelText = @"备份失败!请先关闭工程(XCode)";
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text = @"备份失败!请先关闭工程(XCode)";
+            });
+            
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             });
@@ -223,9 +229,9 @@
         //通知主线程刷新
         dispatch_async(dispatch_get_main_queue(), ^{
             if (resultString.length>0) {
-                hud.labelText = resultString;
+                hud.label.text = resultString;
             }else
-                hud.labelText = @"修改完成";
+                hud.label.text = @"修改完成";
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             });

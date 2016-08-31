@@ -74,7 +74,7 @@
 }
 - (void)outPut:(SearchCellModel *)model Type:(NSInteger)type{//type=1纯手写模式 2非纯手写模式
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToView:self.view animated:YES];
     
     NSString *mainPath=[ZHHelp getHomeDirector];
     mainPath =[mainPath stringByAppendingPathComponent:@"Documents"];
@@ -172,9 +172,9 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [ZHAlertAction alertWithTitle:@"请在mac桌面上的代码助手.m,重新修改MVC文件名,请命名不要以数字开头" withMsg:@"修改好了,再点击下面的生成代码选项" addToViewController:self ActionSheet:NO otherButtonBlocks:@[^{
-            MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            hud.mode = MBProgressHUDModeText;
-            hud.labelText = @"修改中...";
+            MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+            
+            hud.label.text = @"修改中...";
             
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
                 
@@ -188,13 +188,13 @@
                 //通知主线程刷新
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (result.length>0) {
-                        hud.labelText = result;
+                        hud.label.text = result;
                         [ZHFileManager removeItemAtPath:filesPath];
                         if (type==2){
                             [ZHFileManager removeItemAtPath:[filesPath stringByAppendingPathComponent:[ZHFileManager getFileNameFromFilePath:storyBoardPath]]];
                         }
                     }else
-                        hud.labelText = @"生成成功";
+                        hud.label.text = @"生成成功";
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                     });
@@ -293,9 +293,9 @@
     if ([self.backUpLabel.text hasPrefix:@"导入备份"]) {
         if ([[ZHFMDBHelp defaultZHFMDBHelp]selectDataCount]==0) {
             if (macStoryBoardCount>appStoryBoardCount) {
-                MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                hud.mode = MBProgressHUDModeText;
-                hud.labelText = @"导入备份数据...";
+                MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+                
+                hud.label.text = @"导入备份数据...";
                 
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
                     
@@ -308,7 +308,7 @@
                     
                     //通知主线程刷新
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        hud.labelText = @"导入成功,1s后退出";
+                        hud.label.text = @"导入成功,1s后退出";
                         self.backUpLabel.hidden=YES;
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -321,9 +321,9 @@
     }else if ([self.backUpLabel.text isEqualToString:@"备份数据"]){
         if ([[ZHFMDBHelp defaultZHFMDBHelp]selectDataCount]>0) {
             if (macStoryBoardCount!=appStoryBoardCount) {
-                MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                hud.mode = MBProgressHUDModeText;
-                hud.labelText = @"备份数据...";
+                MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+                
+                hud.label.text = @"备份数据...";
                 
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
                     [ZHFileManager removeItemAtPath:macFilePath];
@@ -334,7 +334,7 @@
                     //通知主线程刷新
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.backUpLabel.hidden=YES;
-                        hud.labelText = @"备份数据成功";
+                        hud.label.text = @"备份数据成功";
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                         });
@@ -499,7 +499,7 @@
     return conditionDicM;
 }
 - (void)reloadDataWithNeedScrollToTop:(BOOL)needScrollToTop{
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToView:self.view animated:YES];
     [self groupByCategory:self.categorySelect];
     if (needScrollToTop) {
         [self.tableViewSearch scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:self.dataSearchArr.count-1] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
@@ -529,9 +529,9 @@
     [self.tableViewSearch reloadData];
     
     if (self.dataSearchArr.count==0) {
-        MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeText;
-        hud.labelText = @"无数据";
+        MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+        
+        hud.label.text = @"无数据";
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

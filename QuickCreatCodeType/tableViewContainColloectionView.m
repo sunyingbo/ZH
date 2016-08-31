@@ -6,7 +6,7 @@
     NSDictionary *dic=[self getDicFromFileName:str];
     
     if(![self judge:dic[@"最大文件夹名字"]]){
-        [MBProgressHUD showHUDAddedTo:view withText:@"没有填写文件夹名字,创建MVC失败!" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:view withText:@"没有填写文件夹名字,创建MVC失败!" withDuration:1 animated:NO];
         return;
     }
     
@@ -18,7 +18,7 @@
     
     //如果没有填写dic[@"ViewController的名字"]那么就默认只生成MVC文件夹
     if (![self judge:dic[@"ViewController的名字"]]) {
-        [MBProgressHUD showHUDAddedTo:view withText:@"没有填写 ViewController的名字 那么就默认只生成MVC文件夹!" withDuration:1];
+        [MBProgressHUD showHUDAddedToView:view withText:@"没有填写 ViewController的名字 那么就默认只生成MVC文件夹!" withDuration:1 animated:NO];
         return;
     }
     
@@ -295,7 +295,7 @@
     
     [[ZHWordWrap new]wordWrap:[self getDirectoryPath:dic[@"最大文件夹名字"]]];
     
-    [MBProgressHUD showHUDAddedTo:view withText:@"生成成功!" withDuration:1];
+    [MBProgressHUD showHUDAddedToView:view withText:@"生成成功!" withDuration:1 animated:NO];
 }
 
 - (void)createTableViewCell:(NSString *)cell withStrM:(NSMutableString *)textStrM withInfoDic:(NSDictionary *)dic withContainArrM:(NSArray *)ContainArrM withhasContain:(BOOL)hasContain withIndex:(NSInteger)index{

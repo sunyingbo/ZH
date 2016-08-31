@@ -44,24 +44,4 @@
 + (NSString *)modelCreatDeleteDatawithInsideValue:(NSInteger)tCount withClassName:(NSString *)className;
 + (void)writeFileToModelWithFilePath:(NSString *)filePath;
 + (void)writeToFileWithFilePath:(NSString *)filePath;
-//接口(生成的两个打包文件)
-//- (void)insertDataToDataBaseWithObject:(id)object toDataBaseName:(NSString *)dataBaseName;
-//- (id)readDataFromDataBaseToModelObject:(id)modelObject WithDataBaseName:(NSString *)dataBaseName;
-//- (void)deleteDataFromDataBaseToModelObject:(id)modelObject WithDataBaseName:(NSString *)dataBaseName;
-
-
-//生成的两个打包文件里面应该有的函数:
-//- (void)creatTableNameWithModelObject:(id)object;
-//- (id)getModelDataFromTableName:(NSString *)tableName;
-//- (id)getModelDataFromDataBaseName:(NSString *)dataBaseName;
-//- (void)deleteDataWithTableName:(NSString *)tableName;
-
-
-//fmdb 解决方案:
-//利用生成的.h文件来获取属性值,截取其中有用的信息
-//将其生成对应的FMDB 插入 创建表 读取数据
-/*
- 要求写的函数有
- - ()
- */
 @end

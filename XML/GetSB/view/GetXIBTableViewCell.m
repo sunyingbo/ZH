@@ -43,9 +43,9 @@
 }
 
 - (void)creatCodeAction{
-    MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:[self getViewController].view animated:YES];
-    hud.mode = MBProgressHUDModeText;
-    hud.labelText = @"正在生成代码!";
+    MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:[self getViewController].view animated:YES];
+    
+    hud.label.text = @"正在生成代码!";
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
@@ -53,7 +53,10 @@
         ZHStoryboardManager *manager=[ZHStoryboardManager new];
         
         if ([[NSFileManager defaultManager]fileExistsAtPath:self.dataModel.filePath]==NO) {
-            hud.labelText =@"路径不存在";
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text =@"路径不存在";
+            });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[self getViewController].view animated:YES];
             });
@@ -65,7 +68,10 @@
         if ([self.dataModel.type isEqual:@"GetSBViewControllerTypePureHand"]) {
             [manager Xib_To_Masonry:self.dataModel.filePath];
         }else{
-            hud.labelText =@"无必要,请谅解";
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text =@"无必要,请谅解";
+            });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[self getViewController].view animated:YES];
             });
@@ -74,7 +80,7 @@
         
         //通知主线程刷新
         dispatch_async(dispatch_get_main_queue(), ^{
-            hud.labelText=@"生成成功";
+            hud.label.text=@"生成成功";
             //回调或者说是通知主线程刷新，
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[self getViewController].view animated:YES];

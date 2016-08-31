@@ -127,16 +127,16 @@
 }
 
 - (void)removeTheCommentAction:(NSString *)path RemoveTheCommentsType:(ZHRemoveTheCommentsType)removeTheCommentsType{
-    MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeText;
+    MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+    
     if (path.length<=0) {
-        hud.labelText = @"路径为空!";
+        hud.label.text = @"路径为空!";
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         });
         return;
     }
-    hud.labelText = [NSString stringWithFormat:@"正在备份(%@)...",[ZHFileManager fileSizeString:path]];
+    hud.label.text = [NSString stringWithFormat:@"正在备份(%@)...",[ZHFileManager fileSizeString:path]];
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
@@ -161,9 +161,15 @@
         BOOL result=[ZHFileManager copyItemAtPath:path toPath:newFilePath];
         
         if (result) {
-            hud.labelText = @"备份成功,正在处理注释...";
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text = @"备份成功,正在处理注释...";
+            });
+            
         }else{
-            hud.labelText = @"备份失败!请先关闭工程(XCode)";
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text = @"备份失败!请先关闭工程(XCode)";
+            });
+            
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             });
@@ -175,7 +181,7 @@
         
         //通知主线程刷新
         dispatch_async(dispatch_get_main_queue(), ^{
-            hud.labelText=resultString;
+            hud.label.text=resultString;
             //回调或者说是通知主线程刷新，
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -199,24 +205,24 @@
 }
 
 - (void)statisticalNumberOfLinesOfCode{
-    MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeText;
+    MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+    
     NSString *path=[self getPath];
     if (path.length<=0) {
-        hud.labelText = @"路径为空!";
+        hud.label.text = @"路径为空!";
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         });
         return;
     }
-    hud.labelText = @"正在统计!";
+    hud.label.text = @"正在统计!";
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         // 处理耗时操作的代码块...
         NSString *resultString=[ZHStatisticalCodeRows Begin:path];
         
         //通知主线程刷新
         dispatch_async(dispatch_get_main_queue(), ^{
-            hud.labelText=resultString;
+            hud.label.text=resultString;
             //回调或者说是通知主线程刷新，
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

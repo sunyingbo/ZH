@@ -47,17 +47,23 @@
 }
 
 - (void)OkAction{
-    MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeText;
-    hud.labelText = @"正在检测工程...";
+    MBProgressHUD *hud =[MBProgressHUD showHUDAddedToView:self.view animated:YES];
+    
+    hud.label.text = @"正在检测工程...";
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
         BOOL result=[self checkProject];
         if (result) {
-            hud.labelText = [NSString stringWithFormat:@"检测完成,正在备份(%@)...",[ZHFileManager fileSizeString:self.path]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text = [NSString stringWithFormat:@"检测完成,正在备份(%@)...",[ZHFileManager fileSizeString:self.path]];
+            });
+            
         }else{
-            hud.labelText = @"无可视界面控件,为空工程,或纯手写工程";
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text = @"无可视界面控件,为空工程,或纯手写工程";
+            });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             });
@@ -85,9 +91,15 @@
         result=[ZHFileManager copyItemAtPath:self.path toPath:newFilePath];
         
         if (result) {
-            hud.labelText = @"备份成功,正在转换工程...";
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text = @"备份成功,正在转换工程...";
+            });
         }else{
-            hud.labelText = @"备份失败!请先关闭工程(XCode)";
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.label.text = @"备份失败!请先关闭工程(XCode)";
+            });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             });
@@ -99,7 +111,7 @@
         
         //通知主线程刷新
         dispatch_async(dispatch_get_main_queue(), ^{
-            hud.labelText=@"转换工程成功";
+            hud.label.text=@"转换工程成功";
             
             [self.OkButton setTitle:@"转换成功" forState:(UIControlStateNormal)];
             self.OkButton.enabled=NO;
