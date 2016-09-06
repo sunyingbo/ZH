@@ -22,4 +22,6 @@
 - (void)saveStoryBoard:(NSString *)ViewController TableViewCells:(NSArray *)tableviewCells subTableCells:(NSArray *)subTableCellDic toFileName:(NSArray *)fileNameDegree;
 
 - (NSString *)getDirectoryPath:(NSString *)fileName;
+
+- (void)backUp:(NSString *)fileName;
 @end

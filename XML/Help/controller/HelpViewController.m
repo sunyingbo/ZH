@@ -52,7 +52,8 @@
     NSString *macDesktopPath=[ZHFileManager getMacDesktop];
     macDesktopPath = [macDesktopPath stringByAppendingPathComponent:@"代码助手.m"];
     
-    NSString *text=@"所有视频总链接:  //https://pan.baidu.com/s/1hsho3p6\n\
+    NSString *text=@"GitHub:https://github.com/zhanghuanProgrammer/ZH\n\
+    所有视频总链接:  //https://pan.baidu.com/s/1hsho3p6\n\
     \n\
     1.快速生成代码\n\
     1.1快速生成代码-简单tableView    网址://https://pan.baidu.com/s/1jHOn9jC\n\

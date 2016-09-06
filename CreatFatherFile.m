@@ -8,6 +8,34 @@
     }
     return YES;
 }
+
+- (void)backUp:(NSString *)fileName{
+    if ([fileName hasSuffix:@".m"]) fileName=[fileName substringToIndex:fileName.length-2];
+    
+    NSString *filePathTemp=[[ZHFileManager getMacDesktop] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.m",fileName]];
+    NSString *text=[NSString stringWithContentsOfFile:filePathTemp encoding:NSUTF8StringEncoding error:nil];
+    
+    NSString *filePath=[[ZHFileManager getMacDesktop] stringByAppendingPathComponent:@"Log.m"];
+    if ([ZHFileManager fileExistsAtPath:filePath]==NO) {
+        [ZHFileManager createFileAtPath:filePath];
+    }
+    NSString *content=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    NSString *curTime=[self getDateString:[NSDate date]];
+    curTime=[@"#pragma mark -----------"stringByAppendingString:curTime];
+    curTime=[curTime stringByAppendingString:@"-----------\n"];
+    text=[curTime stringByAppendingString:text];
+    text=[text stringByAppendingString:@"\n"];
+    content=[text stringByAppendingString:content];
+    [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+}
+
+/**获取某个时间的字符串*/
+- (NSString *)getDateString:(NSDate *)date{
+    NSDateFormatter * formatter = [NSDateFormatter new];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    return [formatter stringFromDate:date];
+}
+
 - (NSString *)getInfoFromDic:(NSArray *)arr{
     
     NSMutableString *strM=[NSMutableString string];

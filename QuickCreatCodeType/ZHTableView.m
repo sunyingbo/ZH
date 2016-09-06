@@ -2,7 +2,7 @@
 
 @implementation ZHTableView
 - (void)Begin:(NSString *)str toView:(UIView *)view{
-    
+    [self backUp:str];
     NSDictionary *dic=[self getDicFromFileName:str];
     
     if(![self judge:dic[@"最大文件夹名字"]]){
