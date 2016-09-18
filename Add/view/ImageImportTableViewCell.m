@@ -30,6 +30,9 @@
     [ZHAlertAction alertWithTitle:@"导入图片" withMsg:Msg addToViewController:[self getViewController] withCancleBlock:nil withOkBlock:^{
         
         NSString *path=[NSString stringWithContentsOfFile:macDesktopPath encoding:NSUTF8StringEncoding error:nil];
+        if ([path rangeOfString:@"\n"].location!=NSNotFound) {
+            path=[path stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        }
         
         if ([ZHFileManager fileExistsAtPath:path]==NO) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
