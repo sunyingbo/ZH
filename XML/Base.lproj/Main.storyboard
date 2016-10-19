@@ -160,7 +160,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="N3X-Xe-5CT" kind="relationship" relationship="rootViewController" id="PTa-SB-WSt"/>
+                        <segue destination="J90-gh-2R5" kind="relationship" relationship="rootViewController" id="3hn-ty-uVo"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XB2-1I-2JB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -362,12 +362,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="124" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SGy-xF-4bZ">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="124" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SGy-xF-4bZ">
                                 <rect key="frame" x="0.0" y="41" width="600" height="559"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MoreFunctionTableViewCell" rowHeight="124" id="7nm-V8-1vw" customClass="MoreFunctionTableViewCell">
-                                        <rect key="frame" x="0.0" y="28" width="600" height="124"/>
+                                        <rect key="frame" x="0.0" y="92" width="600" height="124"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7nm-V8-1vw" id="Nmc-pX-mO8">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="123"/>
@@ -401,7 +401,7 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="如有疑问,请看使用简介" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2f-eU-Uo6">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="如有疑问,请看使用简介" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2f-eU-Uo6">
                                 <rect key="frame" x="0.0" y="20" width="600" height="21"/>
                                 <color key="backgroundColor" red="0.52799479166666652" green="0.52799479166666652" blue="0.52799479166666652" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -422,6 +422,7 @@
                             <constraint firstItem="L2f-eU-Uo6" firstAttribute="leading" secondItem="BUo-Q5-GOb" secondAttribute="leading" id="rOu-g8-fy8"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Zsn-pd-jZ8"/>
                     <connections>
                         <outlet property="tableView" destination="SGy-xF-4bZ" id="Lkj-vs-UhP"/>
                     </connections>

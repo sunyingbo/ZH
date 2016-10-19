@@ -39,8 +39,10 @@
     self.tableView.tableFooterView=[UIView new];
 	self.edgesForExtendedLayout=UIRectEdgeNone;
     
-    self.title=@"更多功能";
-    [TabBarAndNavagation setLeftBarButtonItemTitle:@"<返回" TintColor:[UIColor blackColor] target:self action:@selector(backAction)];
+//    self.title=@"更多功能";
+//    [TabBarAndNavagation setLeftBarButtonItemTitle:@"<返回" TintColor:[UIColor blackColor] target:self action:@selector(backAction)];
+    
+    self.title=@"CodeRobert";
     [TabBarAndNavagation setRightBarButtonItemTitle:@"使用简介" TintColor:[UIColor blackColor] target:self action:@selector(helpAction)];
 }
 

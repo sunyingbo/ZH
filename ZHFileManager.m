@@ -411,11 +411,9 @@
 }
 
 /**旧名字改成新名字*/
-+ (NSString *)changeFileOldName:(NSString *)oldName newFileName:(NSString *)newName{
-    NSString *newPath=@"";
-    NSString *fileName=[ZHFileManager getFileNameFromFilePath:oldName];
-    newPath=[oldName substringToIndex:oldName.length-fileName.length];
-    NSString *pathExtension=[oldName pathExtension];
++ (NSString *)changeFileOldPath:(NSString *)oldPath newFileName:(NSString *)newName{
+    NSString *newPath=[self getFilePathByRemoveFileName:oldPath];
+    NSString *pathExtension=[oldPath pathExtension];
     newPath=[newPath stringByAppendingPathComponent:newName];
     newPath=[newPath stringByAppendingString:[NSString stringWithFormat:@".%@",pathExtension]];
     return newPath;
